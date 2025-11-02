@@ -1,9 +1,9 @@
-.songs-page {
+.artists-page {
   background-color: #dfffea;
   padding: 7rem;
 }
 
-.song-card {
+.artist-card {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -13,16 +13,16 @@
   margin: 20px;
 }
 
-.song-card:hover {
+.artist-card:hover {
   transform: scale(1.03);
 }
 
-.song-card img {
+.artist-card img {
   width: 100%;
   border-radius: 6px;
   margin-bottom: 0.5rem;
 }
 
-.song-card h3 {
+.artist-card h3 {
   font-family: sans-serif;
 }
