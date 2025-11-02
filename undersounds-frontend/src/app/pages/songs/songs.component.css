@@ -1,0 +1,28 @@
+.songs-page {
+  background-color: #dfffea;
+  padding: 7rem;
+}
+
+.song-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.song-card:hover {
+  transform: scale(1.03);
+}
+
+.song-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.song-card h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-family: sans-serif;
+}
