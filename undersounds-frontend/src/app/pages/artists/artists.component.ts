@@ -11,8 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class ArtistsComponent {
   artists = [
-    { name: 'Artista 1', genre: 'Pop', image: 'assets/usuario.png' },
-    { name: 'Artista 2', genre: 'Rock', image: 'assets/usuario.png' },
-    { name: 'Artista 3', genre: 'Rap', image: 'assets/usuario.png' },
+    { name: 'Artista 1', genre: 'Pop', image: 'imagenes/usuario.png' },
+    { name: 'Artista 2', genre: 'Rock', image: 'imagenes/usuario.png' },
+    { name: 'Artista 3', genre: 'Rap', image: 'imagenes/usuario.png' },
   ]
 }
