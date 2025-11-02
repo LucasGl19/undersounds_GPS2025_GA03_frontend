@@ -3,7 +3,8 @@ import { SongsComponent } from './pages/songs/songs.component';
 import { LayoutBasicoComponent } from './layouts/layout-basico/layout-basico.component';
 import { EmptyComponent } from './pages/empty/empty.component';
 import { ArtistsComponent } from './pages/artists/artists.component';
-
+import { MerchandisingComponent } from './pages/merchandising/merchandising.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 export const routes: Routes = [
   {
     path: '',
@@ -11,6 +12,8 @@ export const routes: Routes = [
     children: [
       { path: 'songs', component: SongsComponent },
       { path: 'artists', component: ArtistsComponent },
+      { path: 'merchandising', component: MerchandisingComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: 'home', component: EmptyComponent }
     ]
   }

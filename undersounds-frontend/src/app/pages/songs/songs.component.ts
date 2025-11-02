@@ -10,8 +10,9 @@ import{NgFor} from '@angular/common';
 })
 export class SongsComponent {
   songs = [
-    { title: 'Canción 1', artist: 'Artista 1', image: 'assets/rectangle.svg'},
-    { title: 'Canción 2', artist: 'Artista 2', image: 'assets/rectangle.svg' },
-    { title: 'Canción 3', artist: 'Artista 3', image: 'assets/rectangle.svg' }
+    { title: 'Canción 1', artist: 'Artista 1', image: 'imagenes/rectangle.svg'},
+    { title: 'Canción 2', artist: 'Artista 2', image: 'imagenes/rectangle.svg' },
+    { title: 'Canción 3', artist: 'Artista 3', image: 'imagenes/rectangle.svg' }
   ]
 }
+
