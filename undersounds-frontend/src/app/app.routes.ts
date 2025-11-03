@@ -6,6 +6,10 @@ import { ArtistsComponent } from './pages/artists/artists.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { MerchandisingComponent } from './pages/merchandising/merchandising.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { AboutComponent } from './pages/about/about.component';
+import { HelpComponent } from './pages/help/help.component';
+import { TermsComponent } from './pages/terms/terms.component';
+import { PrivacyComponent } from './pages/privacy/privacy.component';
 export const routes: Routes = [
   {
     path: '',
@@ -16,7 +20,11 @@ export const routes: Routes = [
       { path: 'merchandising', component: MerchandisingComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'home', component: EmptyComponent },
-      { path: 'cart', component: CartComponent }
-    ]
-  }
+      { path: 'cart', component: CartComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'help', component: HelpComponent },
+      { path: 'terms', component: TermsComponent },
+      { path: 'privacy', component: PrivacyComponent },
+    ],
+  },
 ];
