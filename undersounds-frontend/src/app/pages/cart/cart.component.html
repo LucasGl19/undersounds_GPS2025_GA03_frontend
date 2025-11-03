@@ -1,0 +1,50 @@
+<div class="cart-container">
+    <h1 class="cart-title">Tu carrito</h1>
+
+    <div class="empty-cart" *ngIf="cartItems.length === 0">
+        <p>Tu carrito está vacío.</p>
+        <div class="cart-links-container">
+            <a (click)="navigateToSongs()" class="btn-primary">Ver canciones</a>
+            <a (click)="navigateToMerch()" class="btn-primary">Ver merch</a>
+        </div>
+    </div>
+
+    <div class="cart-content" *ngIf="cartItems.length > 0">
+        <div class="cart-items">
+            <div class="cart-item" *ngFor="let item of cartItems">
+                <img [src]="item.image" [alt]="item.name" class="item-image" />
+
+                <div class="item-info">
+                    <h3>{{ item.name }}</h3>
+                    <p class="item-price">{{ item.price }}</p>
+
+                    <div class="item-quantity">
+                        <button (click)="decreaseQuantity(item)">-</button>
+                        <span>{{ item.quantity }}</span>
+                        <button (click)="increaseQuantity(item)">+</button>
+                    </div>
+                </div>
+
+                <button class="remove-btn" (click)="removeFromCart(item)">✕</button>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h2>Resumen</h2>
+            <div class="summary-line">
+                <span>Subtotal:</span>
+                <span>{{ getSubtotal() }}</span>
+            </div>
+            <div class="summary-line">
+                <span>Envío:</span>
+                <span>{{ shippingCost }}</span>
+            </div>
+            <div class="summary-total">
+                <span>Total:</span>
+                <span>{{ getTotal() }}</span>
+            </div>
+
+            <button class="btn-checkout" (click)="checkout()">Finalizar compra</button>
+        </div>
+    </div>
+</div>

@@ -5,11 +5,15 @@ import { Router } from '@angular/router';
   selector: 'app-header',
   imports: [],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
   constructor(private router: Router) {}
 
-  navigateToProfile() {this.router.navigate(['/profile'])  }
-
+  navigateToProfile() {
+    this.router.navigate(['/profile']);
+  }
+  navigateToCart() {
+    this.router.navigate(['/cart']);
+  }
 }

@@ -10,6 +10,16 @@
   z-index: 200;
 }
 
+.cart-link{
+
+  margin-right: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .profile-link {
   display: inline-block;
 }
