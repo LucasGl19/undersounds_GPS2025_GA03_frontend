@@ -1,0 +1,28 @@
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5rem;
+  background-color: #222;
+  color: white;
+  height: 80px;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: start;
+  justify-content: center;}
+
+.social-icon {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.social-icon:hover {
+  color: #1da1f2;
+}
+
