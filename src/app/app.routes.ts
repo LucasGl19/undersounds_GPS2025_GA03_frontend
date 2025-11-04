@@ -10,6 +10,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { HelpComponent } from './pages/help/help.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { RegisterComponent } from './pages/register/register.component';
 export const routes: Routes = [
   {
     path: '',
@@ -19,6 +20,7 @@ export const routes: Routes = [
       { path: 'artists', component: ArtistsComponent },
       { path: 'merchandising', component: MerchandisingComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'register', component: RegisterComponent },
       { path: 'home', component: EmptyComponent },
       { path: 'cart', component: CartComponent },
       { path: 'about', component: AboutComponent },

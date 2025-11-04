@@ -1,5 +1,22 @@
-<div class="profile-page">
-  <img [src]="user.image" alt="Foto de perfil" class="profile-photo" />
-  <h2>{{ user.name }}</h2>
-  <p>{{ user.email }}</p>
-</div>
+<ng-container *ngIf="loading(); else loaded">
+  <div class="profile-page">
+    <p class="profile-message">Cargando perfil…</p>
+  </div>
+</ng-container>
+
+<ng-template #loaded>
+  <ng-container *ngIf="user() as profile; else errorState">
+    <div class="profile-page">
+      <img src="assets/images/ui/user-avatar.svg" alt="Foto de perfil" class="profile-photo" />
+      <h2>{{ profile.name }}</h2>
+      <p>{{ profile.email }}</p>
+      <p class="profile-role">Rol: {{ profile.role }}</p>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #errorState>
+  <div class="profile-page">
+    <p class="profile-message">{{ error() ?? 'No se pudo cargar el perfil.' }}</p>
+  </div>
+</ng-template>

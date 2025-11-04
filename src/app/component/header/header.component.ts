@@ -16,4 +16,7 @@ export class HeaderComponent {
   navigateToCart() {
     this.router.navigate(['/cart']);
   }
+  navigateToRegister() {
+    this.router.navigate(['/register']);
+  }
 }
