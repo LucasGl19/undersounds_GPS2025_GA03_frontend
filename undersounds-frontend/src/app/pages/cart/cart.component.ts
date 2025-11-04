@@ -1,30 +1,25 @@
+type CartItem = {
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+};
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css'],
+  styleUrl: './cart.component.css',
 })
 export class CartComponent {
   constructor(private router: Router) {}
 
-  cartItems = [
-    {
-      name: 'Articulo 1',
-      price: 19.99,
-      quantity: 1,
-      image: 'assets/art1.jpg',
-    },
-    {
-      name: 'Articulo 2',
-      price: 9.99,
-      quantity: 2,
-      image: 'assets/art2.jpg',
-    },
-  ];
+  cartItems: CartItem[] = [];
 
   shippingCost = 4.99;
 
@@ -40,16 +35,16 @@ export class CartComponent {
     return (this.getSubtotal() + this.shippingCost).toFixed(2);
   }
 
-  increaseQuantity(item: any) {
+  increaseQuantity(item: CartItem) {
     item.quantity++;
   }
 
-  decreaseQuantity(item: any) {
+  decreaseQuantity(item: CartItem) {
     if (item.quantity > 1) item.quantity--;
     else this.removeFromCart(item);
   }
 
-  removeFromCart(item: any) {
+  removeFromCart(item: CartItem) {
     this.cartItems = this.cartItems.filter((i) => i !== item);
   }
 

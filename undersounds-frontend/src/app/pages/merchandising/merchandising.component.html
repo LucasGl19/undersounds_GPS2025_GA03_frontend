@@ -1,7 +1,22 @@
-<div class="merch-page">
-    <div class="merch-card" *ngFor="let m of articles">
-        <img [src]="m.image" alt="{{m.name}}"/>
-        <h3>{{m.name}} - {{m.price}}€</h3>
-    </div>
-</div>
+<section class="merch-page">
+  <header class="merch-page__header">
+    <h1>Merch exclusivo</h1>
+    <p>Apoya directamente a los artistas con ediciones limitadas y objetos únicos.</p>
+  </header>
+
+  <div class="merch-grid">
+    <article class="merch-card" *ngFor="let item of articles">
+      <img
+        [src]="item.image"
+        [alt]="item.name"
+        loading="lazy"
+      />
+      <div class="merch-card__body">
+        <h3>{{ item.name }}</h3>
+        <p class="merch-card__description">{{ item.description }}</p>
+        <span class="merch-card__price">{{ item.price }}</span>
+      </div>
+    </article>
+  </div>
+</section>
 

@@ -1,6 +1,32 @@
-<div class="songs-page">
-    <div class="song-card" *ngFor="let song of songs">
-        <img [src]="song.image" alt="{{song.title}}"/>
-        <h3>{{song.title}} - {{song.artist}}</h3>
-    </div>
-</div>
+<section class="songs-page">
+  <header class="songs-page__header">
+    <h1>Lanzamientos destacados</h1>
+    <p>
+      Una selección curada de nuevos álbumes, demos y joyas escondidas de la
+      comunidad independiente.
+    </p>
+  </header>
+
+  <div class="song-grid">
+    <article class="song-card" *ngFor="let song of songs">
+      <figure class="song-card__cover">
+        <img
+          [src]="song.image"
+          [alt]="'Portada de ' + song.title"
+          loading="lazy"
+        />
+      </figure>
+
+      <div class="song-card__body">
+        <h3>{{ song.title }}</h3>
+        <p class="song-card__artist">{{ song.artist }}</p>
+        <p class="song-card__description">{{ song.description }}</p>
+      </div>
+
+      <footer class="song-card__meta">
+        <span class="song-card__format">{{ song.format }}</span>
+        <span class="song-card__price">{{ song.price }}</span>
+      </footer>
+    </article>
+  </div>
+</section>

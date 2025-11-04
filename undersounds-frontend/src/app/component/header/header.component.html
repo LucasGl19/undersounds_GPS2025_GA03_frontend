@@ -1,19 +1,31 @@
-<header class="header">
-  <div class="logo">UnderSounds</div>
+<header class="header" role="banner">
+  <div class="header__inner">
+    <div class="header__branding">
+      <span class="logo" aria-label="UnderSounds">undersounds</span>
+      <span class="tagline">descubre música independiente</span>
+    </div>
 
-  <div class="search-bar">
-    <input type="text" placeholder="Search" />
-    <button><i class="fa fa-search"></i></button>
-  </div>
+    <div class="search-bar" role="search">
+      <input
+        type="search"
+        placeholder="Buscar artistas, álbumes y sellos"
+        aria-label="Buscar en UnderSounds"
+      />
+      <button type="button" aria-label="Ejecutar búsqueda">buscar</button>
+    </div>
 
-  <div class="header-right">
-    <a (click)="navigateToCart()" class="cart-link">
-      <span>Carrito</span>
-    </a>
-    <a (click)="navigateToProfile()" class="profile-link">
-      <img src="assets/usuario.svg" alt="Perfil" class="profile-icon" />
-    </a>
-
+    <div class="header__actions">
+      <button type="button" class="header-link" (click)="navigateToCart()">
+        <span class="header-link__label">carrito</span>
+      </button>
+      <button type="button" class="header-link" (click)="navigateToProfile()">
+        <img
+          src="assets/images/ui/user-avatar.svg"
+          alt="Ir al perfil"
+          class="profile-icon"
+        />
+      </button>
+    </div>
   </div>
 </header>
 

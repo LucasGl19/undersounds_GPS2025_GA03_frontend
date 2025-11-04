@@ -8,9 +8,9 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-    user = {
+  user = {
     name: 'Usuario Ejemplo',
     email: 'usuarioejemplo@undersound.com',
-    image: 'assets/usuario.png'
+    image: 'assets/images/ui/user-avatar.svg',
   };
 }
