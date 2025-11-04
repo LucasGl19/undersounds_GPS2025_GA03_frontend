@@ -40,11 +40,11 @@ export class RegisterComponent {
 
   readonly registerForm: FormGroup = this.fb.group(
     {
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      username: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirm: ['', [Validators.required]],
-      role: ['oyente', [Validators.required]],
+      role: ['listener', [Validators.required]],
     },
     { validators: this.passwordMatchValidator }
   );
@@ -58,8 +58,8 @@ export class RegisterComponent {
     (this.registerForm.get('confirm')?.touched || this.submitted())
   );
 
-  get name(): AbstractControl | null {
-    return this.registerForm.get('name');
+  get username(): AbstractControl | null {
+    return this.registerForm.get('username');
   }
 
   get email(): AbstractControl | null {

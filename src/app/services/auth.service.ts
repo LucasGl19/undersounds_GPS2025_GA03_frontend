@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface RegisterDto {
-  name: string;
+  username: string;
   email: string;
   password: string;
-  role: 'artista' | 'oyente';
+  role: 'artist' | 'listener';
 }
 
 export interface AuthTokens {

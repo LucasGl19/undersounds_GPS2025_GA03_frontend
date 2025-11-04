@@ -3,11 +3,11 @@
 
   <form [formGroup]="registerForm" (ngSubmit)="submit()" novalidate>
     <div class="form-field">
-      <label for="name">Nombre</label>
-      <input id="name" type="text" formControlName="name" />
-      <div class="error" *ngIf="name?.invalid && (name?.touched || submitted())">
-        <span *ngIf="name?.errors?.['required']">Requerido</span>
-        <span *ngIf="name?.errors?.['minlength']">Mínimo 2 caracteres</span>
+      <label for="username">Nombre</label>
+      <input id="username" type="text" formControlName="username" />
+      <div class="error" *ngIf="username?.invalid && (username?.touched || submitted())">
+        <span *ngIf="username?.errors?.['required']">Requerido</span>
+        <span *ngIf="username?.errors?.['minlength']">Mínimo 2 caracteres</span>
       </div>
     </div>
 
@@ -41,8 +41,8 @@
     <div class="form-field">
       <label for="role">Rol</label>
       <select id="role" formControlName="role">
-        <option value="artista">Artista</option>
-        <option value="oyente">Oyente</option>
+        <option value="artist">Artista</option>
+        <option value="listener">Oyente</option>
       </select>
       <div class="error" *ngIf="role?.invalid && (role?.touched || submitted())">
         <span>Requerido</span>
