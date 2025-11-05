@@ -10,6 +10,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { HelpComponent } from './pages/help/help.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { LoginComponent } from './pages/login/login.component';
 export const routes: Routes = [
   {
     path: '',
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'help', component: HelpComponent },
       { path: 'terms', component: TermsComponent },
       { path: 'privacy', component: PrivacyComponent },
+      { path: 'login', component: LoginComponent },
     ],
   },
 ];
