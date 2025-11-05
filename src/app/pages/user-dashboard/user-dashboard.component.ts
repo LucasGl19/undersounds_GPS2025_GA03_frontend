@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User, UserService } from '../../services/user.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 import { AuthService } from '../../services/auth.service';
@@ -19,7 +20,8 @@ export class UserDashboardComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -50,8 +52,24 @@ export class UserDashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.userService.deleteUser(userId).subscribe({
-          next: () => this.loadUsers(),
-          error: (err) => console.error('Error al eliminar:', err),
+          next: () => {
+            this.loadUsers();
+            this.snackBar.open('Usuario eliminado con éxito', 'Cerrar', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: ['snackbar-success'],
+            });
+          },
+          error: (err) => {
+            console.error('Error al eliminar:', err);
+            this.snackBar.open('Error al eliminar usuario', 'Cerrar', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: ['snackbar-error'],
+            });
+          },
         });
       }
     });

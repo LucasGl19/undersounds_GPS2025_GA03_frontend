@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { delay, Observable, of } from 'rxjs';
+import { delay, Observable, of, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export interface User {
@@ -54,8 +54,11 @@ export class UserService {
 
   deleteUser(userId: number): Observable<void> {
     // return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
-    if (this.userRole !== 'admin') return of(undefined).pipe(delay(300));
-
+    if (this.userRole !== 'admin') {
+      return throwError(
+        () => new Error('No tienes permisos para eliminar usuarios')
+      ).pipe(delay(300));
+    }
     const index = this.dummyUsers.findIndex((user) => user.id === userId);
     if (index !== -1) {
       this.dummyUsers.splice(index, 1);
