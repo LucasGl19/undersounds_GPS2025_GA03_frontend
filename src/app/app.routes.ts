@@ -10,7 +10,9 @@ import { AboutComponent } from './pages/about/about.component';
 import { HelpComponent } from './pages/help/help.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
+import { UserDashboardComponent } from './pages/user-dashboard/user-dashboard.component';
 export const routes: Routes = [
   {
     path: '',
@@ -20,6 +22,7 @@ export const routes: Routes = [
       { path: 'artists', component: ArtistsComponent },
       { path: 'merchandising', component: MerchandisingComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'register', component: RegisterComponent },
       { path: 'home', component: EmptyComponent },
       { path: 'cart', component: CartComponent },
       { path: 'about', component: AboutComponent },
@@ -27,6 +30,7 @@ export const routes: Routes = [
       { path: 'terms', component: TermsComponent },
       { path: 'privacy', component: PrivacyComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'admin/dashboard', component: UserDashboardComponent },
     ],
   },
 ];

@@ -1,22 +1,81 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+export interface RegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  role: 'artist' | 'listener';
+}
+
+export interface AuthTokens {
+  access: string;
+  refresh: string;
+}
+
+export interface AuthResponse {
+  user_id: number;
+  email: string;
+  role: string;
+  tokens: AuthTokens;
+}
+
+export interface UserProfile {
+  name: string;
+  email: string;
+  role: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private loggedIn = new BehaviorSubject<boolean>(
-    !!localStorage.getItem('token')
-  );
+  private loggedIn = new BehaviorSubject<boolean>(!!this.getAccessToken());
   isLoggedIn$ = this.loggedIn.asObservable();
+  private role = new BehaviorSubject<string | null>(null);
+  userRole$ = this.role.asObservable();
 
-  login(token: string) {
-    localStorage.setItem('token', token);
-    this.loggedIn.next(true);
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
+
+  register(dto: RegisterDto): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, dto);
   }
 
-  logout() {
-    localStorage.removeItem('token');
+  login(emailOrUsername: string, password: string): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/auth/login`, {
+        emailOrUsername,
+        password,
+      })
+      .pipe(
+        tap((response) => {
+          this.role.next(response.role);
+          localStorage.setItem('role', response.role);
+          this.storeTokens(response.tokens);
+          this.loggedIn.next(true);
+        })
+      );
+  }
+
+  me(): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.apiUrl}/me`);
+  }
+
+  storeTokens(tokens: AuthTokens): void {
+    localStorage.setItem('access', tokens.access);
+    localStorage.setItem('refresh', tokens.refresh);
+  }
+
+  clearTokens(): void {
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
+    localStorage.removeItem('role');
+    this.role.next(null);
     this.loggedIn.next(false);
+  }
+
+  getAccessToken(): string | null {
+    return localStorage.getItem('access');
   }
 }

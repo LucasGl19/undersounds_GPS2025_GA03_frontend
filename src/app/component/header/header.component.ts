@@ -11,13 +11,17 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  isLoggedIn = false;
+  isLoggedIn: boolean = false;
+  userRole: string | null = null;
 
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
+    });
+    this.authService.userRole$.subscribe((role) => {
+      this.userRole = role;
     });
   }
 
@@ -37,7 +41,14 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.clearTokens();
     this.router.navigate(['/']);
+  }
+  navigateToRegister() {
+    this.router.navigate(['/register']);
+  }
+
+  navigateToUserDashboard() {
+    this.router.navigate(['/admin/dashboard']);
   }
 }

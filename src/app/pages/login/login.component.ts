@@ -10,23 +10,23 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(form: any) {
     if (!form.valid) return;
 
-    const { email, password } = form.value;
-    console.log('Email:', email);
+    const { emailOrUsername, password } = form.value;
+    console.log('Email or Username:', emailOrUsername);
     console.log('Password:', password);
 
-    // Implementar lógica de autenticación
-    
-
-    // Simular un token recibido del servidor
-
-    // Actualizar el estado de autenticación
-    this.authService.login('dummy-token');
-    this.router.navigate(['/']);
+    this.authService.login(emailOrUsername, password).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+      },
+    });
   }
 }

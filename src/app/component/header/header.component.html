@@ -13,6 +13,10 @@
     </div>
 
     <div *ngIf="isLoggedIn" class="header__actions">
+      <button type="button" *ngIf="userRole === 'admin'" class="header-link" (click)="navigateToUserDashboard()">
+        <mat-icon>dashboard</mat-icon>
+        Usuarios
+      </button>
       <button type="button" class="header-link" (click)="navigateToCart()">
         <mat-icon>shopping_cart</mat-icon>
       </button>
@@ -24,6 +28,9 @@
       </button>
     </div>
     <div *ngIf="!isLoggedIn" class="header__actions">
+      <button type="button" class="header-link" (click)="navigateToRegister()">
+        <span class="header-link__label">crear cuenta</span>
+      </button>
       <button type="button" class="header-link" (click)="navigateToLogin()">
         <span class="header-link__label">Iniciar sesión</span>
       </button>
