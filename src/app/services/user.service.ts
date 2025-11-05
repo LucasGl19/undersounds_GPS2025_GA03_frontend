@@ -65,4 +65,10 @@ export class UserService {
     }
     return of(undefined).pipe(delay(300));
   }
+
+  deleteSelfAccount(): Observable<void> {
+
+    // Cambiar por el endpoint real (no existe en el backend)
+    return of(undefined).pipe(delay(300));
+  }
 }
