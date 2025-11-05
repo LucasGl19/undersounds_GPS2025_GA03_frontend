@@ -3,7 +3,7 @@ import { User, UserService } from '../../services/user.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
 import { AuthService } from '../../services/auth.service';
 
 @Component({

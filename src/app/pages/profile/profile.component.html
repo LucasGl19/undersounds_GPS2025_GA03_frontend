@@ -6,12 +6,19 @@
 
 <ng-template #loaded>
   <ng-container *ngIf="user() as profile; else errorState">
-    <div class="profile-page">
-      <img src="assets/images/ui/user-avatar.svg" alt="Foto de perfil" class="profile-photo" />
-      <h2>{{ profile.name }}</h2>
-      <p>{{ profile.email }}</p>
-      <p class="profile-role">Rol: {{ profile.role }}</p>
-    </div>
+    <section>
+      <div class="profile-actions">
+        <button>
+          Borrar cuenta
+        </button>
+      </div>
+      <div class="profile-page">
+        <img src="assets/images/ui/user-avatar.svg" alt="Foto de perfil" class="profile-photo" />
+        <h2>{{ profile.name }}</h2>
+        <p>{{ profile.email }}</p>
+        <p class="profile-role">Rol: {{ profile.role }}</p>
+      </div>
+    </section>
   </ng-container>
 </ng-template>
 
