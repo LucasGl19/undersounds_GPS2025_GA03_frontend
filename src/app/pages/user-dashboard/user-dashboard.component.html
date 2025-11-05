@@ -1,22 +1,24 @@
-<table *ngIf="!loading && !error" class="">
-    <thead class="bg-gray-100">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Rol</th>
-            <th>Bio</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let user of users">
-            <td>{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.role }}</td>
-            <td>{{ user.bio || '—' }}</td>
-            <td>
-                <button class="">Eliminar</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<section>
+    <table *ngIf="!loading && !error" class="">
+        <thead class="bg-gray-100">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Bio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.bio || '—' }}</td>
+                <td>
+                    <button (click)="onDelete(user.id, user.username)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
