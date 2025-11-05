@@ -1,0 +1,25 @@
+<section class="artists-page">
+  <header class="artists-page__header">
+    <h1>Artistas recomendados</h1>
+    <p>
+      Sellos y proyectos que están marcando tendencia dentro de la escena
+      independiente.
+    </p>
+  </header>
+
+  <div class="artist-grid">
+    <article class="artist-card" *ngFor="let artist of artists">
+      <img
+        [src]="artist.image"
+        [alt]="'Retrato de ' + artist.name"
+        loading="lazy"
+      />
+      <div class="artist-card__content">
+        <h3>{{ artist.name }}</h3>
+        <p class="artist-card__genre">{{ artist.genre }}</p>
+        <p class="artist-card__bio">{{ artist.bio }}</p>
+      </div>
+    </article>
+  </div>
+</section>
+

@@ -1,0 +1,70 @@
+.site-footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--surface-primary);
+}
+
+.site-footer__inner {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer__logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: lowercase;
+  color: var(--text-strong);
+}
+
+.footer__tagline {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.footer__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer__title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover,
+.footer-link:focus-visible {
+  color: var(--accent-stronger);
+}
+
+@media (max-width: 640px) {
+  .site-footer__inner {
+    padding: 2rem 1.5rem 2.5rem;
+  }
+}

@@ -1,0 +1,73 @@
+<section class="cart-page">
+  <header class="cart-header">
+    <h1>Tu carrito</h1>
+    <p>
+      Los lanzamientos y artículos que añadas aparecerán aquí para que apoyes
+      directamente a los artistas.
+    </p>
+  </header>
+
+  <div class="empty-cart" *ngIf="cartItems.length === 0">
+    <div class="empty-cart__illustration" aria-hidden="true"></div>
+    <h2>Tu carrito está vacío</h2>
+    <p>
+      Explora el catálogo de UnderSounds y añade tus descubrimientos favoritos.
+    </p>
+    <div class="cart-links-container">
+      <button type="button" (click)="navigateToSongs()" class="btn-primary">
+        Ver canciones
+      </button>
+      <button type="button" (click)="navigateToMerch()" class="btn-secondary">
+        Ver merch
+      </button>
+    </div>
+  </div>
+
+  <div class="cart-content" *ngIf="cartItems.length > 0">
+    <div class="cart-items">
+      <article class="cart-item" *ngFor="let item of cartItems">
+        <img [src]="item.image" [alt]="item.name" class="item-image" />
+
+        <div class="item-info">
+          <h3>{{ item.name }}</h3>
+          <p class="item-price">{{ item.price | number: '1.2-2' }} €</p>
+
+          <div class="item-quantity" aria-label="Cantidad">
+            <button type="button" (click)="decreaseQuantity(item)">−</button>
+            <span>{{ item.quantity }}</span>
+            <button type="button" (click)="increaseQuantity(item)">+</button>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="remove-btn"
+          (click)="removeFromCart(item)"
+          [attr.aria-label]="'Eliminar ' + item.name"
+        >
+          ✕
+        </button>
+      </article>
+    </div>
+
+    <aside class="cart-summary">
+      <h2>Resumen</h2>
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span>{{ getSubtotal() | number: '1.2-2' }} €</span>
+      </div>
+      <div class="summary-line">
+        <span>Envío</span>
+        <span>{{ shippingCost | number: '1.2-2' }} €</span>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span>{{ getTotal() }} €</span>
+      </div>
+
+      <button type="button" class="btn-checkout" (click)="checkout()">
+        Finalizar compra
+      </button>
+    </aside>
+  </div>
+</section>
