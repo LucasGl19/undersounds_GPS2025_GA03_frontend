@@ -54,6 +54,8 @@ export class ProfileComponent implements OnInit {
       if (result) {
         // Aquí va tu lógica de borrado (dummy o real)
         console.log('Cuenta eliminada');
+        this.authService.clearTokens();
+        this.router.navigate(['/login']);
       }
     });
   }
