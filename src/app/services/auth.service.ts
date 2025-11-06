@@ -58,4 +58,8 @@ export class AuthService {
   getAccessToken(): string | null {
     return localStorage.getItem('access');
   }
+
+  getUserRole(): string | null {
+    return localStorage.getItem('role');
+  }
 }

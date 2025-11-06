@@ -1,0 +1,62 @@
+.uploadsong-page {
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ededed;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.uploadsong-page h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field select {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #7a5cff;
+  box-shadow: 0 0 0 3px rgba(122, 92, 255, 0.2);
+}
+
+
+.upload-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background-color: #00b894; 
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 184, 148, 0.3);
+}
+
+.upload-btn:hover {
+  background-color: #019f7a;
+  transform: translateY(-2px);
+}
+
+.upload-btn:active {
+  transform: translateY(0px);
+}

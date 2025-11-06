@@ -21,6 +21,12 @@
       <button type="button" class="header-link" (click)="navigateToCart()">
         <span class="header-link__label">carrito</span>
       </button>
+      <button type="button" class="header-link" (click)="navigateToUploadSong()">
+        <span *ngIf="role === 'artist'" class="header-link__label"> subir canción</span>
+      </button>
+            <button type="button" class="header-link" (click)="navigateToUploadAlbum()">
+        <span  *ngIf="role === 'artist'" class="header-link__label"> subir álbum</span>
+      </button>
       <button type="button" class="header-link" (click)="navigateToProfile()">
         <img
           src="assets/images/ui/user-avatar.svg"

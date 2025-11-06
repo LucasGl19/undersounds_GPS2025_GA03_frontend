@@ -11,6 +11,8 @@ import { HelpComponent } from './pages/help/help.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { UploadSongComponent } from './upload-song/upload-song.component';
+import { UploadAlbumComponent } from './upload-album/upload-album.component';
 export const routes: Routes = [
   {
     path: '',
@@ -27,6 +29,8 @@ export const routes: Routes = [
       { path: 'help', component: HelpComponent },
       { path: 'terms', component: TermsComponent },
       { path: 'privacy', component: PrivacyComponent },
+      { path: 'upload-song', component: UploadSongComponent },
+      {path: 'upload-album', component: UploadAlbumComponent}
     ],
   },
 ];
