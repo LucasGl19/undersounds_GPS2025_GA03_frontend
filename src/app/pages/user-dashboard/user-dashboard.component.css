@@ -1,38 +1,54 @@
-section{
+.user-dashboard {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem;
+    gap: 1rem;
 }
 
-table {
-    width: 80%;
+.user-dashboard__status {
+    font-size: 1rem;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.user-dashboard__status--error {
+    color: #c0392b;
+}
+
+.user-dashboard__table {
+    width: 100%;
+    max-width: 960px;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-th,
-td {
+.user-dashboard__table th,
+.user-dashboard__table td {
     border: 1px solid #ddd;
     text-align: left;
     padding: 12px;
 }
 
-th {
+.user-dashboard__table th {
     background-color: #f4f4f4;
-    font-weight: bold;
+    font-weight: 600;
 }
 
-tr:nth-child(even) {
+.user-dashboard__table tr:nth-child(even) {
     background-color: #fafafa;
 }
 
-tr:hover {
+.user-dashboard__table tr:hover {
     background-color: #f1f1f1;
 }
 
-button {
+.user-dashboard button {
     background: none;
     border: none;
     color: #c0392b;
@@ -40,46 +56,46 @@ button {
     font-weight: 500;
 }
 
-button:hover {
+.user-dashboard button:hover {
     text-decoration: underline;
 }
 
 @media (max-width: 768px) {
 
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
+    .user-dashboard__table,
+    .user-dashboard__table thead,
+    .user-dashboard__table tbody,
+    .user-dashboard__table th,
+    .user-dashboard__table td,
+    .user-dashboard__table tr {
         display: block;
     }
 
-    tr {
+    .user-dashboard__table tr {
         margin-bottom: 1rem;
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 10px;
     }
 
-    th {
+    .user-dashboard__table th {
         display: none;
     }
 
-    td {
+    .user-dashboard__table td {
         display: flex;
         justify-content: space-between;
         border: none;
         border-bottom: 1px solid #eee;
     }
 
-    td:last-child {
+    .user-dashboard__table td:last-child {
         border-bottom: none;
     }
 
-    td::before {
+    .user-dashboard__table td::before {
         content: attr(data-label);
-        font-weight: bold;
+        font-weight: 600;
         color: #555;
     }
 }

@@ -1,24 +1,40 @@
-<section>
-    <table *ngIf="!loading && !error" class="">
+<section class="user-dashboard">
+    <div *ngIf="loading" class="user-dashboard__status">Cargando usuarios...</div>
+
+    <div *ngIf="!loading && error" class="user-dashboard__status user-dashboard__status--error">
+        {{ error }}
+    </div>
+
+    <table *ngIf="!loading && !error && users.length" class="user-dashboard__table">
         <thead class="bg-gray-100">
             <tr>
                 <th>ID</th>
+                <th>Usuario</th>
                 <th>Nombre</th>
+                <th>Email</th>
                 <th>Rol</th>
                 <th>Bio</th>
+                <th>Creado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let user of users">
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.role }}</td>
-                <td>{{ user.bio || '—' }}</td>
-                <td>
+                <td data-label="ID">{{ user.id }}</td>
+                <td data-label="Usuario">{{ user.username }}</td>
+                <td data-label="Nombre">{{ user.name || '—' }}</td>
+                <td data-label="Email">{{ user.email }}</td>
+                <td data-label="Rol">{{ user.role }}</td>
+                <td data-label="Bio">{{ user.bio || '—' }}</td>
+                <td data-label="Creado">{{ user.createdAt | date: 'short' }}</td>
+                <td data-label="Acciones">
                     <button (click)="onDelete(user.id, user.username)">Eliminar</button>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <div *ngIf="!loading && !error && !users.length" class="user-dashboard__status">
+        No hay usuarios para mostrar.
+    </div>
 </section>
