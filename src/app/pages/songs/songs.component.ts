@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 type SongCard = {
   title: string;
   artist: string;
@@ -12,11 +13,12 @@ type SongCard = {
 @Component({
   selector: 'app-songs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './songs.component.html',
   styleUrl: './songs.component.css',
 })
 export class SongsComponent {
+  searchQuery: string = '';
   readonly songs: SongCard[] = [
     {
       title: 'Ocean Echoes',
@@ -67,5 +69,21 @@ export class SongsComponent {
       image: 'assets/images/covers/cover-club.svg',
     },
   ];
+
+  constructor(){}
+
+  searchSongs(): void {
+    const query = this.searchQuery.toLowerCase().trim();
+    if(!query) return;
+    // this.filteredSongs = this.songs.filter(song =>
+    //   song.title.toLowerCase().includes(query) ||
+    //   song.artist.toLowerCase().includes(query) ||
+    //   song.description.toLowerCase().includes(query)
+    // );
+
+    // Hacer aquí la búsqueda en el SongService
+
+    console.log('Buscando canciones con la consulta:', query);
+  }
 }
 
