@@ -1,0 +1,18 @@
+<section class="song-player-page">
+  <article class="song-card song-card--large">
+    <figure class="song-card__cover song-card__cover--large">
+      <img [src]="song?.image" [alt]="song?.title" />
+    </figure>
+
+    <div class="song-card__body">
+      <h1>{{ song?.title }}</h1>
+      <p class="song-card__artist">{{ song?.artist }}</p>
+
+      <audio controls class="audio-player">
+        <source [src]="song?.audio" type="audio/mpeg">
+      </audio>
+
+      <p class="song-card__description">{{ song?.description }}</p>
+    </div>
+  </article>
+</section>
