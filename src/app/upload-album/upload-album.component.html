@@ -1,79 +1,84 @@
-<div class="uploadalbum-layout">
-        <div class="uploadalbum-page">
-            <h1>¡Sube aquí tu álbum!</h1>
-            <div class="form-field">
-            <label for="title">Título</label>
-            <input id="title" type="text" placeholder="Escribe aquí el nombre de tu álbum" formControlName="title" />
-            </div>
+<form class="uploadalbum-layout" [formGroup]="form" (ngSubmit)="uploadAlbum()">
+  <div class="uploadalbum-page">
+    <h1>¡Sube aquí tu álbum!</h1>
 
-            <div class="form-field">
-            <label for="description">Descripción</label>
-            <input id="description" type="text" placeholder="Añade aquí una breve descripción de tu álbum" formControlName="description" />
-            </div>
-
-            <div class="form-field">
-                <label for="date">Fecha de lanzamiento</label>
-                <input id="date" type="date" formControlName="date" /> 
-            </div>
-            <div class="form-field">
-                <label for="price">Precio</label>
-                <input id="price" type="number" placeholder="Escribe aquí el valor de tu álbum" formControlName="price" />
-            </div>
-            <div class="form-field">
-            <label for="currency">Divisa</label>
-                <select id="currency" formControlName="currency">
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    <option value="MXN">MXN</option>
-                    <option value="JPY">JPY</option>
-                    <option value="AUD">AUD</option>
-                    <option value="CAD">CAD</option>
-                    <option value="CHF">CHF</option>
-                </select> 
-            </div>
-
-            <div class="form-field">
-                <label for="genre">Género</label>
-                <select id="genre" formatControlName="genre">
-                    <option value="rock">Rock</option>
-                    <option value="pop">Pop</option>
-                    <option value="hiphop">Hip Hop</option>
-                    <option value="jazz">Jazz</option>
-                    <option value="classical">Clásica</option>
-                    <option value="electronic">Electrónica</option>
-                    <option value="folk">Folk</option>
-                    <option value="reggae">Reggae</option>
-                    <option value="metal">Metal</option>
-                    <option value="other">Otro</option>
-                </select>
-            </div>
-
-            <div class="form-field">
-            <label for="thumbnail">URL de la portada</label>
-            <input id="thumbnail" type="text" placeholder="Escribe aquí la URL de la portada de tu álbum" formControlName="thumbnail" />
-            </div>
-
-            <button type="submit" class="upload-btn" (click)="uploadAlbumMessage()"> Subir Álbum</button>
-        </div>
-
-          <div class="songs-album-container">
-            <h2>Agregar canciones al álbum</h2>
-              <div id="songInputsContainer">
-                <div class="form-field">
-                  <label>Nombre de la canción</label>
-                  <input type="text" placeholder="Ej: Luna de medianoche" class="song-input"/>
-                </div>
-          </div>
-          
-          <div class="button-container">
-            <button type="button" class="upload-btn" (click)="addSong()">Añadir canción</button>
-            <button type="button" class="delete-btn" (click)="removeLastSongInput()">Eliminar canción</button>
-          </div>
-        </div>
-
+    <div class="form-field">
+      <label for="title">Título</label>
+      <input id="title" type="text" formControlName="title" />
     </div>
 
+    <div class="form-field">
+      <label for="description">Descripción</label>
+      <input id="description" type="text" formControlName="description" />
+    </div>
 
+    <div class="form-field">
+      <label for="date">Fecha de lanzamiento</label>
+      <input id="date" type="date" formControlName="date" />
+    </div>
 
-            
+    <div class="form-field">
+      <label for="price">Precio</label>
+      <input id="price" type="number" formControlName="price" />
+    </div>
+
+    <div class="form-field">
+      <label for="currency">Divisa</label>
+      <select id="currency" formControlName="currency">
+        <option value="USD">USD</option><option value="EUR">EUR</option>
+        <option value="GBP">GBP</option><option value="MXN">MXN</option>
+        <option value="JPY">JPY</option><option value="AUD">AUD</option>
+        <option value="CAD">CAD</option><option value="CHF">CHF</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="genre">Género</label>
+      <!-- OJO: formControlName (no 'formatControlName') -->
+      <select id="genre" formControlName="genre">
+        <option value="rock">Rock</option><option value="pop">Pop</option>
+        <option value="hiphop">Hip Hop</option><option value="jazz">Jazz</option>
+        <option value="classical">Clásica</option><option value="electronic">Electrónica</option>
+        <option value="folk">Folk</option><option value="reggae">Reggae</option>
+        <option value="metal">Metal</option><option value="other">Otro</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="tags">Tags (coma)</label>
+      <input id="tags" type="text" formControlName="tags" />
+    </div>
+
+    <div class="form-field">
+      <label for="thumbnail">URL de la portada</label>
+      <input id="thumbnail" type="text" formControlName="thumbnail" />
+    </div>
+
+  <div class="form-field">
+    <label for="artistId">ID del artista</label>
+    <input id="artistId" type="text" placeholder="pega aquí el UUID del artista" formControlName="artistId" />
+  </div>
+
+  <div class="form-field">
+    <label for="labelId">ID del sello (label)</label>
+    <input id="labelId" type="text" formControlName="labelId" />
+  </div>
+
+    <button type="submit" class="upload-btn">Subir Álbum</button>
+  </div>
+
+  <!-- MISMA <form> -->
+  <div class="songs-album-container">
+    <h2>Agregar canciones al álbum</h2>
+    <div formArrayName="songs" id="songInputsContainer">
+      <div class="form-field" *ngFor="let ctrl of songsArray.controls; index as i">
+        <label>Nombre de la canción</label>
+        <input type="text" class="song-input" [formControlName]="i" />
+      </div>
+    </div>
+    <div class="button-container">
+      <button type="button" class="upload-btn" (click)="addSong()">Añadir canción</button>
+      <button type="button" class="delete-btn" (click)="removeLastSongInput()">Eliminar canción</button>
+    </div>
+  </div>
+</form>
