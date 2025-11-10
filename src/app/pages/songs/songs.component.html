@@ -8,7 +8,7 @@
   </header>
 
   <div class="song-grid">
-    <article class="song-card" *ngFor="let song of songs">
+    <article class="song-card" *ngFor="let song of songs" (click)="navigateToSongPlayer(song.id)">
       <figure class="song-card__cover">
         <img
           [src]="song.image"

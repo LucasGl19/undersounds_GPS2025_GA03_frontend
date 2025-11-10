@@ -1,0 +1,28 @@
+.song-player-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+  max-height: 800px;
+}
+
+.song-card--large {
+  max-width: 500px;
+  width: 90%;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  padding: 2rem;
+}
+
+.song-card__cover--large img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.audio-player {
+  width: 100%;
+  margin: 1.5rem 0;
+  cursor: pointer;
+}
