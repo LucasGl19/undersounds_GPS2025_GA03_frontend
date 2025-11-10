@@ -11,6 +11,8 @@ import { HelpComponent } from './pages/help/help.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
+import { UserDashboardComponent } from './pages/user-dashboard/user-dashboard.component';
 export const routes: Routes = [
   {
     path: '',
@@ -27,6 +29,8 @@ export const routes: Routes = [
       { path: 'help', component: HelpComponent },
       { path: 'terms', component: TermsComponent },
       { path: 'privacy', component: PrivacyComponent },
+      { path: 'login', component: LoginComponent },
+      { path: 'admin/dashboard', component: UserDashboardComponent },
     ],
   },
 ];

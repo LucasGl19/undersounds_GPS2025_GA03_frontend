@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface RegisterDto {
@@ -30,6 +30,11 @@ export interface UserProfile {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private loggedIn = new BehaviorSubject<boolean>(!!this.getAccessToken());
+  isLoggedIn$ = this.loggedIn.asObservable();
+  private role = new BehaviorSubject<string | null>(null);
+  userRole$ = this.role.asObservable();
+
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 
@@ -37,8 +42,20 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, dto);
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { email, password });
+  login(emailOrUsername: string, password: string): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/auth/login`, {
+        emailOrUsername,
+        password,
+      })
+      .pipe(
+        tap((response) => {
+          this.role.next(response.role);
+          localStorage.setItem('role', response.role);
+          this.storeTokens(response.tokens);
+          this.loggedIn.next(true);
+        })
+      );
   }
 
   me(): Observable<UserProfile> {
@@ -53,9 +70,15 @@ export class AuthService {
   clearTokens(): void {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    localStorage.removeItem('role');
+    this.role.next(null);
+    this.loggedIn.next(false);
   }
 
   getAccessToken(): string | null {
     return localStorage.getItem('access');
+  }
+  getUserRole(): string | null {
+    return localStorage.getItem('role');
   }
 }
