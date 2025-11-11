@@ -14,6 +14,9 @@ export class SongsService {
       price: '7 €',
       image: 'assets/images/covers/cover-ambient.svg',
       audio: 'assets/audio/ocean_echoes.mp3',
+      durationSec: 320,
+      createdAt: '15/05/2022',
+      
     },
     {
       id: 2,
@@ -24,6 +27,8 @@ export class SongsService {
       price: '11 €',
       image: 'assets/images/covers/cover-synth.svg',
       audio: 'assets/audio/noches_de_neon.mp3',
+      durationSec: 285,
+      createdAt: '08/09/2023',
     },
     {
       id: 3,
@@ -34,6 +39,8 @@ export class SongsService {
       price: 'Nombre tu precio',
       image: 'assets/images/covers/cover-lofi.svg',
       audio: 'assets/audio/cafe_de_medianoche.mp3',
+      durationSec: 240,
+      createdAt: '12/01/2023',
     },
     {
       id: 4,
@@ -44,6 +51,8 @@ export class SongsService {
       price: '18 €',
       image: 'assets/images/covers/cover-dream.svg',
       audio: 'assets/audio/suenos_en_super8.mp3',
+      durationSec: 360,
+      createdAt: '05/06/2022',
     },
     {
       id: 5,
@@ -54,6 +63,8 @@ export class SongsService {
       price: '12 €',
       image: 'assets/images/covers/cover-sunrise.svg',
       audio: 'assets/audio/luz_primera.mp3',
+      durationSec: 275,
+      createdAt: '22/11/2020',
     },
     {
       id: 6,
@@ -64,6 +75,8 @@ export class SongsService {
       price: '9 €',
       image: 'assets/images/covers/cover-club.svg',
       audio: 'assets/audio/ritmo_subterraneo.mp3',
+      durationSec: 310,
+      createdAt: '30/03/2022',
     },
   ];
 

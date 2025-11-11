@@ -7,4 +7,6 @@ export interface SongCard {
   price: string;
   image: string;
   audio: string;
+  durationSec: number;
+  createdAt: string
 }

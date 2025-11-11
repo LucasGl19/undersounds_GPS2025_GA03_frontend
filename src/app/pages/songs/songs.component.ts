@@ -13,6 +13,7 @@ import { SongsService } from '../../services/songs.service';
 })
 export class SongsComponent implements OnInit {
   songs: SongCard[] = [];
+  selectedSort: 'title' | 'durationSec' | 'createdAt' | null = null;
   constructor(private songService: SongsService, private router: Router) {}
 
   navigateToSongPlayer(id: number) {
@@ -22,5 +23,30 @@ export class SongsComponent implements OnInit {
   ngOnInit(): void {
     this.songs = this.songService.getSongs();
   }
+
+  sortBy(criteria: 'title' | 'durationSec' | 'createdAt') {
+  if (this.selectedSort === criteria) {
+    this.selectedSort = null;
+    this.songs = this.songService.getSongs(); 
+    return;
+  }
+
+  this.selectedSort = criteria;
+
+  this.songs = [...this.songs].sort((a, b) => {
+    if (criteria === 'title') {
+      return a.title.localeCompare(b.title);
+    }
+    if (criteria === 'durationSec') {
+      return (a.durationSec ?? 0) - (b.durationSec ?? 0);
+    }
+    if (criteria === 'createdAt') {
+      return new Date(a.createdAt ?? 0).getTime() -
+             new Date(b.createdAt ?? 0).getTime();
+    }
+    return 0;
+  });
+}
+
 }
 
