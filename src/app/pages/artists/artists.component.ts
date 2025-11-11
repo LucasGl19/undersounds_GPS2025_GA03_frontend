@@ -1,39 +1,80 @@
-type ArtistCard = {
-  name: string;
-  genre: string;
-  bio: string;
-  image: string;
-};
-
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Artist } from '../../models/artist.model';
+import { ArtistsService } from '../../services/artists.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-artists',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './artists.component.html',
   styleUrl: './artists.component.css',
 })
-export class ArtistsComponent {
-  readonly artists: ArtistCard[] = [
-    {
-      name: 'Luna Waves',
-      genre: 'Ambient / Dreampop',
-      bio: 'Paisajes sonoros grabados en analógico con un enfoque cinematográfico y delicado.',
-      image: 'assets/images/artists/artist-1.svg',
-    },
-    {
-      name: 'Club Prisma',
-      genre: 'Synthwave',
-      bio: 'Productor barcelonés que mezcla ritmos retro con arreglos modernos para la pista.',
-      image: 'assets/images/artists/artist-2.svg',
-    },
-    {
-      name: 'Valle Naciente',
-      genre: 'Folk experimental',
-      bio: 'Colectivo que trabaja con instrumentos tradicionales y capas orquestales.',
-      image: 'assets/images/artists/artist-3.svg',
-    },
-  ];
+export class ArtistsComponent implements OnInit {
+  artists: Artist[] = [];
+  selectedSort: 'name' | null = null;
+  selectedGenre: string | null = null;
+  selectedCountry: string | null = null;
+  genres: string[] = [];
+  countries: string[] = [];
+  showFilters = false;
+
+  constructor(private artistsService: ArtistsService) {}
+
+  ngOnInit(): void {
+    this.artists = this.artistsService.getArtists();
+
+    this.genres = Array.from(new Set(this.artists.map(a => a.genre))).sort();
+    this.countries = Array.from(new Set(this.artists.map(a => a.nationality))).sort();
+  }
+  
+  sortByName(criteria: 'name') {
+    if(this.selectedSort === criteria) {
+      this.selectedSort = null;
+      this.artists = this.artistsService.getArtists();
+      return;
+    }
+
+    this.selectedSort = criteria;
+
+    this.artists = [...this.artists].sort((a, b) => {
+      if(criteria === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      return 0;
+    });
+  }
+
+  filterByGenre(): void {
+    const allArtists = this.artistsService.getArtists();
+
+    if (!this.selectedGenre) {
+      this.artists = allArtists;
+      return;
+    }
+    this.artists = allArtists.filter(a => a.genre === this.selectedGenre);
+  }
+
+  filterByCountry(): void {
+    const allArtists = this.artistsService.getArtists();
+    if (!this.selectedCountry) {
+      this.artists = allArtists;
+      return;
+    }
+    this.artists = allArtists.filter(a => a.nationality === this.selectedCountry)
+  }
+  
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
+  applyFilters(): void {
+    const allArtists = this.artistsService.getArtists();
+    this.artists = allArtists.filter(a =>
+      (!this.selectedGenre || a.genre === this.selectedGenre) &&
+      (!this.selectedCountry || a.nationality === this.selectedCountry)
+    );
+  } 
+
 }
