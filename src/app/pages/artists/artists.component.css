@@ -72,6 +72,61 @@
   color: var(--accent-stronger);
 }
 
+.search-elements-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.sort-tags {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.sort-tags button {
+  border: 1px solid #ccc;
+  background: #dbdbdb;
+  padding: 8px 14px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.sort-tags button:hover {
+  background: #3c3c3c;
+  color: white;
+  border-color: #3c3c3c;
+}
+
+.sort-tags button.active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+
+.filter-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 60px;
+  width: 60px;
+}
+
+.filter-dropdown {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+
 .artist-card__bio {
   margin: 0;
   color: var(--text-muted);
