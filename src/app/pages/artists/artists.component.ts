@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ArtistsComponent implements OnInit {
   artists: Artist[] = [];
-  selectedSort: 'name' | null = null;
+  selectedSort: 'name' | 'createdAt' | null = null;
   selectedGenre: string | null = null;
   selectedCountry: string | null = null;
   genres: string[] = [];
@@ -29,23 +29,6 @@ export class ArtistsComponent implements OnInit {
     this.countries = Array.from(new Set(this.artists.map(a => a.nationality))).sort();
   }
   
-  sortByName(criteria: 'name') {
-    if(this.selectedSort === criteria) {
-      this.selectedSort = null;
-      this.artists = this.artistsService.getArtists();
-      return;
-    }
-
-    this.selectedSort = criteria;
-
-    this.artists = [...this.artists].sort((a, b) => {
-      if(criteria === 'name') {
-        return a.name.localeCompare(b.name);
-      }
-      return 0;
-    });
-  }
-
   filterByGenre(): void {
     const allArtists = this.artistsService.getArtists();
 
@@ -75,6 +58,26 @@ export class ArtistsComponent implements OnInit {
       (!this.selectedGenre || a.genre === this.selectedGenre) &&
       (!this.selectedCountry || a.nationality === this.selectedCountry)
     );
-  } 
+  }
+  
+  sortBy(criteria: 'name' | 'createdAt' | null) {
+    if(this.selectedSort === criteria) {
+      this.selectedSort = null;
+      this.artists = this.artistsService.getArtists();
+      return;
+    }
+
+    this.selectedSort = criteria;
+
+    this.artists = [...this.artists].sort((a, b) => {
+      if(criteria === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      if(criteria === 'createdAt') {
+        return a.createdAt.localeCompare(b.createdAt);
+      }
+      return 0;
+    });
+  }
 
 }

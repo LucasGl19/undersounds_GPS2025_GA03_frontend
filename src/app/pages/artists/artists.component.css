@@ -72,10 +72,17 @@
   color: var(--accent-stronger);
 }
 
+.search-elements-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
 .sort-tags {
   margin-top: 1.2rem;
   display: flex;
   gap: 20px;
+  align-items: center;
 }
 
 .sort-tags button {

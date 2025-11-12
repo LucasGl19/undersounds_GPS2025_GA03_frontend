@@ -4,4 +4,5 @@ export interface Artist {
   bio: string;
   image: string;
   nationality: string;
+  createdAt: string;
 }
