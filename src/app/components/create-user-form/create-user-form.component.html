@@ -1,0 +1,90 @@
+<div class="create-user-container">
+  <button 
+    class="toggle-button" 
+    (click)="toggleForm()"
+    type="button">
+    {{ showForm ? 'Cancelar' : 'Crear Nuevo Usuario' }}
+  </button>
+
+  <mat-card *ngIf="showForm" class="create-user-form-card">
+    <mat-card-content>
+      <h2>Crear Nuevo Usuario</h2>
+      <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Nombre de usuario</mat-label>
+          <input 
+            matInput 
+            formControlName="username" 
+            placeholder="Ingrese nombre de usuario"
+            required>
+          <mat-error *ngIf="createUserForm.get('username')?.hasError('required')">
+            El nombre de usuario es obligatorio
+          </mat-error>
+          <mat-error *ngIf="createUserForm.get('username')?.hasError('minlength')">
+            Mínimo 3 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput 
+            type="email"
+            formControlName="email" 
+            placeholder="usuario@ejemplo.com"
+            required>
+          <mat-error *ngIf="createUserForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </mat-error>
+          <mat-error *ngIf="createUserForm.get('email')?.hasError('email')">
+            Email inválido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input 
+            matInput 
+            type="password"
+            formControlName="password" 
+            placeholder="Mínimo 8 caracteres"
+            required>
+          <mat-error *ngIf="createUserForm.get('password')?.hasError('required')">
+            La contraseña es obligatoria
+          </mat-error>
+          <mat-error *ngIf="createUserForm.get('password')?.hasError('minlength')">
+            Mínimo 8 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Rol</mat-label>
+          <mat-select formControlName="role" required>
+            <mat-option *ngFor="let role of roles" [value]="role.value">
+              {{ role.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createUserForm.get('role')?.hasError('required')">
+            El rol es obligatorio
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button 
+            type="button" 
+            mat-stroked-button 
+            (click)="onCancel()">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            mat-raised-button 
+            color="primary"
+            [disabled]="!createUserForm.valid">
+            Crear Usuario
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

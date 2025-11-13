@@ -28,6 +28,13 @@ export interface UserListFilters {
   pageSize?: number;
 }
 
+export interface CreateUserDto {
+  username: string;
+  email: string;
+  password: string;
+  role: 'listener' | 'artist' | 'admin';
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -55,6 +62,10 @@ export class UserService {
     }
 
     return this.http.get<UserListResponse>(`${this.apiUrl}/users`, { params });
+  }
+
+  createUser(dto: CreateUserDto): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/users`, dto);
   }
 
   deleteUser(userId: number): Observable<void> {
