@@ -16,6 +16,7 @@ export class SongsService {
       audio: 'assets/audio/ocean_echoes.mp3',
       durationSec: 320,
       createdAt: '15/05/2022',
+      artistId: 1,
       
     },
     {
@@ -29,6 +30,7 @@ export class SongsService {
       audio: 'assets/audio/noches_de_neon.mp3',
       durationSec: 285,
       createdAt: '08/09/2023',
+      artistId: 2,
     },
     {
       id: 3,
@@ -41,6 +43,7 @@ export class SongsService {
       audio: 'assets/audio/cafe_de_medianoche.mp3',
       durationSec: 240,
       createdAt: '12/01/2023',
+      artistId: 6,
     },
     {
       id: 4,
@@ -53,6 +56,7 @@ export class SongsService {
       audio: 'assets/audio/suenos_en_super8.mp3',
       durationSec: 360,
       createdAt: '05/06/2022',
+      artistId: 4,
     },
     {
       id: 5,
@@ -64,7 +68,8 @@ export class SongsService {
       image: 'assets/images/covers/cover-sunrise.svg',
       audio: 'assets/audio/luz_primera.mp3',
       durationSec: 275,
-      createdAt: '22/11/2020',
+      createdAt: '22/11/2020', 
+      artistId: 5,
     },
     {
       id: 6,
@@ -77,6 +82,7 @@ export class SongsService {
       audio: 'assets/audio/ritmo_subterraneo.mp3',
       durationSec: 310,
       createdAt: '30/03/2022',
+      artistId: 3,
     },
   ];
 
@@ -84,7 +90,11 @@ export class SongsService {
     return this.songs;
   }
 
-  getSongById(id: number): SongCard | undefined {
+  getArtistSongs(id: number): SongCard[] {
+    return this.songs.filter(song => song.artistId === id);
+  }
+
+  getSongById(id: number) {
     return this.songs.find(song => song.id === id);
   }
 
