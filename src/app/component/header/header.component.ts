@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ShareButtonComponent } from '../../components/share-button/share-button.component';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, ShareButtonComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
@@ -54,7 +55,8 @@ export class HeaderComponent implements OnInit {
 
   navigateToModifyMerch() {
     this.router.navigate(['/modify-merch']);
+  }
   navigateToModifySection() {
-    this.router.navigate(['/modify-creations'])
+    this.router.navigate(['/modify-creations']);
   }
 }

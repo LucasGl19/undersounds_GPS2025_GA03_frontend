@@ -35,7 +35,7 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'admin/dashboard', component: UserDashboardComponent },
       { path: 'song-player/:id', component: SongPlayerComponent },
-      { path : 'modify-merch', component: ModifyMerchComponent}
+      { path : 'modify-merch', component: ModifyMerchComponent},
       { path: 'modify-creations', component: ModifyCreationsComponent}
     ],
   },

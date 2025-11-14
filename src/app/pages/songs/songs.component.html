@@ -1,7 +1,7 @@
 <section class="songs-page">
   <div class="search-bar" role="search">
-    <input type="search" placeholder="Buscar canciones" (keyup.enter)="searchSongs()" [(ngModel)]="searchQuery" aria-label="Buscar canciones" />
-    <button (click)="searchSongs()" type="button" aria-label="Botón de buscar">buscar</button>
+    <input type="search" placeholder="Buscar canciones" (keyup.enter)="searchSongs(searchQuery)" [(ngModel)]="searchQuery" aria-label="Buscar canciones" />
+    <button (click)="searchSongs(searchQuery)" type="button" aria-label="Botón de buscar">buscar</button>
   </div>
   <header class="songs-page__header">
     <h1>Lanzamientos destacados</h1>
