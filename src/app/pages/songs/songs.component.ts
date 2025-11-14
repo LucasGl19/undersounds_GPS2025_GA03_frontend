@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SongCard } from '../../models/song-card.model';
 import { SongsService } from '../../services/songs.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-songs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './songs.component.html',
   styleUrls: ['./songs.component.css'],
 })
 export class SongsComponent implements OnInit {
   songs: SongCard[] = [];
+  searchQuery: string = '';
   selectedSort: 'title' | 'durationSec' | 'createdAt' | null = null;
   constructor(private songService: SongsService, private router: Router) {}
 
@@ -21,6 +23,11 @@ export class SongsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.songs = this.songService.getSongs();
+  }
+
+  searchSongs(query?: string) {
+    const term = query?.toLowerCase() || this.searchQuery.toLowerCase(); // no se usa
     this.songs = this.songService.getSongs();
   }
 

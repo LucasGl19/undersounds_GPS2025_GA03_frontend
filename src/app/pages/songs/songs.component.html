@@ -1,4 +1,8 @@
 <section class="songs-page">
+  <div class="search-bar" role="search">
+    <input type="search" placeholder="Buscar canciones" (keyup.enter)="searchSongs(searchQuery)" [(ngModel)]="searchQuery" aria-label="Buscar canciones" />
+    <button (click)="searchSongs(searchQuery)" type="button" aria-label="Botón de buscar">buscar</button>
+  </div>
   <header class="songs-page__header">
     <h1>Lanzamientos destacados</h1>
     <p>
@@ -16,11 +20,7 @@
   <div class="song-grid">
     <article class="song-card" *ngFor="let song of songs" (click)="navigateToSongPlayer(song.id)">
       <figure class="song-card__cover">
-        <img
-          [src]="song.image"
-          [alt]="'Portada de ' + song.title"
-          loading="lazy"
-        />
+        <img [src]="song.image" [alt]="'Portada de ' + song.title" loading="lazy" />
       </figure>
 
       <div class="song-card__body">

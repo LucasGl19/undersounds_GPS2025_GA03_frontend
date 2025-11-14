@@ -52,7 +52,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/admin/dashboard']);
   }
 
+  navigateToModifyMerch() {
+    this.router.navigate(['/modify-merch']);
+  }
   navigateToModifySection() {
-    this.router.navigate(['/modify-creations'])
+    this.router.navigate(['/modify-creations']);
   }
 }
