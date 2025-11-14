@@ -7,10 +7,10 @@
       </button>
     </div>
 
-    <div class="search-bar" role="search">
+    <!-- <div class="search-bar" role="search">
       <input type="search" placeholder="Buscar artistas, álbumes y sellos" aria-label="Buscar en UnderSounds" />
       <button type="button" aria-label="Ejecutar búsqueda">buscar</button>
-    </div>
+    </div> -->
 
     <div *ngIf="isLoggedIn" class="header__actions">
       <button type="button" *ngIf="userRole === 'admin'" class="header-link" (click)="navigateToUserDashboard()">
@@ -37,6 +37,7 @@
       <button type="button" *ngIf="userRole === 'artist'" class="header-link" (click)="navigateToModifyMerch()">
         <span class="header-link__label">Mi merch</span>
       </button>
+
 
       <button type="button" *ngIf="userRole === 'artist'" class="header-link" (click)="navigateToModifySection()">
         <span class="header-link__label">Modificar creaciones</span>

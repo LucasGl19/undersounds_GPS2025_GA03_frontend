@@ -54,7 +54,8 @@ export class HeaderComponent implements OnInit {
 
   navigateToModifyMerch() {
     this.router.navigate(['/modify-merch']);
+  }
   navigateToModifySection() {
-    this.router.navigate(['/modify-creations'])
+    this.router.navigate(['/modify-creations']);
   }
 }
