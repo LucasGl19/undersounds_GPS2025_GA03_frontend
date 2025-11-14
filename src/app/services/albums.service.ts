@@ -57,4 +57,8 @@ export class AlbumsService {
   getAlbumArtist(id: number): Album[] {
     return this.albums.filter(a => a.artistId === id);
   }
+
+  saveAlbumAsFavorite(albumId: String) : void {
+    console.log(`Álbum con ID ${albumId} guardado como favorito.`);
+  }
 }
