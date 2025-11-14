@@ -1,5 +1,6 @@
 export interface SongCard {
   id: number;
+  artistId: number;
   title: string;
   artist: string;
   description: string;

@@ -1,0 +1,68 @@
+<h1> Mis canciones </h1>
+  <div class="creation-grid" >
+    <article class="creation-card" *ngFor="let song of artistSongs">
+      <figure class="creation-card__cover" (click)="toggleSongEditor(song.id)">
+        <img
+          [src]="song.image"
+          [alt]="'Portada de ' + song.title"
+          loading="lazy"
+        />
+      </figure>
+
+      <div class="creation-card__body" (click)="toggleSongEditor(song.id)">
+        <h3>{{ song.title }}</h3>
+        <p class="creation-card__artist">{{ song.artist }}</p>
+        <p class="creation-card__description">{{ song.description }}</p>
+      </div>
+
+      <footer class="creation-card__meta" (click)="toggleSongEditor(song.id)">
+        <span class="creation-card__format">{{ song.format }}</span>
+        <span class="creation-card__price">{{ song.price }}</span>
+      </footer>
+
+      <div class="edit-panel" *ngIf="openedSongId === song.id">
+        <h3>Panel de edición de la canción:</h3>
+        <label>Título <input [(ngModel)]="song.title" /></label>
+        <label>Precio <input type="number" [(ngModel)]="song.price" /></label>
+        <label>Descripción <textarea [(ngModel)]="song.description"></textarea></label>
+        <label>Portada <input type="text" [(ngModel)]="song.image" /></label>
+        <label>Archivo de audio <input type="audio" [(ngModel)]="song.audio" /></label>
+        <button class="save-btn" (click)="saveSong(song)">Guardar</button>
+      </div>
+
+    </article>
+  </div>
+
+<h1>Mis álbumes</h1>
+  <div class="creation-grid">
+    <article class="creation-card" *ngFor="let a of artistAlbums">
+      <figure class="creation-card__cover" (click)="toggleAlbumEditor(a.id)">
+        <img
+          [src]="a.cover"
+          [alt]="'Portada de ' + a.title"
+          loading="lazy"
+        />
+      </figure>
+
+      <div class="creation-card__body" (click)="toggleAlbumEditor(a.id)">
+        <h3>{{ a.title }}</h3>
+        <p class="creation-card__artist">{{ a.artistName }}</p>
+        <p class="creation-card__description">{{ a.description }}</p>
+      </div>
+
+      <footer class="creation-card__meta" (click)="toggleAlbumEditor(a.id)">
+        <span class="creation-card__price">{{ a.price }}</span>
+      </footer>
+
+      <div class="edit-panel" *ngIf="openedAlbumId === a.id">
+        <h3>Panel de edición del álbum:</h3>
+        <label>Título <input [(ngModel)]="a.title" /></label>
+        <label>Precio <input type="number" [(ngModel)]="a.price" /></label>
+        <label>Divisa <input [(ngModel)]="a.currency" /></label>
+        <label>Descripción <textarea [(ngModel)]="a.description"></textarea></label>
+        <label>Portada <input type="text" [(ngModel)]="a.cover" /></label>
+
+        <button class="save-btn" (click)="saveAlbum(a)">Guardar</button>
+      </div>
+    </article>
+  </div>

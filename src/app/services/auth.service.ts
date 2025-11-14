@@ -83,9 +83,8 @@ export class AuthService {
     return localStorage.getItem('role');
   }
 
-  getUserId(): number | null {
+  getUserId():number | null {
     const id = localStorage.getItem('user_id');
-    return id ? Number(id) : null;
+      return id ? +id : null;
   }
-
 }

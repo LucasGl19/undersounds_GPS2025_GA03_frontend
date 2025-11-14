@@ -38,6 +38,9 @@
         <span class="header-link__label">Mi merch</span>
       </button>
 
+      <button type="button" *ngIf="userRole === 'artist'" class="header-link" (click)="navigateToModifySection()">
+        <span class="header-link__label">Modificar creaciones</span>
+      </button>
     </div>
   </div>
 </header>
