@@ -1,18 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+  CreateUserDto,
   User,
   UserListResponse,
   UserService,
 } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { CreateUserFormComponent } from '../../components/create-user-form/create-user-form.component';
 
 @Component({
   selector: 'app-user-dashboard',
-  imports: [CommonModule, MatDialogModule, MatSnackBarModule, ConfirmDialogComponent],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    ConfirmDialogComponent,
+    CreateUserFormComponent,
+  ],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
 })
@@ -23,15 +32,23 @@ export class UserDashboardComponent implements OnInit {
   total: number = 0;
   page: number = 1;
   pageSize: number = 20;
+  isAdmin: boolean = false;
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.checkAdminRole();
     this.loadUsers();
+  }
+
+  checkAdminRole(): void {
+    const role = this.authService.getUserRole();
+    this.isAdmin = role === 'admin';
   }
 
   loadUsers(): void {
@@ -58,6 +75,30 @@ export class UserDashboardComponent implements OnInit {
           console.error('Error al cargar usuarios:', err);
         },
       });
+  }
+
+  onCreateUser(userData: CreateUserDto): void {
+    this.userService.createUser(userData).subscribe({
+      next: () => {
+        this.loadUsers();
+        this.snackBar.open('Usuario creado con éxito', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-success'],
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al crear usuario:', err);
+        const errorMsg = err.error?.mensaje || 'Error al crear usuario';
+        this.snackBar.open(errorMsg, 'Cerrar', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-error'],
+        });
+      },
+    });
   }
 
   onDelete(userId: number, name: string): void {

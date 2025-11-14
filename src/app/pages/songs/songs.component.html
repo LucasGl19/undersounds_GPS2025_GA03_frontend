@@ -9,10 +9,16 @@
       Una selección curada de nuevos álbumes, demos y joyas escondidas de la
       comunidad independiente.
     </p>
+
+    <div class="sort-tags">
+      <button (click)="sortBy('title')" [ngClass]="{ active: selectedSort === 'title'}">Título</button>
+      <button (click)="sortBy('durationSec')" [ngClass]="{active: selectedSort === 'durationSec' }">Duración</button>
+      <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha</button>
+    </div>
   </header>
 
   <div class="song-grid">
-    <article class="song-card" *ngFor="let song of songs">
+    <article class="song-card" *ngFor="let song of songs" (click)="navigateToSongPlayer(song.id)">
       <figure class="song-card__cover">
         <img [src]="song.image" [alt]="'Portada de ' + song.title" loading="lazy" />
       </figure>

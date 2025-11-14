@@ -51,4 +51,10 @@ export class HeaderComponent implements OnInit {
   navigateToUserDashboard() {
     this.router.navigate(['/admin/dashboard']);
   }
+
+  navigateToModifyMerch() {
+    this.router.navigate(['/modify-merch']);
+  navigateToModifySection() {
+    this.router.navigate(['/modify-creations'])
+  }
 }

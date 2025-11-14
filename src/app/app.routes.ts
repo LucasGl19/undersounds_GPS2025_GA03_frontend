@@ -13,6 +13,9 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UserDashboardComponent } from './pages/user-dashboard/user-dashboard.component';
+import { SongPlayerComponent } from './pages/song-player/song-player.component';
+import { ModifyMerchComponent } from './pages/modify-merch/modify-merch.component';
+import { ModifyCreationsComponent } from './modify-creations/modify-creations.component';
 export const routes: Routes = [
   {
     path: '',
@@ -31,6 +34,9 @@ export const routes: Routes = [
       { path: 'privacy', component: PrivacyComponent },
       { path: 'login', component: LoginComponent },
       { path: 'admin/dashboard', component: UserDashboardComponent },
+      { path: 'song-player/:id', component: SongPlayerComponent },
+      { path : 'modify-merch', component: ModifyMerchComponent}
+      { path: 'modify-creations', component: ModifyCreationsComponent}
     ],
   },
 ];

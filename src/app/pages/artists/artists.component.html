@@ -5,8 +5,32 @@
       Sellos y proyectos que están marcando tendencia dentro de la escena
       independiente.
     </p>
-  </header>
+    <div class="search-elements-container">
+        <button class="filter-btn" (click)="toggleFilters()">
+          <img src="assets/images/ui/filtrar.png" alt="Filtros"/>
+        </button>
+          <div class="filter-dropdown" *ngIf="showFilters">
+            <label>Filtrar por nacionalidad
+              <select [(ngModel)]="selectedCountry" (change)="applyFilters()">
+                <option value="">Todos</option>
+                <option *ngFor="let country of countries" [value]="country"> {{country}}</option>   
+              </select> 
+            </label>
+            <label>Filtrar por género
+              <select [(ngModel)]="selectedGenre" (change)="applyFilters()">
+                <option value="">Todos</option>
+                <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+              </select>
+            </label>
+          </div>
 
+        
+          <div class="sort-tags">
+            <button (click)="sortBy('name')" [ngClass]="{ active: selectedSort === 'name'}">Título</button>
+            <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha de creación</button>
+          </div>
+    </div>
+  </header>
   <div class="artist-grid">
     <article class="artist-card" *ngFor="let artist of artists">
       <img

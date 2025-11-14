@@ -3,37 +3,61 @@ type MerchItem = {
   price: string;
   description: string;
   image: string;
+  createdAt: string;
 };
 
-import { Component } from '@angular/core';
+import { Component, OnInit, Query } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MerchService } from '../../services/merch.service';
 
 @Component({
   selector: 'app-merchandising',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './merchandising.component.html',
   styleUrl: './merchandising.component.css',
 })
-export class MerchandisingComponent {
-  readonly articles: MerchItem[] = [
-    {
-      name: 'Camiseta “Waves”',
-      price: '22 €',
-      description: 'Algodón orgánico con impresión serigráfica de edición limitada.',
-      image: 'assets/images/merch/merch-shirt.svg',
-    },
-    {
-      name: 'Taza esmaltada',
-      price: '12 €',
-      description: 'Perfecta para sesiones nocturnas de mezcla o para tu café matutino.',
-      image: 'assets/images/merch/merch-mug.svg',
-    },
-    {
-      name: 'Tote bag “UnderSounds”',
-      price: '15 €',
-      description: 'Bolsa resistente para llevar vinilos, cassettes y equipos ligeros.',
-      image: 'assets/images/merch/merch-tote.svg',
-    },
-  ];
+export class MerchandisingComponent implements OnInit{
+  articles: MerchItem[] = [];
+  selectedSort: 'name' | 'createdAt' | null = null;
+  searchQuery: string = '';
+  constructor(private merchService: MerchService) {}
+
+  ngOnInit(): void {
+    this.articles = this.merchService.getMerchItems();
+  }
+
+    sortBy(criteria: 'name' | 'createdAt') {
+  if (this.selectedSort === criteria) {
+    this.selectedSort = null;
+    this.articles = this.merchService.getMerchItems(); 
+    return;
+  }
+
+  this.selectedSort = criteria;
+
+  this.articles = [...this.articles].sort((a, b) => {
+    if (criteria === 'name') {
+      return a.name.localeCompare(b.name);
+    }
+    if (criteria === 'createdAt') {
+      return new Date(a.createdAt ?? 0).getTime() -
+             new Date(b.createdAt ?? 0).getTime();
+    }
+    return 0;
+  });
+}
+  searchArticles() {
+    const query = this.searchQuery.trim().toLowerCase();
+    if(!query) {
+      this.articles = this.merchService.getMerchItems();
+      return;
+    }
+
+      this.articles = this.articles.filter(a => a.name.toLowerCase().includes(query) || a.description.toLowerCase().includes(query)
+  );
+    
+  }
+
 }
