@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -7,4 +7,17 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './share-button.component.html',
   styleUrl: './share-button.component.css',
 })
-export class ShareButtonComponent {}
+export class ShareButtonComponent {
+  @Input() url: string = '';
+
+  buttonText: string = 'Compartir';
+
+  copyLink(){
+    if (!this.url) return;
+    navigator.clipboard.writeText(this.url);
+    this.buttonText = '¡Enlace copiado!';
+    setTimeout(() => {
+      this.buttonText = 'Compartir';
+    }, 2000);
+  }
+}

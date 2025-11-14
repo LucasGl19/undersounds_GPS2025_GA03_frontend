@@ -1,4 +1,4 @@
-<button class="share-button" type="button" aria-label="Compartir enlace">
+<button (click)="copyLink()" class="share-button" type="button" aria-label="Compartir enlace">
     <mat-icon>share</mat-icon>
-    <span class="share-label">Compartir</span>
+    <span class="share-label">{{buttonText}}</span>
 </button>

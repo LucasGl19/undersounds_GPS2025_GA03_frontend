@@ -3,11 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ShareButtonComponent } from '../../components/share-button/share-button.component';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatIconModule, ShareButtonComponent],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
