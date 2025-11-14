@@ -71,4 +71,10 @@ export class UserService {
   deleteUser(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
   }
+
+  deleteSelfAccount(): Observable<void> {
+
+    // Cambiar por el endpoint real (no existe en el backend)
+    return of(undefined).pipe(delay(300));
+  }
 }

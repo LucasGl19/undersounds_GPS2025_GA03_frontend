@@ -12,8 +12,8 @@
       <button type="button" aria-label="Ejecutar búsqueda">buscar</button>
     </div> -->
 
-    <div *ngIf="isLoggedIn" class="header__actions">
-      <button type="button" *ngIf="userRole === 'admin'" class="header-link" (click)="navigateToUserDashboard()">
+    <div *ngIf="isLoggedIn$ | async" class="header__actions">
+      <button type="button" *ngIf="(userRole$ | async) === 'admin'" class="header-link" (click)="navigateToUserDashboard()">
         <mat-icon>dashboard</mat-icon>
         Usuarios
       </button>
@@ -27,7 +27,7 @@
         <mat-icon>logout</mat-icon>
       </button>
     </div>
-    <div *ngIf="!isLoggedIn" class="header__actions">
+    <div *ngIf="!(isLoggedIn$ | async)" class="header__actions">
       <button type="button" class="header-link" (click)="navigateToRegister()">
         <span class="header-link__label">crear cuenta</span>
       </button>

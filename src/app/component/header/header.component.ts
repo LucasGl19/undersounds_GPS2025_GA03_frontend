@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -10,19 +11,13 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
-  isLoggedIn: boolean = false;
-  userRole: string | null = null;
+export class HeaderComponent {
+  isLoggedIn$: Observable<boolean>;
+  userRole$: Observable<string | null>;
 
-  constructor(private router: Router, private authService: AuthService) {}
-
-  ngOnInit(): void {
-    this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-      this.isLoggedIn = isLoggedIn;
-    });
-    this.authService.userRole$.subscribe((role) => {
-      this.userRole = role;
-    });
+  constructor(private router: Router, private authService: AuthService) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+    this.userRole$ = this.authService.userRole$;
   }
 
   navigateToProfile() {
