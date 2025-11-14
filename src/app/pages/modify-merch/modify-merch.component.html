@@ -1,0 +1,49 @@
+<h1>Mis artículos de merch</h1>
+
+<div class="merch-grid">
+  <article class="merch-card" *ngFor="let item of merch">
+    
+    <button class="edit-btn" (click)="openEditionModal(item)">
+      <img src="assets/images/ui/edit.png" alt="Editar">
+    </button>
+
+    <figure class="merch-card__image">
+      <img [src]="item.image" [alt]="item.name">
+    </figure>
+
+    <div class="merch-card__body">
+      <h3>{{ item.name }}</h3>
+      <p class="merch-card__price">{{ item.price }}</p>
+    </div>
+
+  </article>
+</div>
+
+<div class="modal-backdrop" *ngIf="modalOpen">
+  <div class="modal">
+
+    <h2>Editar artículo</h2>
+
+    <label>Nombre:
+      <input type="text" [(ngModel)]="editableItem.name">
+    </label>
+
+    <label>Precio:
+      <input type="number" [(ngModel)]="editableItem.price">
+    </label>
+
+    <label>Descripción:
+      <textarea [(ngModel)]="editableItem.description"></textarea>
+    </label>
+
+    <label>Imagen (URL):
+      <input type="text" [(ngModel)]="editableItem.image">
+    </label>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" (click)="closeEditionModal()">Cancelar</button>
+      <button class="save-btn" (click)="saveChanges()">Guardar</button>
+    </div>
+
+  </div>
+</div>

@@ -2,7 +2,17 @@
   <header class="merch-page__header">
     <h1>Merch exclusivo</h1>
     <p>Apoya directamente a los artistas con ediciones limitadas y objetos únicos.</p>
+    
+    <div class="sort-tags">
+      <button (click)="sortBy('name')" [ngClass]="{ active: selectedSort === 'name'}">Título</button>
+      <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha</button>
+    </div>
   </header>
+  
+  <div class="search-bar" role="search">
+    <input type="search" placeholder="Buscar artículos" (keyup.enter)="searchArticles()" [(ngModel)]="searchQuery" aria-label="Buscar artículos" />
+    <button (click)="searchArticles()" type="button" aria-label="Botón de buscar">buscar</button>
+  </div>
 
   <div class="merch-grid">
     <article class="merch-card" *ngFor="let item of articles">

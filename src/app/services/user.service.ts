@@ -1,14 +1,38 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { delay, Observable, of, throwError } from 'rxjs';
-import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 export interface User {
   id: number;
+  name: string | null;
   username: string;
-  role: 'admin' | 'artist' | 'listener';
-  bio: string;
+  role: string;
+  email: string;
+  createdAt: string;
+  bio: string | null;
+  avatarUrl: string | null;
+}
+
+export interface UserListResponse {
+  items: User[];
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
+export interface UserListFilters {
+  q?: string;
+  role?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface CreateUserDto {
+  username: string;
+  email: string;
+  password: string;
+  role: 'listener' | 'artist' | 'admin';
 }
 
 @Injectable({
@@ -18,52 +42,34 @@ export class UserService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 
-  dummyUsers: User[] = [
-    {
-      id: 1,
-      username: 'Ana López',
-      role: 'listener',
-      bio: 'Amante del indie.',
-    },
-    {
-      id: 2,
-      username: 'Carlos Ruiz',
-      role: 'artist',
-      bio: 'Productor experimental.',
-    },
-    {
-      id: 3,
-      username: 'María Pérez',
-      role: 'admin',
-      bio: 'Gestiona la plataforma.',
-    },
-  ];
+  getUsers(filters: UserListFilters = {}): Observable<UserListResponse> {
+    let params = new HttpParams();
 
-  userRole: string | null = null;
-  constructor(private authService: AuthService) {
-    this.userRole = this.authService.getUserRole();
+    if (filters.q) {
+      params = params.set('q', filters.q);
+    }
+
+    if (filters.role) {
+      params = params.set('role', filters.role);
+    }
+
+    if (filters.page) {
+      params = params.set('page', filters.page);
+    }
+
+    if (filters.pageSize) {
+      params = params.set('pageSize', filters.pageSize);
+    }
+
+    return this.http.get<UserListResponse>(`${this.apiUrl}/users`, { params });
   }
 
-  getUsers(): Observable<User[]> {
-    // return this.http.get<User[]>(`${this.apiUrl}/users`);
-
-    // Dummy data
-
-    return of(this.dummyUsers).pipe(delay(300));
+  createUser(dto: CreateUserDto): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/users`, dto);
   }
 
   deleteUser(userId: number): Observable<void> {
-    // return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
-    if (this.userRole !== 'admin') {
-      return throwError(
-        () => new Error('No tienes permisos para eliminar usuarios')
-      ).pipe(delay(300));
-    }
-    const index = this.dummyUsers.findIndex((user) => user.id === userId);
-    if (index !== -1) {
-      this.dummyUsers.splice(index, 1);
-    }
-    return of(undefined).pipe(delay(300));
+    return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
   }
 
   deleteSelfAccount(): Observable<void> {

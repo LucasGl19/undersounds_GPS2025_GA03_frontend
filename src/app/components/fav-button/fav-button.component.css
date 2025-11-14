@@ -1,0 +1,22 @@
+.fav-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  background: #fff;
+  color: #24292f;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.fav-button:hover {
+  background: #f6f8fa;
+  border-color: #b6c0ca;
+}
+
+.fav-button:active {
+  background: #eef2f6;
+}

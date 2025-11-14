@@ -40,6 +40,12 @@
   box-shadow: 0 0 0 3px rgba(122, 92, 255, 0.2);
 }
 
+/* Mismatch visual feedback */
+.form-field input.mismatch {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
 .error {
   color: #c0392b;
   font-size: 0.85rem;
