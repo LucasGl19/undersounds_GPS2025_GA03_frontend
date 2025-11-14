@@ -47,15 +47,20 @@ export class ProfileComponent implements OnInit {
   onDeleteAccount(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { name: 'tu cuenta' },
-      width: '400px'
+      width: '400px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Aquí va tu lógica de borrado (dummy o real)
-        console.log('Cuenta eliminada');
-        this.authService.clearTokens();
-        this.router.navigate(['/login']);
+        this.authService.deleteAccount().subscribe({
+          next: () => {
+            this.authService.clearTokens();
+            this.router.navigate(['/login']);
+          },
+          error: () => {
+            this.error.set('No se pudo eliminar la cuenta.');
+          },
+        });
       }
     });
   }

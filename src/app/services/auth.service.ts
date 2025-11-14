@@ -28,11 +28,17 @@ export interface UserProfile {
   role: string;
 }
 
+export interface DeleteAccountResponse {
+  message: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(!!this.getAccessToken());
   isLoggedIn$ = this.loggedIn.asObservable();
-  private role = new BehaviorSubject<string | null>(localStorage.getItem('role'));
+  private role = new BehaviorSubject<string | null>(
+    localStorage.getItem('role')
+  );
   userRole$ = this.role.asObservable();
 
   private readonly http = inject(HttpClient);
@@ -60,13 +66,17 @@ export class AuthService {
 
   me(): Observable<UserProfile> {
     // return this.http.get<UserProfile>(`${this.apiUrl}/me`);
-  const dummyProfile: UserProfile = {
-    name: 'Jorge Carrasco',
-    email: 'jorge@example.com',
-    role: 'admin',
-  };
+    const dummyProfile: UserProfile = {
+      name: 'Jorge Carrasco',
+      email: 'jorge@example.com',
+      role: 'admin',
+    };
 
-  return of(dummyProfile).pipe(delay(1000));
+    return of(dummyProfile).pipe(delay(1000));
+  }
+
+  deleteAccount(): Observable<DeleteAccountResponse> {
+    return this.http.delete<DeleteAccountResponse>(`${this.apiUrl}/me`);
   }
 
   storeTokens(tokens: AuthTokens): void {
