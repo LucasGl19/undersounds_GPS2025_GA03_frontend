@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -53,10 +53,12 @@ export class RegisterComponent {
   readonly submitted = signal(false);
   readonly apiError = signal<string | null>(null);
 
-  readonly passwordMismatch = computed(() =>
-    this.registerForm.hasError('passwordMismatch') &&
-    (this.registerForm.get('confirm')?.touched || this.submitted())
-  );
+  get passwordMismatch(): boolean {
+    return (
+      this.registerForm.hasError('passwordMismatch') &&
+      (!!this.registerForm.get('confirm')?.touched || this.submitted())
+    );
+  }
 
   get username(): AbstractControl | null {
     return this.registerForm.get('username');
