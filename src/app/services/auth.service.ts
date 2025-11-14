@@ -52,6 +52,7 @@ export class AuthService {
         tap((response) => {
           this.role.next(response.role);
           localStorage.setItem('role', response.role);
+          localStorage.setItem('user_id', response.user_id.toString());
           this.storeTokens(response.tokens);
           this.loggedIn.next(true);
         })
@@ -81,4 +82,10 @@ export class AuthService {
   getUserRole(): string | null {
     return localStorage.getItem('role');
   }
+
+  getUserId(): number | null {
+    const id = localStorage.getItem('user_id');
+    return id ? Number(id) : null;
+  }
+
 }

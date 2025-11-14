@@ -6,9 +6,10 @@ type MerchItem = {
   createdAt: string;
 };
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Query } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MerchService } from '../../services/merch.service';
 
 @Component({
   selector: 'app-merchandising',
@@ -18,44 +19,45 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './merchandising.component.css',
 })
 export class MerchandisingComponent implements OnInit{
+  articles: MerchItem[] = [];
+  selectedSort: 'name' | 'createdAt' | null = null;
   searchQuery: string = '';
-  filteredArticles: MerchItem[] = [];
-  readonly articles: MerchItem[] = [
-    {
-      name: 'Camiseta “Waves”',
-      price: '22 €',
-      description: 'Algodón orgánico con impresión serigráfica de edición limitada.',
-      image: 'assets/images/merch/merch-shirt.svg',
-      createdAt: '01/03/2023',
-    },
-    {
-      name: 'Taza esmaltada',
-      price: '12 €',
-      description: 'Perfecta para sesiones nocturnas de mezcla o para tu café matutino.',
-      image: 'assets/images/merch/merch-mug.svg',
-      createdAt: '15/07/2023',
-    },
-    {
-      name: 'Tote bag “UnderSounds”',
-      price: '15 €',
-      description: 'Bolsa resistente para llevar vinilos, cassettes y equipos ligeros.',
-      image: 'assets/images/merch/merch-tote.svg',
-      createdAt: '22/11/2022',
-    },
-  ];
+  constructor(private merchService: MerchService) {}
 
-    ngOnInit(): void {
-      this.filteredArticles = this.articles;
+  ngOnInit(): void {
+    this.articles = this.merchService.getMerchItems();
+  }
+
+    sortBy(criteria: 'name' | 'createdAt') {
+  if (this.selectedSort === criteria) {
+    this.selectedSort = null;
+    this.articles = this.merchService.getMerchItems(); 
+    return;
+  }
+
+  this.selectedSort = criteria;
+
+  this.articles = [...this.articles].sort((a, b) => {
+    if (criteria === 'name') {
+      return a.name.localeCompare(b.name);
     }
-
-    searchArticles(): void {
-    const query = this.searchQuery.toLowerCase().trim();
+    if (criteria === 'createdAt') {
+      return new Date(a.createdAt ?? 0).getTime() -
+             new Date(b.createdAt ?? 0).getTime();
+    }
+    return 0;
+  });
+}
+  searchArticles() {
+    const query = this.searchQuery.trim().toLowerCase();
     if(!query) {
-      this.filteredArticles = this.articles;
+      this.articles = this.merchService.getMerchItems();
       return;
     }
-     this.filteredArticles = this.articles.filter(article =>
-      article.name.toLowerCase().includes(query) 
-    );
+
+      this.articles = this.articles.filter(a => a.name.toLowerCase().includes(query) || a.description.toLowerCase().includes(query)
+  );
+    
   }
+
 }

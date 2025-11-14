@@ -76,6 +76,36 @@
   color: var(--accent-stronger);
 }
 
+
+/*Selectores para ordenar*/
+.sort-tags {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 12px;
+}
+
+.sort-tags button {
+  border: 1px solid #ccc;
+  background: #dbdbdb;
+  padding: 8px 14px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.sort-tags button:hover {
+  background: #3c3c3c;
+  color: white;
+  border-color: #3c3c3c;
+}
+
+.sort-tags button.active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
 .search-bar {
   flex: 1;
   display: flex;
