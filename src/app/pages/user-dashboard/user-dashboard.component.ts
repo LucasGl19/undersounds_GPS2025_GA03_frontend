@@ -19,7 +19,6 @@ import { CreateUserFormComponent } from '../../components/create-user-form/creat
     CommonModule,
     MatDialogModule,
     MatSnackBarModule,
-    ConfirmDialogComponent,
     CreateUserFormComponent,
   ],
   templateUrl: './user-dashboard.component.html',
