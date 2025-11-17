@@ -7,35 +7,26 @@
       </button>
     </div>
 
-    <!-- <div class="search-bar" role="search">
-      <input type="search" placeholder="Buscar artistas, álbumes y sellos" aria-label="Buscar en UnderSounds" />
-      <button type="button" aria-label="Ejecutar búsqueda">buscar</button>
-    </div> -->
-
-    <div *ngIf="isLoggedIn$ | async" class="header__actions">
-      <button type="button" *ngIf="(userRole$ | async) === 'admin'" class="header-link" (click)="navigateToUserDashboard()">
+    <!-- LOGGED IN -->
+    <div *ngIf="isLoggedIn$ | async; else loggedOut" class="header__actions">
+      
+      <!-- Admin -->
+      <button
+        type="button"
+        class="header-link"
+        *ngIf="(userRole$ | async) === 'admin'"
+        (click)="navigateToUserDashboard()"
+      >
         <mat-icon>dashboard</mat-icon>
         Usuarios
       </button>
+
+      <!-- Carrito -->
       <button type="button" class="header-link" (click)="navigateToCart()">
         <mat-icon>shopping_cart</mat-icon>
       </button>
-      <button type="button" class="header-link" (click)="navigateToProfile()">
-        <mat-icon>account_circle</mat-icon>
-      </button>
-      <button type="button" class="header-link" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-      </button>
-    </div>
 
-    <div *ngIf="!(isLoggedIn$ | async)" class="header__actions">
-      <button type="button" class="header-link" (click)="navigateToRegister()">
-        <span class="header-link__label">crear cuenta</span>
-      </button>
-      <button type="button" class="header-link" (click)="navigateToLogin()">
-        <span class="header-link__label">Iniciar sesión</span>
-      </button>
-
+      <!-- Acciones para ARTISTAS -->
       <button
         type="button"
         *ngIf="(userRole$ | async) === 'artist'"
@@ -54,21 +45,44 @@
         <span class="header-link__label">Modificar creaciones</span>
       </button>
 
-      <button type="button" class="header-link" (click)="navigateToUploadSong()">
-        <span *ngIf="role === 'artist'" class="header-link__label"> subir canción</span>
+      <button
+        type="button"
+        *ngIf="(userRole$ | async) === 'artist'"
+        class="header-link"
+        (click)="navigateToUploadSong()"
+      >
+        <span class="header-link__label">subir canción</span>
       </button>
 
-      <button type="button" class="header-link" (click)="navigateToUploadAlbum()">
-        <span *ngIf="role === 'artist'" class="header-link__label"> subir álbum</span>
+      <button
+        type="button"
+        *ngIf="(userRole$ | async) === 'artist'"
+        class="header-link"
+        (click)="navigateToUploadAlbum()"
+      >
+        <span class="header-link__label">subir álbum</span>
       </button>
 
+      <!-- Perfil -->
       <button type="button" class="header-link" (click)="navigateToProfile()">
-        <img
-          src="assets/images/ui/user-avatar.svg"
-          alt="Ir al perfil"
-          class="profile-icon"
-        />
+        <mat-icon>account_circle</mat-icon>
+      </button>
+
+      <button type="button" class="header-link" (click)="logout()">
+        <mat-icon>logout</mat-icon>
       </button>
     </div>
+
+    <!-- LOGGED OUT -->
+    <ng-template #loggedOut>
+      <div class="header__actions">
+        <button type="button" class="header-link" (click)="navigateToRegister()">
+          <span class="header-link__label">crear cuenta</span>
+        </button>
+        <button type="button" class="header-link" (click)="navigateToLogin()">
+          <span class="header-link__label">Iniciar sesión</span>
+        </button>
+      </div>
+    </ng-template>
   </div>
 </header>

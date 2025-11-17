@@ -42,7 +42,7 @@ export const routes: Routes = [
       { path: 'admin/dashboard', component: UserDashboardComponent },
       { path: 'song-player/:id', component: SongPlayerComponent },
       { path : 'modify-merch', component: ModifyMerchComponent},
-      { path: 'modify-creations', component: ModifyCreationsComponent}
+      { path: 'modify-creations', component: ModifyCreationsComponent},
 
       { path: 'upload-song', component: UploadSongComponent },
       {path: 'upload-album', component: UploadAlbumComponent}
