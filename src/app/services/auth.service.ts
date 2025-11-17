@@ -96,6 +96,7 @@ export class AuthService {
   getAccessToken(): string | null {
     return localStorage.getItem('access');
   }
+
   getUserRole(): string | null {
     return localStorage.getItem('role');
   }
@@ -104,4 +105,6 @@ export class AuthService {
     const id = localStorage.getItem('user_id');
       return id ? +id : null;
   }
+
+
 }

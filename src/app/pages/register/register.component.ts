@@ -99,6 +99,7 @@ export class RegisterComponent {
       .subscribe({
         next: (response) => {
           this.authService.storeTokens(response.tokens);
+          localStorage.setItem('role', response.role);
           this.submitting.set(false);
           this.router.navigateByUrl('/profile');
         },

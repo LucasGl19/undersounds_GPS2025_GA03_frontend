@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
@@ -23,6 +24,7 @@ export class HeaderComponent {
   navigateToProfile() {
     this.router.navigate(['/profile']);
   }
+
   navigateToCart() {
     this.router.navigate(['/cart']);
   }
@@ -39,6 +41,7 @@ export class HeaderComponent {
     this.authService.clearTokens();
     this.router.navigate(['/']);
   }
+
   navigateToRegister() {
     this.router.navigate(['/register']);
   }
@@ -50,7 +53,16 @@ export class HeaderComponent {
   navigateToModifyMerch() {
     this.router.navigate(['/modify-merch']);
   }
+
   navigateToModifySection() {
     this.router.navigate(['/modify-creations']);
+  }
+
+  navigateToUploadSong() {
+    this.router.navigate(['/upload-song']);
+  }
+
+  navigateToUploadAlbum() {
+    this.router.navigate(['/upload-album']);
   }
 }

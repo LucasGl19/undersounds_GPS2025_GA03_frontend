@@ -1,0 +1,25 @@
+<form class="uploadsong-page" [formGroup]="form" (ngSubmit)="submit()">
+  <h1>¡Sube aquí tus creaciones!</h1>
+
+  <div class="form-field">
+    <label for="title">Título</label>
+    <input id="title" type="text" formControlName="title" />
+  </div>
+
+  <div class="form-field">
+    <label for="albumId">Álbum (id)</label>
+    <input id="albumId" type="text" formControlName="albumId" />
+  </div>
+
+  <div class="form-field">
+    <label for="trackNumber">Nº de pista</label>
+    <input id="trackNumber" type="number" formControlName="trackNumber" />
+  </div>
+
+  <div class="form-field">
+    <label for="durationSec">Duración (s)</label>
+    <input id="durationSec" type="number" formControlName="durationSec" />
+  </div>
+
+  <button type="submit" class="upload-btn">Subir Canción</button>
+</form>
