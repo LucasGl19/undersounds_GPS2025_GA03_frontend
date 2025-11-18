@@ -111,7 +111,7 @@ export class SongsService {
   getTracksFromBackend(filters?: TrackFilters): Observable<{ tracks: any[], pagination: { page: number; limit: number; total: number; totalPages: number } }> {
     return this.apiService.getTracks(filters).pipe(
       map(response => ({
-        tracks: response.data,
+        tracks: response.data.map((track: any) => this.mapBackendTrackToSongCard(track)),
         pagination: {
           page: response.meta.page,
           limit: response.meta.limit,
@@ -122,12 +122,46 @@ export class SongsService {
     );
   }
 
+  // Mapea un track del backend al modelo SongCard del frontend
+  private mapBackendTrackToSongCard(track: any): SongCard {
+    return {
+      id: track.id,
+      title: track.title || 'Sin título',
+      artist: track.album?.artist?.name || track.album?.artistId || 'Artista desconocido',
+      artistId: track.album?.artistId ? parseInt(track.album.artistId) : 0,
+      description: track.album?.description || 'Sin descripción',
+      format: 'Streaming digital',
+      price: track.album?.price ? `${track.album.price} ${track.album.currency || 'EUR'}` : 'Gratis',
+      image: track.album?.cover?.url || 'assets/images/covers/default-cover.svg',
+      audio: track.audio?.url || '',  // <-- AQUÍ está la clave: extraer la URL del objeto audio
+      durationSec: track.durationSec || 0,
+      createdAt: track.createdAt ? new Date(track.createdAt).toLocaleDateString('es-ES') : '',
+      albumId: track.albumId,
+      labelId: track.album?.labelId,
+      genre: track.genre || (track.album?.genres ? track.album.genres.split(',')[0]?.trim() : ''),
+      genres: track.album?.genres ? track.album.genres.split(',').map((g: string) => g.trim()) : [],
+      tag: track.album?.tags ? track.album.tags.split(',')[0]?.trim() : '',
+      tags: track.album?.tags ? track.album.tags.split(',').map((t: string) => t.trim()) : [],
+      language: track.lyrics?.language || '',
+      releaseDate: track.album?.releaseDate ? new Date(track.album.releaseDate).toLocaleDateString('es-ES') : '',
+      trackNumber: track.trackNumber,
+      playCount: track.stats?.playCount || 0,
+    };
+  }
+
   getArtistSongs(id: number): SongCard[] {
     return this.songs.filter(song => song.artistId === id);
   }
 
   getSongById(id: number) {
     return this.songs.find(song => song.id === id);
+  }
+
+  // Obtener canción individual del backend por ID
+  getTrackByIdFromBackend(trackId: string): Observable<SongCard> {
+    return this.apiService.getTrackById(trackId, ['album', 'audio', 'lyrics', 'stats']).pipe(
+      map(response => this.mapBackendTrackToSongCard(response.data))
+    );
   }
 
 }

@@ -1,5 +1,13 @@
 <section class="song-player-page">
-  <article class="song-card song-card--large">
+  <div *ngIf="isLoading" class="loading-indicator">
+    Cargando canción...
+  </div>
+
+  <div *ngIf="errorMsg && !isLoading" class="error-message">
+    {{ errorMsg }}
+  </div>
+
+  <article class="song-card song-card--large" *ngIf="song && !isLoading">
     <figure class="song-card__cover song-card__cover--large">
       <img [src]="song?.image" [alt]="song?.title" />
     </figure>
@@ -8,9 +16,18 @@
       <h1>{{ song?.title }}</h1>
       <p class="song-card__artist">{{ song?.artist }}</p>
 
-      <audio controls class="audio-player">
-        <source [src]="song?.audio" type="audio/mpeg">
-      </audio>
+      <div *ngIf="song?.audio; else noAudio">
+        <audio controls class="audio-player">
+          <source [src]="song.audio" type="audio/mpeg">
+          Tu navegador no soporta el elemento de audio.
+        </audio>
+      </div>
+      
+      <ng-template #noAudio>
+        <div class="no-audio-message">
+          <p>⚠️ No hay audio disponible para esta canción</p>
+        </div>
+      </ng-template>
 
       <p class="song-card__description">{{ song?.description }}</p>
     </div>

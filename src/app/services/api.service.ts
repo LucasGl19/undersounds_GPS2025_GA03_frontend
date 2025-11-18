@@ -98,6 +98,22 @@ export class ApiService {
       });
     }
 
+    // Asegurar que siempre se incluya la relación 'audio' para obtener la URL
+    if (!params.include) {
+      params.include = 'album,audio,stats';
+    } else if (!params.include.includes('audio')) {
+      params.include = params.include + ',audio';
+    }
+
     return this.http.get<PaginatedTrackResponse>(`${API}/tracks`, { params });
+  }
+
+  // Obtener un track específico por ID
+  getTrackById(trackId: string, include?: string[]): Observable<{ data: any }> {
+    let params: any = {};
+    if (include && include.length > 0) {
+      params.include = include.join(',');
+    }
+    return this.http.get<{ data: any }>(`${API}/tracks/${trackId}`, { params });
   }
 }

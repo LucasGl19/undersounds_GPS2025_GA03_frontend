@@ -44,7 +44,7 @@ export class SongsComponent implements OnInit {
 
   constructor(private songService: SongsService, private router: Router) {}
 
-  navigateToSongPlayer(id: number) {
+  navigateToSongPlayer(id: number | string) {
     this.router.navigate(['song-player', id]);
   }
 
