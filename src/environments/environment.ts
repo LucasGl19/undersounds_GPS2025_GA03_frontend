@@ -1,3 +1,8 @@
 export const environment = {
-  apiUrl: 'http://localhost:8080',
+  // Contenidos (álbumes, pistas, etc.)
+  contentApiUrl: 'http://localhost:8081',
+  // Usuarios y autorización (login, registro, gestión usuarios)
+  usersApiUrl: 'http://localhost:8080',
+  // Mostrar indicadores de debug (badges, logs, etc.)
+  showDebugInfo: false,
 };

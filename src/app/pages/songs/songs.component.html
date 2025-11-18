@@ -1,23 +1,158 @@
 <section class="songs-page">
+  <!-- Barra de búsqueda -->
   <div class="search-bar" role="search">
-    <input type="search" placeholder="Buscar canciones" (keyup.enter)="searchSongs(searchQuery)" [(ngModel)]="searchQuery" aria-label="Buscar canciones" />
-    <button (click)="searchSongs(searchQuery)" type="button" aria-label="Botón de buscar">buscar</button>
+    <input 
+      type="search" 
+      placeholder="Buscar canciones" 
+      (keyup.enter)="searchSongs()" 
+      [(ngModel)]="searchQuery" 
+      aria-label="Buscar canciones" 
+    />
+    <button (click)="searchSongs()" type="button" aria-label="Botón de buscar">buscar</button>
   </div>
+
+  <!-- Error banner cuando falla el backend (solo en modo debug) -->
+  <div *ngIf="showDebugInfo && errorMsg" class="error-banner" role="alert">
+    {{ errorMsg }}
+  </div>
+
   <header class="songs-page__header">
     <h1>Lanzamientos destacados</h1>
+    
+      <!-- Indicador de fuente de datos (solo en modo debug) -->
+      <div *ngIf="showDebugInfo" class="data-source-indicator" [ngClass]="dataSource">
+        <span *ngIf="dataSource === 'backend'" class="badge badge-backend">
+          🌐 Conectado al Backend
+        </span>
+        <span *ngIf="dataSource === 'mock'" class="badge badge-mock">
+          📦 Datos de Prueba (Mock)
+        </span>
+      </div>
+    
     <p>
       Una selección curada de nuevos álbumes, demos y joyas escondidas de la
       comunidad independiente.
     </p>
 
+    <!-- Filtros avanzados -->
+    <div class="filters-container">
+      <div class="filters-row">
+        <!-- Género -->
+        <div class="filter-group">
+          <label for="genre-select">Género:</label>
+          <select 
+            id="genre-select" 
+            [(ngModel)]="selectedGenre" 
+            (change)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">Todos</option>
+            <option *ngFor="let genre of availableGenres" [value]="genre">{{ genre }}</option>
+          </select>
+        </div>
+
+        <!-- Tag -->
+        <div class="filter-group">
+          <label for="tag-select">Etiqueta:</label>
+          <select 
+            id="tag-select" 
+            [(ngModel)]="selectedTag" 
+            (change)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">Todas</option>
+            <option *ngFor="let tag of availableTags" [value]="tag">{{ tag }}</option>
+          </select>
+        </div>
+
+        <!-- Idioma -->
+        <div class="filter-group">
+          <label for="language-select">Idioma:</label>
+          <select 
+            id="language-select" 
+            [(ngModel)]="selectedLanguage" 
+            (change)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">Todos</option>
+            <option *ngFor="let lang of availableLanguages" [value]="lang">{{ lang }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filters-row">
+        <!-- Fecha desde -->
+        <div class="filter-group">
+          <label for="released-from">Publicado desde:</label>
+          <input 
+            id="released-from"
+            type="date" 
+            [(ngModel)]="releasedFrom" 
+            (change)="applyFilters()"
+            class="filter-input"
+          />
+        </div>
+
+        <!-- Fecha hasta -->
+        <div class="filter-group">
+          <label for="released-to">Publicado hasta:</label>
+          <input 
+            id="released-to"
+            type="date" 
+            [(ngModel)]="releasedTo" 
+            (change)="applyFilters()"
+            class="filter-input"
+          />
+        </div>
+      </div>
+
+      <!-- Botón limpiar filtros -->
+      <div class="filters-actions">
+        <button (click)="clearFilters()" class="btn-clear-filters">
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- Etiquetas de ordenación -->
     <div class="sort-tags">
-      <button (click)="sortBy('title')" [ngClass]="{ active: selectedSort === 'title'}">Título</button>
-      <button (click)="sortBy('durationSec')" [ngClass]="{active: selectedSort === 'durationSec' }">Duración</button>
-      <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha</button>
+      <button 
+        (click)="sortBy('title')" 
+        [ngClass]="{ 
+          active: selectedSort === 'title',
+          'desc': selectedSort === 'title' && selectedOrder === 'desc'
+        }"
+      >
+        Título {{ selectedSort === 'title' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button 
+        (click)="sortBy('durationSec')" 
+        [ngClass]="{
+          active: selectedSort === 'durationSec',
+          'desc': selectedSort === 'durationSec' && selectedOrder === 'desc'
+        }"
+      >
+        Duración {{ selectedSort === 'durationSec' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button 
+        (click)="sortBy('playCount')" 
+        [ngClass]="{
+          active: selectedSort === 'playCount',
+          'desc': selectedSort === 'playCount' && selectedOrder === 'desc'
+        }"
+      >
+        Reproducciones {{ selectedSort === 'playCount' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
     </div>
   </header>
 
-  <div class="song-grid">
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-indicator">
+    Cargando canciones...
+  </div>
+
+  <!-- Grid de canciones -->
+  <div class="song-grid" *ngIf="!isLoading">
     <article class="song-card" *ngFor="let song of songs" (click)="navigateToSongPlayer(song.id)">
       <figure class="song-card__cover">
         <img [src]="song.image" [alt]="'Portada de ' + song.title" loading="lazy" />
@@ -27,6 +162,10 @@
         <h3>{{ song.title }}</h3>
         <p class="song-card__artist">{{ song.artist }}</p>
         <p class="song-card__description">{{ song.description }}</p>
+        <div class="song-card__metadata" *ngIf="song.genre || song.language">
+          <span *ngIf="song.genre" class="metadata-tag">{{ song.genre }}</span>
+          <span *ngIf="song.language" class="metadata-tag">{{ song.language }}</span>
+        </div>
       </div>
 
       <footer class="song-card__meta">
@@ -34,5 +173,30 @@
         <span class="song-card__price">{{ song.price }}</span>
       </footer>
     </article>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div *ngIf="!isLoading && songs.length === 0" class="no-results">
+    <p>No se encontraron canciones con los filtros seleccionados.</p>
+    <button (click)="clearFilters()" class="btn-clear-filters">Limpiar filtros</button>
+  </div>
+
+  <!-- Paginación (solo cuando se usa backend) -->
+  <div *ngIf="useBackend && !isLoading" class="pagination">
+    <button 
+      (click)="prevPage()" 
+      [disabled]="currentPage === 1"
+      class="pagination-btn"
+    >
+      ← Anterior
+    </button>
+    <span class="pagination-info">Página {{ currentPage }} de {{ totalPages }}</span>
+    <button 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages"
+      class="pagination-btn"
+    >
+      Siguiente →
+    </button>
   </div>
 </section>

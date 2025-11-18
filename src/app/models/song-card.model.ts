@@ -9,5 +9,16 @@ export interface SongCard {
   image: string;
   audio: string;
   durationSec: number;
-  createdAt: string
+  createdAt: string;
+  // Campos adicionales del backend
+  albumId?: string;
+  labelId?: string;
+  genre?: string;
+  genres?: string[];
+  tag?: string;
+  tags?: string[];
+  language?: string;
+  releaseDate?: string;
+  trackNumber?: number;
+  playCount?: number;
 }

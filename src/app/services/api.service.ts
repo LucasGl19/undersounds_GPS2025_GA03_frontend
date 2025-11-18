@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
-const API = environment.apiUrl;
+const API = environment.contentApiUrl;
 
 export interface AlbumCreateDto {
   title: string;
@@ -34,6 +34,34 @@ export interface TrackCreateDto {
   lyrics?: { language?: string | null; text: string };                      // opcional
 }
 
+export interface TrackFilters {
+  page?: number;
+  limit?: number;
+  include?: string[];
+  albumId?: string;
+  artistId?: string;
+  labelId?: string;
+  genre?: string;
+  tag?: string;
+  language?: string;
+  minDurationSec?: number;
+  maxDurationSec?: number;
+  releasedFrom?: string;  // formato: YYYY-MM-DD
+  releasedTo?: string;    // formato: YYYY-MM-DD
+  sort?: 'title' | 'durationSec' | 'playCount';
+  order?: 'asc' | 'desc';
+  q?: string;
+}
+
+export interface PaginatedTrackResponse {
+  data: any[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
@@ -51,5 +79,25 @@ export class ApiService {
   // --------- TRACKS ----------
   createTrack(body: TrackCreateDto): Observable<{ data: any }> {
     return this.http.post<{ data: any }>(`${API}/tracks`, body);
+  }
+
+  // Obtener tracks con filtros
+  getTracks(filters?: TrackFilters): Observable<PaginatedTrackResponse> {
+    let params: any = {};
+    
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        const value = (filters as any)[key];
+        if (value !== undefined && value !== null && value !== '') {
+          if (Array.isArray(value)) {
+            params[key] = value.join(',');
+          } else {
+            params[key] = value.toString();
+          }
+        }
+      });
+    }
+
+    return this.http.get<PaginatedTrackResponse>(`${API}/tracks`, { params });
   }
 }

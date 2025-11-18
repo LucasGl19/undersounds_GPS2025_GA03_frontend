@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SongCard } from '../models/song-card.model';
+import { ApiService, TrackFilters } from './api.service';
+import { Observable, map, of } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +20,8 @@ export class SongsService {
       durationSec: 320,
       createdAt: '15/05/2022',
       artistId: 1,
-      
+      genre: 'Ambient',
+      language: 'es',
     },
     {
       id: 2,
@@ -31,6 +35,8 @@ export class SongsService {
       durationSec: 285,
       createdAt: '08/09/2023',
       artistId: 2,
+      genre: 'Synthwave',
+      language: 'es',
     },
     {
       id: 3,
@@ -44,6 +50,8 @@ export class SongsService {
       durationSec: 240,
       createdAt: '12/01/2023',
       artistId: 6,
+      genre: 'Lofi',
+      language: 'instrumental',
     },
     {
       id: 4,
@@ -57,6 +65,8 @@ export class SongsService {
       durationSec: 360,
       createdAt: '05/06/2022',
       artistId: 4,
+      genre: 'Shoegaze',
+      language: 'en',
     },
     {
       id: 5,
@@ -70,6 +80,8 @@ export class SongsService {
       durationSec: 275,
       createdAt: '22/11/2020', 
       artistId: 5,
+      genre: 'Folk',
+      language: 'es',
     },
     {
       id: 6,
@@ -83,11 +95,31 @@ export class SongsService {
       durationSec: 310,
       createdAt: '30/03/2022',
       artistId: 3,
+      genre: 'House',
+      language: 'instrumental',
     },
   ];
 
+  constructor(private apiService: ApiService) {}
+
+  // Método para obtener canciones (usa mock si no hay backend disponible)
   getSongs(): SongCard[] {
     return this.songs;
+  }
+
+  // Método para obtener canciones del backend con filtros
+  getTracksFromBackend(filters?: TrackFilters): Observable<{ tracks: any[], pagination: { page: number; limit: number; total: number; totalPages: number } }> {
+    return this.apiService.getTracks(filters).pipe(
+      map(response => ({
+        tracks: response.data,
+        pagination: {
+          page: response.meta.page,
+          limit: response.meta.limit,
+          total: response.meta.total,
+          totalPages: Math.max(1, Math.ceil((response.meta.total || 0) / Math.max(1, response.meta.limit || 1)))
+        }
+      }))
+    );
   }
 
   getArtistSongs(id: number): SongCard[] {

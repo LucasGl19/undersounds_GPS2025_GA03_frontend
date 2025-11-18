@@ -4,7 +4,10 @@ import { environment } from '../../environments/environment';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const accessToken = localStorage.getItem('access');
 
-  if (accessToken && req.url.startsWith(environment.apiUrl)) {
+  const isUsersApi = req.url.startsWith(environment.usersApiUrl);
+  const isContentApi = req.url.startsWith(environment.contentApiUrl);
+
+  if (accessToken && (isUsersApi || isContentApi)) {
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${accessToken}`,

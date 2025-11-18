@@ -42,7 +42,7 @@ export class AuthService {
   userRole$ = this.role.asObservable();
 
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = environment.usersApiUrl;
 
   register(dto: RegisterDto): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, dto);

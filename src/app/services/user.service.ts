@@ -41,7 +41,7 @@ export interface CreateUserDto {
 })
 export class UserService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = environment.usersApiUrl;
 
   getUsers(filters: UserListFilters = {}): Observable<UserListResponse> {
     let params = new HttpParams();
