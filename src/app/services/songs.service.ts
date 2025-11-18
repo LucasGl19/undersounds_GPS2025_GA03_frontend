@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { SongCard } from '../models/song-card.model';
 import { ApiService, TrackFilters } from './api.service';
 import { Observable, map, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SongsService {
+  private apiBase = environment.contentApiUrl;
   private songs: SongCard[] = [
     {
       id: 1,
@@ -124,6 +126,15 @@ export class SongsService {
 
   // Mapea un track del backend al modelo SongCard del frontend
   private mapBackendTrackToSongCard(track: any): SongCard {
+    const normalizeUrl = (u?: string): string => {
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;
+      // Si es relativo, prefijar con el backend
+      if (u.startsWith('/')) return `${this.apiBase}${u}`;
+      return `${this.apiBase}/${u}`;
+    };
+
+    const streamUrl = normalizeUrl(`/tracks/${track.id}/stream`);
     const mapped = {
       id: track.id,
       title: track.title || 'Sin título',
@@ -132,8 +143,9 @@ export class SongsService {
       description: track.album?.description || 'Sin descripción',
       format: 'Streaming digital',
       price: track.album?.price ? `${track.album.price} ${track.album.currency || 'EUR'}` : 'Gratis',
-      image: track.album?.cover?.url || 'assets/images/covers/cover-ambient.svg',
-      audio: track.audio?.url || '',  // <-- AQUÍ está la clave: extraer la URL del objeto audio
+      image: track.album?.cover?.url ? normalizeUrl(track.album.cover.url) : 'assets/images/covers/cover-ambient.svg',
+      // Usar SIEMPRE el endpoint de streaming del backend
+      audio: streamUrl,
       durationSec: track.durationSec || 0,
       createdAt: track.createdAt ? new Date(track.createdAt).toLocaleDateString('es-ES') : '',
       albumId: track.albumId,
