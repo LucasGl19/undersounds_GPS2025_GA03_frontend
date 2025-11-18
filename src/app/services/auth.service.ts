@@ -23,9 +23,14 @@ export interface AuthResponse {
 }
 
 export interface UserProfile {
+  id?: string;
   name: string;
+  username?: string;
   email: string;
   role: string;
+  bio?: string;
+  avatarUrl?: string;
+  createdAt?: string;
 }
 
 export interface DeleteAccountResponse {
@@ -66,14 +71,7 @@ export class AuthService {
   }
 
   me(): Observable<UserProfile> {
-    // return this.http.get<UserProfile>(`${this.apiUrl}/me`);
-    const dummyProfile: UserProfile = {
-      name: 'Jorge Carrasco',
-      email: 'jorge@example.com',
-      role: 'admin',
-    };
-
-    return of(dummyProfile).pipe(delay(1000));
+    return this.http.get<UserProfile>(`${this.apiUrl}/me`);
   }
 
   deleteAccount(): Observable<DeleteAccountResponse> {
@@ -89,6 +87,7 @@ export class AuthService {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
     localStorage.removeItem('role');
+    localStorage.removeItem('user_id');
     this.role.next(null);
     this.loggedIn.next(false);
   }
