@@ -21,18 +21,20 @@ export class SongPlayerComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     
     if (id) {
-      // Intentar primero como número (para datos mock)
+      // Si es un número, buscar en mock
       const numericId = Number(id);
-      if (!isNaN(numericId)) {
+      if (!isNaN(numericId) && numericId > 0 && numericId < 1000) {
         this.song = this.songService.getSongById(numericId);
+        if (this.song) {
+          console.log('🎵 Canción encontrada en mock:', this.song);
+          this.isLoading = false;
+          return;
+        }
       }
       
-      // Si no se encuentra en local o es un string ID, intentar desde el backend
-      if (!this.song) {
-        this.loadSongFromBackend(id);
-      } else {
-        this.isLoading = false;
-      }
+      // Si no es un número o no se encontró en mock, cargar desde backend
+      console.log('🌐 Cargando canción desde backend, ID:', id);
+      this.loadSongFromBackend(id);
     } else {
       this.errorMsg = 'ID de canción no válido';
       this.isLoading = false;

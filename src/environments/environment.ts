@@ -4,5 +4,5 @@ export const environment = {
   // Usuarios y autorización (login, registro, gestión usuarios)
   usersApiUrl: 'http://localhost:8080',
   // Mostrar indicadores de debug (badges, logs, etc.)
-  showDebugInfo: false,
+  showDebugInfo: true,
 };

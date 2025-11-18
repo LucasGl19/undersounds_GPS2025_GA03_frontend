@@ -124,7 +124,7 @@ export class SongsService {
 
   // Mapea un track del backend al modelo SongCard del frontend
   private mapBackendTrackToSongCard(track: any): SongCard {
-    return {
+    const mapped = {
       id: track.id,
       title: track.title || 'Sin título',
       artist: track.album?.artist?.name || track.album?.artistId || 'Artista desconocido',
@@ -132,7 +132,7 @@ export class SongsService {
       description: track.album?.description || 'Sin descripción',
       format: 'Streaming digital',
       price: track.album?.price ? `${track.album.price} ${track.album.currency || 'EUR'}` : 'Gratis',
-      image: track.album?.cover?.url || 'assets/images/covers/default-cover.svg',
+      image: track.album?.cover?.url || 'assets/images/covers/cover-ambient.svg',
       audio: track.audio?.url || '',  // <-- AQUÍ está la clave: extraer la URL del objeto audio
       durationSec: track.durationSec || 0,
       createdAt: track.createdAt ? new Date(track.createdAt).toLocaleDateString('es-ES') : '',
@@ -147,6 +147,16 @@ export class SongsService {
       trackNumber: track.trackNumber,
       playCount: track.stats?.playCount || 0,
     };
+    
+    // Log para debug
+    if (track.audio) {
+      console.log(`🎵 Track "${mapped.title}" tiene audio:`, track.audio);
+      console.log(`   Mapeado a: ${mapped.audio}`);
+    } else {
+      console.warn(`⚠️ Track "${mapped.title}" NO tiene objeto audio`, track);
+    }
+    
+    return mapped;
   }
 
   getArtistSongs(id: number): SongCard[] {
@@ -159,7 +169,7 @@ export class SongsService {
 
   // Obtener canción individual del backend por ID
   getTrackByIdFromBackend(trackId: string): Observable<SongCard> {
-    return this.apiService.getTrackById(trackId, ['album', 'audio', 'lyrics', 'stats']).pipe(
+    return this.apiService.getTrackById(trackId).pipe(
       map(response => this.mapBackendTrackToSongCard(response.data))
     );
   }

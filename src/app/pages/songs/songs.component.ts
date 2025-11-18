@@ -72,10 +72,11 @@ export class SongsComponent implements OnInit {
       next: (response) => {
         if (this.showDebugInfo) {
           console.log('✅ Datos cargados desde el BACKEND:', response);
+          console.log('📊 Total de canciones recibidas:', response.tracks.length);
         }
         this.songs = response.tracks;
         this.totalPages = response.pagination.totalPages;
-          this.dataSource = 'backend';
+        this.dataSource = 'backend';
         this.isLoading = false;
       },
       error: (error) => {
@@ -86,7 +87,6 @@ export class SongsComponent implements OnInit {
         const msg = error?.message || error?.statusText || 'Error desconocido';
         this.errorMsg = `No se pudieron cargar las canciones (HTTP ${status}). ${msg}`;
         this.isLoading = false;
-        // Mantener el backend activo para reintentar, no hacer fallback automático
         this.useBackend = true;
         this.dataSource = 'backend';
       }
@@ -98,6 +98,7 @@ export class SongsComponent implements OnInit {
       console.log('📦 Usando datos de PRUEBA (mock)');
     }
     this.dataSource = 'mock';
+    this.isLoading = false;
     let filteredSongs = this.songService.getSongs();
 
     // Aplicar filtros localmente
@@ -130,6 +131,8 @@ export class SongsComponent implements OnInit {
     const filters: TrackFilters = {
       page: this.currentPage,
       limit: this.itemsPerPage,
+      // Temporalmente sin include para probar
+      // include: ['album', 'audio', 'stats'],
     };
 
     if (this.searchQuery) filters.q = this.searchQuery;
