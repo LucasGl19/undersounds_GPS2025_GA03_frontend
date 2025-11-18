@@ -21,9 +21,35 @@ section{
   object-fit: cover;
 }
 
+.profile-username {
+  color: #666;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+}
+
+.profile-email {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
 .profile-role {
   margin-top: 0.5rem;
   font-weight: 600;
+  color: #0066cc;
+}
+
+.profile-bio {
+  margin-top: 1rem;
+  max-width: 500px;
+  text-align: center;
+  color: #555;
+  line-height: 1.5;
+}
+
+.profile-date {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #888;
 }
 
 .profile-message {

@@ -13,10 +13,17 @@
         </button>
       </div>
       <div class="profile-page">
-        <img src="assets/images/ui/user-avatar.svg" alt="Foto de perfil" class="profile-photo" />
+        <img 
+          [src]="profile.avatarUrl || 'assets/images/ui/user-avatar.svg'" 
+          [alt]="'Foto de perfil de ' + profile.name" 
+          class="profile-photo" 
+        />
         <h2>{{ profile.name }}</h2>
-        <p>{{ profile.email }}</p>
+        <p *ngIf="profile.username" class="profile-username">{{ '@' + profile.username }}</p>
+        <p class="profile-email">{{ profile.email }}</p>
         <p class="profile-role">Rol: {{ profile.role }}</p>
+        <p *ngIf="profile.bio" class="profile-bio">{{ profile.bio }}</p>
+        <p *ngIf="profile.createdAt" class="profile-date">Miembro desde: {{ profile.createdAt | date:'longDate' }}</p>
       </div>
     </section>
   </ng-container>
