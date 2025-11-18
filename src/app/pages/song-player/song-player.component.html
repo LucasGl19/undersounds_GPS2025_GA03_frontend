@@ -9,14 +9,14 @@
 
   <article class="song-card song-card--large" *ngIf="song && !isLoading">
     <figure class="song-card__cover song-card__cover--large">
-      <img [src]="song?.image" [alt]="song?.title" />
+      <img [src]="song.image" [alt]="song.title" />
     </figure>
 
     <div class="song-card__body">
-      <h1>{{ song?.title }}</h1>
-      <p class="song-card__artist">{{ song?.artist }}</p>
+      <h1>{{ song.title }}</h1>
+      <p class="song-card__artist">{{ song.artist }}</p>
 
-      <div *ngIf="song?.audio; else noAudio">
+      <div *ngIf="song.audio; else noAudio">
         <audio controls class="audio-player">
           <source [src]="song.audio" type="audio/mpeg">
           Tu navegador no soporta el elemento de audio.
@@ -29,7 +29,7 @@
         </div>
       </ng-template>
 
-      <p class="song-card__description">{{ song?.description }}</p>
+      <p class="song-card__description">{{ song.description }}</p>
     </div>
   </article>
 </section>

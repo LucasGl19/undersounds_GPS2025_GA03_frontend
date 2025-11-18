@@ -17,7 +17,7 @@ import { SourceMap } from '@angular/compiler';
 export class ModifyCreationsComponent implements OnInit {
    artistSongs: SongCard[] = [] ;
    artistAlbums: Album[] = [];
-   openedSongId: number | null = null;
+   openedSongId: number | string | null = null;
    openedAlbumId: number | null = null;
 
    constructor(private authService: AuthService, private albumService:AlbumsService, private songService: SongsService){};
@@ -29,7 +29,7 @@ export class ModifyCreationsComponent implements OnInit {
       }
    }
 
-   toggleSongEditor(id: number) {
+   toggleSongEditor(id: number | string) {
       this.openedSongId = this.openedSongId == id? null : id;
    }
 
