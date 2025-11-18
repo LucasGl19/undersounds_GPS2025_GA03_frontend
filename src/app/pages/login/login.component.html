@@ -2,6 +2,13 @@
     <h1>
         Iniciar sesión
     </h1>
+    
+    @if (errorMessage) {
+        <div class="error-message">
+            {{ errorMessage }}
+        </div>
+    }
+    
     <div>
         <label for="emailOrUsername">Email o Nombre de Usuario</label>
         <input id="emailOrUsername" name="emailOrUsername" type="text" ngModel required />

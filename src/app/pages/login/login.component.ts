@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+  errorMessage: string = '';
+
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(form: any) {
@@ -19,6 +21,9 @@ export class LoginComponent {
     console.log('Email or Username:', emailOrUsername);
     console.log('Password:', password);
 
+    // Limpiar mensaje de error previo
+    this.errorMessage = '';
+
     this.authService.login(emailOrUsername, password).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
@@ -26,6 +31,7 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('Login failed:', error);
+        this.errorMessage = 'El usuario o contraseña son incorrectos';
       },
     });
   }
