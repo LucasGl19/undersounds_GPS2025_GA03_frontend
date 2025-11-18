@@ -26,6 +26,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutBasicoComponent,
     children: [
+      { path: '', redirectTo: 'songs', pathMatch: 'full' },
       { path: 'songs', component: SongsComponent },
       { path: 'artists', component: ArtistsComponent },
       { path: 'merchandising', component: MerchandisingComponent },
@@ -45,7 +46,10 @@ export const routes: Routes = [
       { path: 'modify-creations', component: ModifyCreationsComponent},
 
       { path: 'upload-song', component: UploadSongComponent },
-      {path: 'upload-album', component: UploadAlbumComponent}
+      {path: 'upload-album', component: UploadAlbumComponent},
+
+      // Fallback
+      { path: '**', redirectTo: 'songs' }
 
     ],
   },

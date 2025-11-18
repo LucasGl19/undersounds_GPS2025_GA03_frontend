@@ -33,6 +33,12 @@ export interface UserProfile {
   createdAt?: string;
 }
 
+export interface UserUpdateDto {
+  username?: string;
+  avatarUrl?: string;
+  bio?: string;
+}
+
 export interface DeleteAccountResponse {
   message: string;
 }
@@ -72,6 +78,10 @@ export class AuthService {
 
   me(): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${this.apiUrl}/me`);
+  }
+
+  updateProfile(data: UserUpdateDto): Observable<UserProfile> {
+    return this.http.patch<UserProfile>(`${this.apiUrl}/me`, data);
   }
 
   deleteAccount(): Observable<DeleteAccountResponse> {
