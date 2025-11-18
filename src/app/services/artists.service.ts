@@ -1,9 +1,23 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Artist } from '../models/artist.model';
+import { environment } from '../../environments/environment';
+
+interface PagedUsers {
+  items: any[];
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ArtistsService {
+  private apiUrl = `${environment.usersApiUrl}/artists`;
+  
   artists: Artist[] = [
    {
       name: 'Luna Waves',
@@ -30,9 +44,22 @@ export class ArtistsService {
       createdAt: '30/10/2024',   
     },
   ]
-  constructor() { }
+  
+  constructor(private http: HttpClient) { }
 
   getArtists(): Artist[] {
     return this.artists;
+  }
+
+  searchArtists(query: string, page: number = 1, pageSize: number = 20): Observable<PagedUsers> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    
+    if (query && query.trim()) {
+      params = params.set('q', query.trim());
+    }
+    
+    return this.http.get<PagedUsers>(this.apiUrl, { params });
   }
 }

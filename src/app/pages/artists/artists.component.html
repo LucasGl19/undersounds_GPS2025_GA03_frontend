@@ -5,6 +5,20 @@
       Sellos y proyectos que están marcando tendencia dentro de la escena
       independiente.
     </p>
+    
+    <!-- Barra de búsqueda -->
+    <div class="search-bar-container">
+      <input 
+        type="search" 
+        class="search-input" 
+        placeholder="Buscar artistas..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchInput(searchQuery)"
+      />
+      <span class="search-status" *ngIf="isSearching">Buscando...</span>
+      <span class="search-error" *ngIf="searchError">{{ searchError }}</span>
+    </div>
+    
     <div class="search-elements-container">
         <button class="filter-btn" (click)="toggleFilters()">
           <img src="assets/images/ui/filtrar.png" alt="Filtros"/>
@@ -31,7 +45,39 @@
           </div>
     </div>
   </header>
-  <div class="artist-grid">
+  
+  <!-- Mensaje de carga -->
+  <div class="loading-message" *ngIf="isSearching">
+    <p>Cargando artistas...</p>
+  </div>
+  
+  <!-- Resultados del backend -->
+  <div class="search-results" *ngIf="!isSearching && backendArtists.length > 0">
+    <h2 *ngIf="searchQuery">Resultados de búsqueda ({{ backendArtists.length }})</h2>
+    <h2 *ngIf="!searchQuery">Artistas ({{ backendArtists.length }})</h2>
+    <div class="artist-grid">
+      <article class="artist-card" *ngFor="let artist of backendArtists">
+        <img
+          [src]="artist.avatarUrl || 'assets/images/artists/default-artist.svg'"
+          [alt]="'Perfil de ' + artist.username"
+          loading="lazy"
+        />
+        <div class="artist-card__content">
+          <h3>{{ artist.username }}</h3>
+          <p class="artist-card__genre">{{ artist.role }}</p>
+          <p class="artist-card__bio">{{ artist.bio || 'Sin biografía disponible' }}</p>
+        </div>
+      </article>
+    </div>
+  </div>
+  
+  <!-- Mensaje cuando no hay resultados -->
+  <div class="no-results" *ngIf="!isSearching && backendArtists.length === 0 && searchQuery">
+    <p>No se encontraron artistas con "{{ searchQuery }}"</p>
+  </div>
+  
+  <!-- Fallback a artistas locales si el backend falla y no hay búsqueda -->
+  <div class="artist-grid" *ngIf="!isSearching && backendArtists.length === 0 && !searchQuery && artists.length > 0">
     <article class="artist-card" *ngFor="let artist of artists">
       <img
         [src]="artist.image"
