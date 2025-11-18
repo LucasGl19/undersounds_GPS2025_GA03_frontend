@@ -10,6 +10,8 @@ interface PagedUsers {
   page: number;
   pageSize: number;
   total: number;
+  sortBy?: string;
+  sortOrder?: string;
 }
 
 @Injectable({
@@ -51,15 +53,17 @@ export class ArtistsService {
     return this.artists;
   }
 
-  searchArtists(query: string, page: number = 1, pageSize: number = 20): Observable<PagedUsers> {
+  searchArtists(query: string, page: number = 1, pageSize: number = 20, sortBy: string = 'name', sortOrder: string = 'asc'): Observable<PagedUsers> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('page_size', pageSize.toString());
-    
+      .set('page_size', pageSize.toString())
+      .set('sortBy', sortBy)
+      .set('sortOrder', sortOrder);
+
     if (query && query.trim()) {
       params = params.set('q', query.trim());
     }
-    
+
     return this.http.get<PagedUsers>(this.apiUrl, { params });
   }
 }
