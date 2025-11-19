@@ -9,16 +9,30 @@ section {
 .profile-page {
   display: flex;
   margin: auto;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-evenly;
   font-family: sans-serif;
   background: white;
   padding: 3rem 2rem;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  max-width: 1000px;
   width: 100%;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-artist-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .profile-photo {

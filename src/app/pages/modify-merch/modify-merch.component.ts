@@ -9,25 +9,32 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-modify-merch',
   imports: [FormsModule, CommonModule],
   templateUrl: './modify-merch.component.html',
-  styleUrl: './modify-merch.component.css'
+  styleUrl: './modify-merch.component.css',
 })
-export class ModifyMerchComponent implements OnInit{
+export class ModifyMerchComponent implements OnInit {
   merch: MerchItem[] = [];
   openedItemId: number | null = null;
   modalOpen = false;
   selectedItem: MerchItem | null = null;
   editableItem: any = {};
-  
-  constructor(private auth: AuthService, private merchService: MerchService){};
+
+  constructor(private auth: AuthService, private merchService: MerchService) {}
 
   ngOnInit(): void {
     const artistId = 1;
-    this.merch = this.merchService.getArtistMerch(artistId);
+    this.merchService.getArtistMerch(artistId).subscribe({
+      next: (response) => {
+        this.merch = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching merch items for artist', err);
+      },
+    });
   }
 
-  openEditionModal(item : MerchItem) {
+  openEditionModal(item: MerchItem) {
     this.selectedItem = item;
-    this.editableItem = {... item};
+    this.editableItem = { ...item };
     this.modalOpen = true;
   }
 

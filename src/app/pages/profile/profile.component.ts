@@ -8,10 +8,12 @@ import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-d
 import { UserService } from '../../services/user.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ArtistStatsComponent } from '../../components/artist-stats/artist-stats.component';
+import { ArtistAlbumsComponent } from '../../components/artist-albums/artist-albums.component';
+import { ArtistMerchComponent } from '../../components/artist-merch/artist-merch.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, ArtistStatsComponent],
+  imports: [CommonModule, ReactiveFormsModule, ArtistStatsComponent, ArtistAlbumsComponent, ArtistMerchComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
