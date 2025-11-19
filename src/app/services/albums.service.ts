@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Album } from '../models/album.model';
-import { ApiService } from './api.service';
-import { map } from 'rxjs';
+import { ApiService, AlbumFilters } from './api.service';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -93,5 +93,39 @@ export class AlbumsService {
 
   saveAlbumAsFavorite(albumId: String) : void {
     console.log(`Álbum con ID ${albumId} guardado como favorito.`);
+  }
+
+  // Método para obtener todos los álbumes del backend con filtros
+  getAlbumsFromBackend(filters: AlbumFilters): Observable<{ albums: Album[]; pagination: { totalPages: number } }> {
+    return this.apiService.getAlbums(filters).pipe(
+      map(response => {
+        const albums = (response.data || []).map((album: any) => ({
+          id: album.id,
+          title: album.title || 'Sin título',
+          description: album.description || '',
+          artistId: album.artistId || '',
+          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseState: album.releaseState || 'draft',
+          price: album.price || 0,
+          currency: album.currency || 'EUR',
+          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          artistName: album.artistName || 'Artista desconocido'
+        })) as Album[];
+
+        // Calcular totalPages basado en el total y limit
+        const totalPages = Math.ceil((response.meta?.total || 0) / (response.meta?.limit || 20));
+
+        return {
+          albums,
+          pagination: { totalPages }
+        };
+      })
+    );
+  }
+
+  // Método para obtener álbumes locales (mock)
+  getAlbums(): Album[] {
+    return this.albums;
   }
 }

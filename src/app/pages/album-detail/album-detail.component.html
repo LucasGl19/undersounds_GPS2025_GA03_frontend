@@ -1,0 +1,97 @@
+<div class="album-detail-page" *ngIf="!isLoading && album; else loading">
+  <!-- Header con botón atrás -->
+  <div class="album-header">
+    <button class="btn-back" (click)="goBack()">← Volver a Álbumes</button>
+  </div>
+
+  <!-- Contenedor principal del álbum -->
+  <div class="album-container">
+    <!-- Sección de portada y info básica -->
+    <div class="album-hero">
+      <figure class="album-cover">
+        <img [src]="album.cover" [alt]="album.title" loading="lazy" />
+      </figure>
+
+      <div class="album-info">
+        <h1 class="album-title">{{ album.title }}</h1>
+        
+        <div class="album-metadata">
+          <span class="metadata-item" *ngIf="album.releaseDate">
+            <strong>Lanzamiento:</strong> {{ album.releaseDate }}
+          </span>
+          <span class="metadata-item" *ngIf="album.price > 0">
+            <strong>Precio:</strong> {{ album.price }} {{ album.currency }}
+          </span>
+          <span class="metadata-item" *ngIf="!album.price || album.price === 0">
+            <strong>Precio:</strong> Gratis
+          </span>
+          <span class="metadata-item state" [ngClass]="'state-' + album.releaseState">
+            {{ album.releaseState }}
+          </span>
+        </div>
+
+        <div class="album-genres" *ngIf="album.genres && album.genres.length > 0">
+          <span class="genre-tag" *ngFor="let genre of album.genres">{{ genre }}</span>
+        </div>
+
+        <p class="album-description" *ngIf="album.description">
+          {{ album.description }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Sección de canciones -->
+    <div class="album-tracks-section">
+      <h2>Canciones del Álbum</h2>
+
+      <div *ngIf="tracks.length === 0" class="no-tracks">
+        <p>Este álbum aún no tiene canciones.</p>
+      </div>
+
+      <div *ngIf="tracks.length > 0" class="tracks-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-number">#</th>
+              <th class="col-title">Título</th>
+              <th class="col-duration">Duración</th>
+              <th class="col-plays">Reproducciones</th>
+              <th class="col-action">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="track-row" *ngFor="let track of tracks; let i = index" (click)="navigateToSongPlayer(track.id)">
+              <td class="col-number">{{ i + 1 }}</td>
+              <td class="col-title">
+                <div class="track-info">
+                  <div class="track-title">{{ track.title }}</div>
+                  <div class="track-artist">{{ track.artist }}</div>
+                </div>
+              </td>
+              <td class="col-duration">{{ formatDuration(track.durationSec) }}</td>
+              <td class="col-plays">{{ track.playCount }}</td>
+              <td class="col-action">
+                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">
+                  Reproducir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Template de carga -->
+<ng-template #loading>
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando álbum...</p>
+  </div>
+
+  <div class="error-container" *ngIf="!isLoading && errorMsg">
+    <p class="error-message">{{ errorMsg }}</p>
+    <button class="btn-back" (click)="goBack()">← Volver a Álbumes</button>
+  </div>
+</ng-template>

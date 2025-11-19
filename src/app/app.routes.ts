@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { SongsComponent } from './pages/songs/songs.component';
+import { AlbumsComponent } from './pages/albums/albums.component';
+import { AlbumDetailComponent } from './pages/album-detail/album-detail.component';
 import { LayoutBasicoComponent } from './layouts/layout-basico/layout-basico.component';
 import { EmptyComponent } from './pages/empty/empty.component';
 import { ArtistsComponent } from './pages/artists/artists.component';
@@ -27,6 +29,8 @@ export const routes: Routes = [
     component: LayoutBasicoComponent,
     children: [
       { path: 'songs', component: SongsComponent },
+      { path: 'albums', component: AlbumsComponent },
+      { path: 'album/:id', component: AlbumDetailComponent },
       { path: 'artists', component: ArtistsComponent },
       { path: 'merchandising', component: MerchandisingComponent },
       { path: 'profile', component: ProfileComponent },

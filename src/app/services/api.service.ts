@@ -117,6 +117,11 @@ export class ApiService {
     return this.http.post<{ data: any }>(`${API}/albums/${albumId}/tracks`, { tracks });
   }
 
+  // Obtener un álbum específico por ID
+  getAlbumById(albumId: string): Observable<{ data: any }> {
+    return this.http.get<{ data: any }>(`${API}/albums/${albumId}`);
+  }
+
   // --------- TRACKS ----------
   createTrack(body: TrackCreateDto): Observable<{ data: any }> {
     return this.http.post<{ data: any }>(`${API}/tracks`, body);
@@ -138,6 +143,8 @@ export class ApiService {
         }
       });
     }
+
+    console.log('[ApiService] getTracks called with params:', params);
 
     return this.http.get<PaginatedTrackResponse>(`${API}/tracks`, { params });
   }

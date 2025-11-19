@@ -10,6 +10,7 @@ export class SubheaderComponent {
   constructor(private router: Router) {}
 
   navigateToSongs() { this.router.navigate(['/songs']);}
+  navigateToAlbums() { this.router.navigate(['/albums']);}
   navigateToArtists() {this.router.navigate(['/artists'])}
   navigateToMerchandising() {this.router.navigate(['/merchandising'])}
 }
