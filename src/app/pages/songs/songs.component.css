@@ -255,6 +255,30 @@
   letter-spacing: 0.05em;
 }
 
+.song-card__plays {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, rgba(98, 153, 201, 0.08) 0%, rgba(98, 153, 201, 0.12) 100%);
+  border: 1px solid rgba(98, 153, 201, 0.2);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-stronger);
+  transition: all 0.2s ease;
+}
+
+.song-card__plays span:first-child {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.song-card__plays span:last-child {
+  letter-spacing: 0.02em;
+}
+
 .song-card__meta {
   display: flex;
   justify-content: space-between;
