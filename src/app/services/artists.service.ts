@@ -46,7 +46,6 @@ export class ArtistsService {
       createdAt: '30/10/2024',   
     },
   ]
-  
   constructor(private http: HttpClient) { }
 
   getArtists(): Artist[] {

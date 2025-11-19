@@ -8,24 +8,13 @@
   <ng-container *ngIf="user() as profile; else errorState">
     <section>
       <div class="profile-actions">
-        <button 
-          *ngIf="!isEditing()" 
-          (click)="onEdit()" 
-          class="btn-edit">
+        <button *ngIf="!isEditing()" (click)="onEdit()" class="btn-edit">
           Editar perfil
         </button>
-        <button 
-          *ngIf="isEditing()" 
-          (click)="onSave()" 
-          [disabled]="saving()"
-          class="btn-save">
+        <button *ngIf="isEditing()" (click)="onSave()" [disabled]="saving()" class="btn-save">
           {{ saving() ? 'Guardando...' : 'Guardar' }}
         </button>
-        <button 
-          *ngIf="isEditing()" 
-          (click)="onCancel()" 
-          [disabled]="saving()"
-          class="btn-cancel">
+        <button *ngIf="isEditing()" (click)="onCancel()" [disabled]="saving()" class="btn-cancel">
           Cancelar
         </button>
         <button (click)="onDeleteAccount()" class="btn-delete-account">
@@ -33,19 +22,17 @@
         </button>
       </div>
       <div class="profile-page">
-        <img 
-          [src]="profile.avatarUrl || 'assets/images/ui/user-avatar.svg'" 
-          [alt]="'Foto de perfil de ' + profile.name" 
-          class="profile-photo" 
-        />
+        <img [src]="profile.avatarUrl || 'assets/images/ui/user-avatar.svg'" [alt]="'Foto de perfil de ' + profile.name"
+          class="profile-photo" />
         <h2>{{ profile.name }}</h2>
-        
+
         <ng-container *ngIf="!isEditing(); else editMode">
           <p *ngIf="profile.username" class="profile-username">{{ '@' + profile.username }}</p>
           <p class="profile-email">{{ profile.email }}</p>
           <p class="profile-role">Rol: {{ profile.role }}</p>
           <p *ngIf="profile.bio" class="profile-bio">{{ profile.bio }}</p>
           <p *ngIf="profile.createdAt" class="profile-date">Miembro desde: {{ profile.createdAt | date:'longDate' }}</p>
+          <app-artist-stats *ngIf="profile.role === 'artista'" [artistId]="profile.id"></app-artist-stats>
         </ng-container>
 
         <ng-template #editMode>
@@ -55,28 +42,16 @@
               <label>Foto de perfil</label>
               <div class="avatar-upload-container">
                 <div class="avatar-preview">
-                  <img 
-                    [src]="previewUrl() || profile.avatarUrl || 'assets/images/ui/user-avatar.svg'" 
-                    [alt]="'Vista previa de foto de perfil'" 
-                    class="preview-image" 
-                  />
+                  <img [src]="previewUrl() || profile.avatarUrl || 'assets/images/ui/user-avatar.svg'"
+                    [alt]="'Vista previa de foto de perfil'" class="preview-image" />
                 </div>
                 <div class="avatar-actions">
                   <label for="avatarInput" class="btn-upload">
-                    <input 
-                      type="file" 
-                      id="avatarInput" 
-                      accept="image/*"
-                      (change)="onFileSelected($event)"
-                      style="display: none;"
-                    />
+                    <input type="file" id="avatarInput" accept="image/*" (change)="onFileSelected($event)"
+                      style="display: none;" />
                     📷 Seleccionar imagen
                   </label>
-                  <button 
-                    type="button" 
-                    *ngIf="previewUrl()" 
-                    (click)="removeImage()"
-                    class="btn-remove-image">
+                  <button type="button" *ngIf="previewUrl()" (click)="removeImage()" class="btn-remove-image">
                     ✕ Quitar
                   </button>
                   <small class="image-hint">Máximo 2MB (JPG, PNG, GIF)</small>
@@ -86,13 +61,8 @@
 
             <div class="form-group">
               <label for="username">Nombre de usuario</label>
-              <input 
-                id="username"
-                type="text" 
-                formControlName="username"
-                class="form-control"
-                placeholder="Tu nombre de usuario"
-              />
+              <input id="username" type="text" formControlName="username" class="form-control"
+                placeholder="Tu nombre de usuario" />
               <span class="error" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
                 El nombre de usuario debe tener al menos 3 caracteres
               </span>
@@ -100,13 +70,8 @@
 
             <div class="form-group">
               <label for="bio">Biografía</label>
-              <textarea 
-                id="bio"
-                formControlName="bio"
-                class="form-control"
-                rows="4"
-                placeholder="Cuéntanos sobre ti..."
-              ></textarea>
+              <textarea id="bio" formControlName="bio" class="form-control" rows="4"
+                placeholder="Cuéntanos sobre ti..."></textarea>
               <span class="error" *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched">
                 La biografía no puede superar los 500 caracteres
               </span>

@@ -1,0 +1,18 @@
+.stats-box {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.stat-item > span {
+    font-weight: bold; 
+    margin-right: 8px;
+}
