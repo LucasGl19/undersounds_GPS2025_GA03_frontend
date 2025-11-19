@@ -7,10 +7,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
 import { UserService } from '../../services/user.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ArtistStatsComponent } from '../../components/artist-stats/artist-stats.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ArtistStatsComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
