@@ -8,7 +8,7 @@ import { ArtistStats, StatsService } from '../../services/stats.service';
   styleUrl: './artist-stats.component.css',
 })
 export class ArtistStatsComponent {
-  @Input() artistId : string | undefined;
+  @Input() artistId: string | undefined;
   stats?: ArtistStats;
 
   constructor(private statsService: StatsService) {}
@@ -22,8 +22,8 @@ export class ArtistStatsComponent {
         console.error('Error fetching artist stats', err);
         this.stats = {
           totalSales: 0,
-          totalPlays: 0
-        }
+          totalPlays: 0,
+        };
       },
     });
   }

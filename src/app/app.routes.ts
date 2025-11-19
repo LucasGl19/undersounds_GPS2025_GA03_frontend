@@ -22,6 +22,7 @@ import { ModifyCreationsComponent } from './modify-creations/modify-creations.co
 
 import { UploadSongComponent } from './upload-song/upload-song.component';
 import { UploadAlbumComponent } from './upload-album/upload-album.component';
+import { MerchDetailComponent } from './pages/merch-detail/merch-detail.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,7 @@ export const routes: Routes = [
       { path: 'album/:id', component: AlbumDetailComponent },
       { path: 'artists', component: ArtistsComponent },
       { path: 'merchandising', component: MerchandisingComponent },
+      { path: 'merchandising/:id', component: MerchDetailComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'home', component: EmptyComponent },

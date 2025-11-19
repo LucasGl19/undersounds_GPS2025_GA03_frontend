@@ -1,0 +1,62 @@
+<div class="merch-detail-page" *ngIf="!isLoading && merch; else loading">
+  <!-- Header con botón atrás -->
+  <div class="merch-header">
+    <button class="btn-back" (click)="goBack()">← Volver a Merch</button>
+  </div>
+
+  <div class="merch-container">
+    <!-- Imagen principal e info básica -->
+    <div class="merch-hero">
+      <figure class="merch-cover" *ngIf="merch.cover">
+        <img [src]="merch.cover.url" [alt]="merch.title" loading="lazy" />
+      </figure>
+
+      <div class="merch-info">
+        <h1 class="merch-title">{{ merch.title }}</h1>
+
+        <div class="merch-metadata">
+          <span class="metadata-merch">
+            <strong>Precio:</strong> {{ merch.priceCents / 100 | currency:merch.currency }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.stock !== null">
+            <strong>Stock:</strong> {{ merch.stock }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.sku">
+            <strong>SKU:</strong> {{ merch.sku }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.category">
+            <strong>Categoría:</strong> {{ merch.category }}
+          </span>
+          <span class="metadata-merch" *ngIf="!merch.active">
+            <strong>Estado:</strong> Inactivo
+          </span>
+        </div>
+
+        <p class="merch-description" *ngIf="merch.description">
+          {{ merch.description }}
+        </p>
+
+        <div class="merch-dates">
+          <span class="metadata-merch">
+            <strong>Creado:</strong> {{ merch.createdAt | date:'medium' }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.updatedAt">
+            <strong>Actualizado:</strong> {{ merch.updatedAt | date:'medium' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando artículo...</p>
+  </div>
+
+  <div class="error-container" *ngIf="!isLoading && errorMsg">
+    <p class="error-message">{{ errorMsg }}</p>
+    <button class="btn-back" (click)="goBack()">← Volver a Merch</button>
+  </div>
+</ng-template>
