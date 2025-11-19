@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
 import { SongCard } from '../../models/song-card.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-song-player',
@@ -14,8 +15,9 @@ export class SongPlayerComponent implements OnInit {
   song: SongCard | undefined;
   isLoading: boolean = true;
   errorMsg: string = '';
+  @ViewChild('audioRef') audioRef!: ElementRef<HTMLAudioElement>;
   
-  constructor(private route: ActivatedRoute, private songService: SongsService){}
+  constructor(private route: ActivatedRoute, private songService: SongsService, private api: ApiService){}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -54,5 +56,24 @@ export class SongPlayerComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  // Evento cuando comienza la reproducción. El backend incrementa el playCount
+  // al solicitar el stream; aquí refrescamos las estadísticas para mostrar el
+  // contador actualizado en UI.
+  onPlay(): void {
+    const id = this.song?.id?.toString();
+    if (!id) return;
+    // Pequeño retraso para asegurar que el backend procesó el incremento
+    setTimeout(() => {
+      this.api.getTrackStats(id).subscribe({
+        next: (res) => {
+          if (this.song) {
+            this.song.playCount = res?.data?.playCount ?? this.song.playCount ?? 0;
+          }
+        },
+        error: (e) => console.warn('No se pudieron refrescar las estadísticas:', e)
+      });
+    }, 250);
   }
 }

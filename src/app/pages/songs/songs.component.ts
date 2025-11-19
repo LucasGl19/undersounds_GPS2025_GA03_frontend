@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { SongCard } from '../../models/song-card.model';
 import { SongsService } from '../../services/songs.service';
 import { FormsModule } from '@angular/forms';
-import { TrackFilters } from '../../services/api.service';
+import { ApiService, TrackFilters } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -42,7 +42,7 @@ export class SongsComponent implements OnInit {
   availableTags: string[] = ['indie', 'experimental', 'acoustic', 'live', 'remix', 'instrumental', 'lo-fi', 'ambient', 'chill'];
   availableLanguages: string[] = ['es', 'en', 'fr', 'de', 'it', 'pt', 'instrumental'];
 
-  constructor(private songService: SongsService, private router: Router) {}
+  constructor(private songService: SongsService, private router: Router, private api: ApiService) {}
 
   navigateToSongPlayer(id: number | string) {
     this.router.navigate(['song-player', id]);
@@ -78,19 +78,40 @@ export class SongsComponent implements OnInit {
         this.totalPages = response.pagination.totalPages;
         this.dataSource = 'backend';
         this.isLoading = false;
+        // Refrescar playCount desde /tracks/{id}/stats para asegurar valores recientes
+        this.refreshStatsForVisibleSongs();
       },
       error: (error) => {
-        if (this.showDebugInfo) {
-          console.error('❌ Error al conectar con backend:', error);
-        }
+        console.error('❌ Error al conectar con backend:', error);
         const status = error?.status ?? 'desconocido';
         const msg = error?.message || error?.statusText || 'Error desconocido';
         this.errorMsg = `No se pudieron cargar las canciones (HTTP ${status}). ${msg}`;
+        // Fallback a mock para no dejar la vista vacía
+        this.useBackend = false;
         this.isLoading = false;
-        this.useBackend = true;
-        this.dataSource = 'backend';
+        this.loadFromMock();
       }
     });
+  }
+
+  // Obtiene estadísticas actualizadas para las canciones actualmente visibles
+  private refreshStatsForVisibleSongs() {
+    // Evitar si estamos usando mock
+    if (this.dataSource !== 'backend') return;
+    const isUuidLike = (v: number | string | undefined) => typeof v === 'string' && v.length >= 24;
+    for (const s of this.songs) {
+      const id = s.id;
+      if (!isUuidLike(id)) continue;
+      this.api.getTrackStats(String(id)).subscribe({
+        next: (res) => {
+          const pc = res?.data?.playCount;
+          if (typeof pc === 'number') s.playCount = pc;
+        },
+        error: () => {
+          // Silencioso: si falla, dejamos el valor ya mapeado
+        }
+      });
+    }
   }
 
   loadFromMock() {
@@ -131,8 +152,7 @@ export class SongsComponent implements OnInit {
     const filters: TrackFilters = {
       page: this.currentPage,
       limit: this.itemsPerPage,
-      // Temporalmente sin include para probar
-      // include: ['album', 'audio', 'stats'],
+      // No forzamos include: el backend incluye relaciones por defecto (album,audio,lyrics,stats)
     };
 
     if (this.searchQuery) filters.q = this.searchQuery;
