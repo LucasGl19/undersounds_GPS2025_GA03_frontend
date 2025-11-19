@@ -171,8 +171,8 @@ export class SongsService {
     return mapped;
   }
 
-  getArtistSongs(id: number): SongCard[] {
-    return this.songs.filter(song => song.artistId === id);
+  getArtistSongs(id: number | string): SongCard[] {
+    return this.songs.filter(song => song.artistId == id);
   }
 
   getSongById(id: number) {

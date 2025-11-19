@@ -15,8 +15,8 @@ export interface AlbumCreateDto {
   tags?: string[];                   // idem
   // Extras opcionales admitidos por el backend:
   coverUrl?: string;                 // si lo envías, te crea una Image mínima
-  artistId?: string;
-  labelId?: string;
+  artistId: string;                  // requerido: ID del usuario autenticado
+  labelId?: string;                  // opcional - no se incluye si no tiene valor
 }
 
 export interface TrackMinimal {
@@ -62,6 +62,27 @@ export interface PaginatedTrackResponse {
   };
 }
 
+export interface AlbumFilters {
+  page?: number;
+  limit?: number;
+  include?: string[];
+  artistId?: string;
+  labelId?: string;
+  genre?: string;
+  tag?: string;
+  releaseState?: string;
+  q?: string;
+}
+
+export interface PaginatedAlbumResponse {
+  data: any[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
@@ -69,6 +90,26 @@ export class ApiService {
   // --------- ALBUMS ----------
   createAlbum(body: AlbumCreateDto): Observable<{ data: any }> {
     return this.http.post<{ data: any }>(`${API}/albums`, body);
+  }
+
+  // Obtener álbumes con filtros
+  getAlbums(filters?: AlbumFilters): Observable<PaginatedAlbumResponse> {
+    let params: any = {};
+    
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        const value = (filters as any)[key];
+        if (value !== undefined && value !== null && value !== '') {
+          if (Array.isArray(value)) {
+            params[key] = value.join(',');
+          } else {
+            params[key] = value.toString();
+          }
+        }
+      });
+    }
+
+    return this.http.get<PaginatedAlbumResponse>(`${API}/albums`, { params });
   }
 
   // Añadir varias pistas a un álbum
@@ -105,5 +146,10 @@ export class ApiService {
   // Nota: si no enviamos 'include', el backend incluye todas las relaciones por defecto
   getTrackById(trackId: string): Observable<{ data: any }> {
     return this.http.get<{ data: any }>(`${API}/tracks/${trackId}`);
+  }
+
+  // Subir archivo de audio para una pista
+  uploadTrackAudio(trackId: string, formData: FormData): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(`${API}/tracks/${trackId}/audio`, formData);
   }
 }

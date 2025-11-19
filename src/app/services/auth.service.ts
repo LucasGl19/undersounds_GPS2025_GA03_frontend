@@ -16,7 +16,7 @@ export interface AuthTokens {
 }
 
 export interface AuthResponse {
-  user_id: number;
+  user_id: string;
   email: string;
   role: string;
   tokens: AuthTokens;
@@ -61,9 +61,11 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
+          console.log('[AuthService] Login response:', response);
           this.role.next(response.role);
           localStorage.setItem('role', response.role);
           localStorage.setItem('user_id', response.user_id.toString());
+          console.log('[AuthService] Stored user_id:', response.user_id.toString());
           this.storeTokens(response.tokens);
           this.loggedIn.next(true);
         })
@@ -100,9 +102,8 @@ export class AuthService {
     return localStorage.getItem('role');
   }
 
-  getUserId():number | null {
-    const id = localStorage.getItem('user_id');
-      return id ? +id : null;
+  getUserId(): string | null {
+    return localStorage.getItem('user_id');
   }
 
 

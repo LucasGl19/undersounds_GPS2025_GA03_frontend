@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Album } from '../models/album.model';
+import { ApiService } from './api.service';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlbumsService {
+  private apiService = inject(ApiService);
 
   constructor() { }
   private albums: Album[] = [
@@ -54,8 +57,38 @@ export class AlbumsService {
     return this.albums;
   }
 
-  getAlbumArtist(id: number): Album[] {
-    return this.albums.filter(a => a.artistId === id);
+  getAlbumArtist(id: number | string): Album[] {
+    // Primero intenta obtener del backend
+    const artistIdStr = String(id);
+    
+    // Aquí hacemos una llamada síncrona, pero eventualmente esto debería ser async
+    // Por ahora, retornamos los datos locales filtrados
+    return this.albums.filter(a => a.artistId == id);
+  }
+
+  // Obtener álbumes del backend de forma async
+  getAlbumArtistFromBackend(artistId: number | string) {
+    return this.apiService.getAlbums({ 
+      artistId: String(artistId),
+      limit: 100 
+    }).pipe(
+      map(response => {
+        // Mapear álbumes del backend al modelo Album del frontend
+        return (response.data || []).map((album: any) => ({
+          id: album.id,
+          title: album.title || 'Sin título',
+          description: album.description || '',
+          artistId: album.artistId || artistId,
+          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseState: album.releaseState || 'draft',
+          price: album.price || 0,
+          currency: album.currency || 'EUR',
+          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          artistName: 'Artista desconocido'
+        }));
+      })
+    );
   }
 
   saveAlbumAsFavorite(albumId: String) : void {

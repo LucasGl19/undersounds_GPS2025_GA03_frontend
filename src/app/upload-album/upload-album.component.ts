@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService, AlbumCreateDto, TrackMinimal } from '../services/api.service';
+import { AuthService, UserProfile } from '../services/auth.service';
 
 @Component({
   selector: 'app-upload-album',
@@ -11,9 +12,12 @@ import { ApiService, AlbumCreateDto, TrackMinimal } from '../services/api.servic
   templateUrl: './upload-album.component.html',
   styleUrls: ['./upload-album.component.css']
 })
-export class UploadAlbumComponent {
+export class UploadAlbumComponent implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(ApiService);
+  private auth = inject(AuthService);
+
+  currentUser: UserProfile | null = null;
 
   form: FormGroup = this.fb.group({
     title: ['', Validators.required],
@@ -24,10 +28,22 @@ export class UploadAlbumComponent {
     genre: ['other'],     // select de un valor → lo convertimos a array
     tags: [''],           // CSV → lo convertimos a array
     thumbnail: [''],      // de momento NO se envía
-    artistId: ['', Validators.required],
-    labelId: ['', Validators.required],
+    labelId: [''],        // opcional
     songs: this.fb.array([]) // sin required
   });
+
+  ngOnInit(): void {
+    // Obtener el perfil del usuario autenticado
+    this.auth.me().subscribe({
+      next: (profile) => {
+        this.currentUser = profile;
+        console.log('[UploadAlbumComponent] User profile loaded:', profile);
+      },
+      error: (err) => {
+        console.error('[UploadAlbumComponent] Error loading profile:', err);
+      }
+    });
+  }
 
   get songsArray(): FormArray { return this.form.get('songs') as FormArray; }
   addSong() { this.songsArray.push(this.fb.control('')); }
@@ -44,19 +60,37 @@ export class UploadAlbumComponent {
       return;
     }
 
+    // Obtener el ID del usuario autenticado
+    if (!this.currentUser || !this.currentUser.id) {
+      alert('No estás autenticado. Por favor inicia sesión.');
+      return;
+    }
+
+    const userId = String(this.currentUser.id).trim();
+    if (!userId) {
+      alert('Error: ID de usuario vacío. Por favor inicia sesión nuevamente.');
+      return;
+    }
+    console.log('[uploadAlbum] userId:', userId, 'type:', typeof userId);
+
     const v = this.form.value;
     const payload: AlbumCreateDto = {
-      title: String(v.title),
-      description: v.description || null,
-      releaseDate: v.date || null,       // YYYY-MM-DD
-      price: v.price ?? null,
-      currency: v.currency || null,
-      genres: v.genre ? [String(v.genre)] : [],
+      title: String(v.title).trim(),
+      description: v.description ? String(v.description).trim() || null : null,
+      releaseDate: v.date ? String(v.date).trim() || null : null,
+      price: v.price ? Number(v.price) : null,
+      currency: v.currency ? String(v.currency).trim() : null,
+      genres: v.genre ? [String(v.genre).trim()].filter(Boolean) : [],
       tags: v.tags ? String(v.tags).split(',').map((s: string) => s.trim()).filter(Boolean) : [],
-      artistId: String(v.artistId),
-      labelId: String(v.labelId),
-      // coverUrl: v.thumbnail || '' // ← NO lo enviamos por ahora
+      artistId: userId,  // Asegurado como string
     };
+
+    // Solo agregar labelId si tiene valor
+    if (v.labelId && String(v.labelId).trim()) {
+      (payload as any).labelId = String(v.labelId).trim();
+    }
+
+    console.log('[uploadAlbum] payload:', payload);
 
     try {
       const albumResp = await this.api.createAlbum(payload).toPromise();
