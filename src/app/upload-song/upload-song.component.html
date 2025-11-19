@@ -7,8 +7,22 @@
   </div>
 
   <div class="form-field">
-    <label for="albumId">Álbum (id)</label>
-    <input id="albumId" type="text" formControlName="albumId" />
+    <label for="albumId">Álbum</label>
+    <div *ngIf="loading" class="loading-message">Cargando tus álbumes...</div>
+    <div *ngIf="!loading && userAlbums.length === 0" class="empty-message">
+      No tienes álbumes creados. <a href="/upload-album">Crea uno primero.</a>
+    </div>
+    <select 
+      *ngIf="!loading && userAlbums.length > 0" 
+      id="albumId" 
+      formControlName="albumId"
+      [disabled]="loading"
+    >
+      <option value="" disabled selected>Selecciona un álbum</option>
+      <option *ngFor="let album of userAlbums" [value]="album.id">
+        {{ album.title }}
+      </option>
+    </select>
   </div>
 
   <div class="form-field">
@@ -21,5 +35,51 @@
     <input id="durationSec" type="number" formControlName="durationSec" />
   </div>
 
-  <button type="submit" class="upload-btn">Subir Canción</button>
+  <button type="submit" class="upload-btn" [disabled]="loading || userAlbums.length === 0 || createdTrackId !== null">
+    Subir Canción
+  </button>
+</form>
+
+<!-- Formulario para subir audio después de crear la canción -->
+<form class="audio-upload-section" *ngIf="createdTrackId" [formGroup]="audioForm" (ngSubmit)="submitAudio()">
+  <h2>Subir archivo de audio</h2>
+  
+  <div class="form-field">
+    <label for="audioFile">Archivo de audio (MP3, WAV, OGG, etc.)</label>
+    <input 
+      id="audioFile" 
+      type="file" 
+      accept="audio/*"
+      (change)="onAudioFileSelected($event)"
+      [disabled]="uploadingAudio"
+    />
+  </div>
+
+  <div class="form-field">
+    <label for="bitrate">Bitrate (kbps)</label>
+    <input 
+      id="bitrate" 
+      type="number" 
+      formControlName="bitrate"
+      [disabled]="uploadingAudio"
+    />
+  </div>
+
+  <div class="form-field">
+    <label for="codec">Codec</label>
+    <input 
+      id="codec" 
+      type="text" 
+      formControlName="codec"
+      [disabled]="uploadingAudio"
+    />
+  </div>
+
+  <button 
+    type="submit" 
+    class="upload-btn" 
+    [disabled]="uploadingAudio || !audioForm.value.audioFile"
+  >
+    {{ uploadingAudio ? 'Subiendo...' : 'Subir Audio' }}
+  </button>
 </form>

@@ -15,8 +15,8 @@ export interface AlbumCreateDto {
   tags?: string[];                   // idem
   // Extras opcionales admitidos por el backend:
   coverUrl?: string;                 // si lo envías, te crea una Image mínima
-  artistId?: string;
-  labelId?: string;
+  artistId: string;                  // requerido: ID del usuario autenticado
+  labelId?: string;                  // opcional - no se incluye si no tiene valor
 }
 
 export interface TrackMinimal {
@@ -62,6 +62,27 @@ export interface PaginatedTrackResponse {
   };
 }
 
+export interface AlbumFilters {
+  page?: number;
+  limit?: number;
+  include?: string[];
+  artistId?: string;
+  labelId?: string;
+  genre?: string;
+  tag?: string;
+  releaseState?: string;
+  q?: string;
+}
+
+export interface PaginatedAlbumResponse {
+  data: any[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
@@ -71,9 +92,34 @@ export class ApiService {
     return this.http.post<{ data: any }>(`${API}/albums`, body);
   }
 
+  // Obtener álbumes con filtros
+  getAlbums(filters?: AlbumFilters): Observable<PaginatedAlbumResponse> {
+    let params: any = {};
+    
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        const value = (filters as any)[key];
+        if (value !== undefined && value !== null && value !== '') {
+          if (Array.isArray(value)) {
+            params[key] = value.join(',');
+          } else {
+            params[key] = value.toString();
+          }
+        }
+      });
+    }
+
+    return this.http.get<PaginatedAlbumResponse>(`${API}/albums`, { params });
+  }
+
   // Añadir varias pistas a un álbum
   addTracksToAlbum(albumId: string, tracks: TrackMinimal[]): Observable<{ data: any }> {
     return this.http.post<{ data: any }>(`${API}/albums/${albumId}/tracks`, { tracks });
+  }
+
+  // Obtener un álbum específico por ID
+  getAlbumById(albumId: string): Observable<{ data: any }> {
+    return this.http.get<{ data: any }>(`${API}/albums/${albumId}`);
   }
 
   // --------- TRACKS ----------
@@ -98,6 +144,8 @@ export class ApiService {
       });
     }
 
+    console.log('[ApiService] getTracks called with params:', params);
+
     return this.http.get<PaginatedTrackResponse>(`${API}/tracks`, { params });
   }
 
@@ -107,8 +155,15 @@ export class ApiService {
     return this.http.get<{ data: any }>(`${API}/tracks/${trackId}`);
   }
 
+
   // Obtener estadísticas de reproducción de un track
   getTrackStats(trackId: string): Observable<{ data: { playCount: number } }> {
     return this.http.get<{ data: { playCount: number } }>(`${API}/tracks/${trackId}/stats`);
+  
+  }
+  // Subir archivo de audio para una pista
+  uploadTrackAudio(trackId: string, formData: FormData): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(`${API}/tracks/${trackId}/audio`, formData);
+
   }
 }
