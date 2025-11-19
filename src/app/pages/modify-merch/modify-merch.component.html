@@ -8,12 +8,12 @@
     </button>
 
     <figure class="merch-card__image">
-      <img [src]="item.image" [alt]="item.name">
+      <img [src]="item.cover?.url" [alt]="item.title">
     </figure>
 
     <div class="merch-card__body">
-      <h3>{{ item.name }}</h3>
-      <p class="merch-card__price">{{ item.price }}</p>
+      <h3>{{ item.title }}</h3>
+      <p class="merch-card__price">{{ item.priceCents }}</p>
     </div>
 
   </article>

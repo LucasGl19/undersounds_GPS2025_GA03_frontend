@@ -1,9 +1,19 @@
 export interface MerchItem {
-  id: number;
-  name: string;
-  price: string;
-  description: string;
-  image: string;
+  id: string;
+  title: string;
+  description?: string;
+  category?: string;
+  priceCents: number;
+  currency?: string;
+  stock?: number;
+  sku?: string;
+  active?: boolean;
+  artistId?: number | null;
+  labelId?: number | null;
+  coverId?: string | null;
   createdAt: string;
-  artistId: number;
+  updatedAt: string;
+  artist?: any;
+  label?: any;
+  cover?: { url: string } | null;
 }

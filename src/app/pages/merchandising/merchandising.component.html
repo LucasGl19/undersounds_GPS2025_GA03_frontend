@@ -2,31 +2,40 @@
   <header class="merch-page__header">
     <h1>Merch exclusivo</h1>
     <p>Apoya directamente a los artistas con ediciones limitadas y objetos únicos.</p>
-    
+
     <div class="sort-tags">
       <button (click)="sortBy('name')" [ngClass]="{ active: selectedSort === 'name'}">Título</button>
       <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha</button>
     </div>
   </header>
-  
+
   <div class="search-bar" role="search">
-    <input type="search" placeholder="Buscar artículos" (keyup.enter)="searchArticles()" [(ngModel)]="searchQuery" aria-label="Buscar artículos" />
+    <input type="search" placeholder="Buscar artículos" (keyup.enter)="searchArticles()" [(ngModel)]="searchQuery"
+      aria-label="Buscar artículos" />
     <button (click)="searchArticles()" type="button" aria-label="Botón de buscar">buscar</button>
   </div>
 
-  <div class="merch-grid">
-    <article class="merch-card" *ngFor="let item of articles">
-      <img
-        [src]="item.image"
-        [alt]="item.name"
-        loading="lazy"
-      />
+  <div class="merch-grid" *ngIf="!isLoading">
+    <article class="merch-card" *ngFor="let item of articles" (click)="navigateToMerchDetail(item.id)">
+      <figure class="merch-card__cover">
+        <img [src]="item.cover?.url" [alt]="'Imagen de ' + item.title" loading="lazy" />
+      </figure>
+
       <div class="merch-card__body">
-        <h3>{{ item.name }}</h3>
+        <h3>{{ item.title }}</h3>
         <p class="merch-card__description">{{ item.description }}</p>
-        <span class="merch-card__price">{{ item.price }}</span>
+        <div class="merch-card__metadata" *ngIf="item.category || item.stock">
+          <span *ngIf="item.category" class="metadata-tag">{{ item.category }}</span>
+          <span *ngIf="item.stock !== undefined" class="metadata-tag"
+            [ngClass]="item.stock > 0 ? 'in-stock' : 'out-of-stock'">
+            {{ item.stock > 0 ? 'Disponible' : 'Agotado' }}
+          </span>
+        </div>
       </div>
+
+      <footer class="merch-card__meta">
+        <span class="merch-card__price">{{ item.priceCents }} {{ item.currency }}</span>
+      </footer>
     </article>
   </div>
 </section>
-
