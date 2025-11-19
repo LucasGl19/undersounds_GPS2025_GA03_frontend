@@ -26,3 +26,39 @@
   margin: 1.5rem 0;
   cursor: pointer;
 }
+
+.song-card__plays {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 0;
+  padding: 0.8rem 1.2rem;
+  background: linear-gradient(135deg, rgba(98, 153, 201, 0.1) 0%, rgba(98, 153, 201, 0.15) 100%);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text-strong);
+}
+
+.song-card__plays strong {
+  font-weight: 600;
+  color: var(--accent-stronger);
+  letter-spacing: 0.02em;
+}
+
+.no-audio-message {
+  padding: 1.5rem;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  text-align: center;
+  color: #991b1b;
+}
+
+.loading-indicator,
+.error-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}

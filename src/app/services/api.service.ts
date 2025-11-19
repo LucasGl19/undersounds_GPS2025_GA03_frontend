@@ -106,4 +106,9 @@ export class ApiService {
   getTrackById(trackId: string): Observable<{ data: any }> {
     return this.http.get<{ data: any }>(`${API}/tracks/${trackId}`);
   }
+
+  // Obtener estadísticas de reproducción de un track
+  getTrackStats(trackId: string): Observable<{ data: { playCount: number } }> {
+    return this.http.get<{ data: { playCount: number } }>(`${API}/tracks/${trackId}/stats`);
+  }
 }

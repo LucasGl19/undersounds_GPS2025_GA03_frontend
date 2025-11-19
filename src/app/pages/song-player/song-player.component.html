@@ -17,7 +17,7 @@
       <p class="song-card__artist">{{ song.artist }}</p>
 
       <div *ngIf="song.audio; else noAudio">
-        <audio controls class="audio-player">
+        <audio controls class="audio-player" preload="none" (play)="onPlay()" #audioRef>
           <source [src]="song.audio" type="audio/mpeg">
           Tu navegador no soporta el elemento de audio.
         </audio>
@@ -28,6 +28,11 @@
           <p>⚠️ No hay audio disponible para esta canción</p>
         </div>
       </ng-template>
+
+      <div class="song-card__plays" *ngIf="song.playCount !== undefined">
+        <span style="font-size: 1.2rem;">🎧</span>
+        <strong>{{ song.playCount || 0 }}</strong> {{ song.playCount === 1 ? 'reproducción' : 'reproducciones' }}
+      </div>
 
       <p class="song-card__description">{{ song.description }}</p>
     </div>

@@ -166,6 +166,10 @@
           <span *ngIf="song.genre" class="metadata-tag">{{ song.genre }}</span>
           <span *ngIf="song.language" class="metadata-tag">{{ song.language }}</span>
         </div>
+        <div class="song-card__plays" *ngIf="song.playCount !== undefined">
+          <span aria-label="Reproducciones" title="Reproducciones">🎧</span>
+          <span>{{ song.playCount || 0 }} {{ song.playCount === 1 ? 'reproducción' : 'reproducciones' }}</span>
+        </div>
       </div>
 
       <footer class="song-card__meta">
