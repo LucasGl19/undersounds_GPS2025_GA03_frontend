@@ -7,6 +7,16 @@
       <button (click)="sortBy('name')" [ngClass]="{ active: selectedSort === 'name'}">Título</button>
       <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha</button>
     </div>
+
+    <!-- Botón subir merch solo para artistas y admin -->
+    <button 
+      *ngIf="(isLoggedIn$ | async) && ((userRole$ | async) === 'artista' || (userRole$ | async) === 'admin')"
+      class="btn-upload-merch"
+      (click)="navigateToUploadMerch()"
+      type="button"
+    >
+      + Subir merchandising
+    </button>
   </header>
 
   <div class="search-bar" role="search">
@@ -16,6 +26,8 @@
   </div>
 
   <div class="merch-grid" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="!errorMessage && articles.length === 0">No hay productos de merchandising todavía.</div>
+    <div class="error-state" *ngIf="errorMessage">{{ errorMessage }}</div>
     <article class="merch-card" *ngFor="let item of articles" (click)="navigateToMerchDetail(item.id)">
       <figure class="merch-card__cover">
         <img [src]="item.cover?.url" [alt]="'Imagen de ' + item.title" loading="lazy" />
@@ -34,7 +46,7 @@
       </div>
 
       <footer class="merch-card__meta">
-        <span class="merch-card__price">{{ item.priceCents }} {{ item.currency }}</span>
+        <span class="merch-card__price">{{ (item.priceCents / 100) | number:'1.2-2' }} {{ item.currency || 'EUR' }}</span>
       </footer>
     </article>
   </div>

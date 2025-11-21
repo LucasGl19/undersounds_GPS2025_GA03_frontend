@@ -18,11 +18,13 @@ export interface MerchItem {
   cover?: { url: string } | null;
 }
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MerchService } from '../../services/merch.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-merchandising',
@@ -34,19 +36,35 @@ import { Router } from '@angular/router';
 export class MerchandisingComponent implements OnInit {
   articles: MerchItem[] = [];
   isLoading: boolean = false;
+  errorMessage: string | null = null;
 
   selectedSort: 'name' | 'createdAt' | 'price' | null = null;
   searchQuery: string = '';
-  constructor(private merchService: MerchService, private router: Router) {}
+  
+  private authService = inject(AuthService);
+  userRole$: Observable<string | null>;
+  isLoggedIn$: Observable<boolean>;
+
+  constructor(private merchService: MerchService, private router: Router) {
+    this.userRole$ = this.authService.userRole$;
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+  }
 
   ngOnInit(): void {
-    this.merchService.getMerchItems().subscribe({
+    this.loadMerch();
+  }
+
+  private loadMerch(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.merchService.getMerchItems({ sort: this.selectedSort || undefined }).subscribe({
       next: (response) => {
         this.articles = response.data;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error(err);
+        console.error('[Merchandising] Error cargando merch', err);
+        this.errorMessage = 'Error cargando productos de merchandising';
         this.isLoading = false;
       },
     });
@@ -55,36 +73,18 @@ export class MerchandisingComponent implements OnInit {
   sortBy(criteria: 'name' | 'price' | 'createdAt') {
     if (this.selectedSort === criteria) {
       this.selectedSort = null;
-      this.merchService.getMerchItems().subscribe((response) => {
-        this.articles = response.data;
-      });
+      this.loadMerch();
       return;
     }
 
     this.selectedSort = criteria;
-
-    this.articles = [...this.articles].sort((a, b) => {
-      if (criteria === 'name') {
-        return a.title.localeCompare(b.title);
-      }
-      if (criteria === 'createdAt') {
-        return (
-          new Date(a.createdAt ?? 0).getTime() -
-          new Date(b.createdAt ?? 0).getTime()
-        );
-      }
-      if (criteria === 'price') {
-        return a.priceCents - b.priceCents;
-      }
-      return 0;
-    });
+    // Recargar desde API usando sort del backend (evitamos inconsistencias con paginación futura)
+    this.loadMerch();
   }
   searchArticles() {
     const query = this.searchQuery.trim().toLowerCase();
     if (!query) {
-      this.merchService.getMerchItems().subscribe((response) => {
-        this.articles = response.data;
-      });
+      this.loadMerch();
       return;
     }
 
@@ -96,5 +96,9 @@ export class MerchandisingComponent implements OnInit {
   }
   navigateToMerchDetail(id: string) {
     this.router.navigate(['/merchandising', id]);
+  }
+
+  navigateToUploadMerch() {
+    this.router.navigate(['/upload-merch']);
   }
 }
