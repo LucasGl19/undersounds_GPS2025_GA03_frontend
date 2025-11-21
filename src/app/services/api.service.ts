@@ -166,4 +166,20 @@ export class ApiService {
     return this.http.post<{ data: any }>(`${API}/tracks/${trackId}/audio`, formData);
 
   }
+  
+  // --------- UPDATES (PATCH) ----------
+  // Actualizar álbum parcialmente
+  updateAlbum(albumId: string, body: any): Observable<{ data: any }> {
+    return this.http.patch<{ data: any }>(`${API}/albums/${albumId}`, body);
+  }
+
+  // Crear/actualizar portada mínima para un álbum (el backend crea una Image y enlaza coverId)
+  albumCoverPost(albumId: string): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(`${API}/albums/${albumId}/cover`, {});
+  }
+
+  // Actualizar pista parcialmente
+  updateTrack(trackId: string, body: any): Observable<{ data: any }> {
+    return this.http.patch<{ data: any }>(`${API}/tracks/${trackId}`, body);
+  }
 }

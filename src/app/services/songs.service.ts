@@ -186,4 +186,11 @@ export class SongsService {
     );
   }
 
+  // Actualizar pista (backend). body puede contener campos parciales del track.
+  updateTrack(trackId: number | string, body: Partial<SongCard>) {
+    return this.apiService.updateTrack(String(trackId), body).pipe(
+      map((resp: any) => this.mapBackendTrackToSongCard(resp.data))
+    );
+  }
+
 }
