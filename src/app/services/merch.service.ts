@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { MerchItem } from '../models/merch-item.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 type MerchType =
   | 'camiseta'
@@ -16,7 +17,7 @@ type MerchType =
 interface MerchFilters {
   page?: number;
   limit?: number;
-  artistId?: number;
+  artistId?: string;  // UUID string según OpenAPI
   type?: MerchType;
   sort?: 'name' | 'price' | 'createdAt';
   order?: 'asc' | 'desc';
@@ -24,11 +25,26 @@ interface MerchFilters {
 }
 
 interface PaginatedMerchResponse {
-  data: any[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
+  data: MerchItem[];
+  meta: { page: number; limit: number; total: number };
+}
+
+export interface MerchCreateDto {
+  name: string;               // obligatorio según backend
+  description?: string | null;
+  type: MerchType;            // obligatorio según backend
+  price?: number | null;      // euros (backend convierte a cents)
+  currency?: string | null;   // por defecto 'EUR'
+  stock?: number | null;
+  sku?: string | null;
+  active?: boolean;           // por defecto true
+  artistId?: string;          // id usuario/artist
+  labelId?: string;           // opcional
+  cover?: {                   // opcional al crear
+    url?: string;
+    alt?: string;
+    width?: number | null;
+    height?: number | null;
   };
 }
 
@@ -37,7 +53,7 @@ interface PaginatedMerchResponse {
 })
 export class MerchService {
   private http = inject(HttpClient);
-  private apiUrl: string = 'http://localhost:8081/merch';
+  private apiUrl: string = `${environment.contentApiUrl}/merch`;
   // private merchItems: MerchItem[] = [
   //   {
   //     id: "1",
@@ -103,5 +119,21 @@ export class MerchService {
     // return this.merchItems.filter((i) => i.artistId === id);
     return [];
   }
+
+  createMerch(body: MerchCreateDto): Observable<{ data: MerchItem }> {
+    return this.http.post<{ data: MerchItem }>(this.apiUrl, body);
+  }
+
+  addMerchImage(merchId: string, file?: File): Observable<{ data: MerchItem }> {
+    const form = new FormData();
+    // El backend actual ignora el contenido y crea una imagen vacía, pero seguimos el contrato multipart
+    if (file) form.append('file', file);
+    return this.http.post<{ data: MerchItem }>(`${this.apiUrl}/${merchId}/images`, form);
+  }
+
+  updateMerch(merchId: string, body: any): Observable<{ data: MerchItem }> {
+    return this.http.patch<{ data: MerchItem }>(`${this.apiUrl}/${merchId}`, body);
+  }
+
   constructor() {}
 }

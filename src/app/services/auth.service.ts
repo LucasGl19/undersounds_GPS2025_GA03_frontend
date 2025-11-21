@@ -7,7 +7,7 @@ export interface RegisterDto {
   username: string;
   email: string;
   password: string;
-  role: 'artist' | 'listener';
+  role: 'artista' | 'oyente' | 'artist' | 'listener'; // Backend acepta ambos
 }
 
 export interface AuthTokens {
