@@ -124,6 +124,52 @@ export class AlbumsService {
     );
   }
 
+  // Actualizar álbum (backend). body puede contener campos parciales.
+  updateAlbum(albumId: number | string, body: Partial<Album>) {
+    return this.apiService.updateAlbum(String(albumId), body).pipe(
+      map((resp: any) => {
+        const album = resp.data;
+        if (!album) return null;
+        return {
+          id: album.id,
+          title: album.title || 'Sin título',
+          description: album.description || '',
+          artistId: album.artistId || '',
+          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseState: album.releaseState || 'draft',
+          price: album.price || 0,
+          currency: album.currency || 'EUR',
+          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          artistName: album.artistName || 'Artista desconocido'
+        } as Album;
+      })
+    );
+  }
+
+  // Wrapper para llamar al endpoint que crea/actualiza la portada mínima del álbum
+  uploadAlbumCover(albumId: number | string) {
+    return this.apiService.albumCoverPost(String(albumId)).pipe(
+      map((resp: any) => {
+        const album = resp.data;
+        if (!album) return null;
+        return {
+          id: album.id,
+          title: album.title || 'Sin título',
+          description: album.description || '',
+          artistId: album.artistId || '',
+          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseState: album.releaseState || 'draft',
+          price: album.price || 0,
+          currency: album.currency || 'EUR',
+          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          artistName: 'Artista desconocido'
+        } as Album;
+      })
+    );
+  }
+
   // Método para obtener álbumes locales (mock)
   getAlbums(): Album[] {
     return this.albums;
