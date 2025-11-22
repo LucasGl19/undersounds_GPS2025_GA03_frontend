@@ -4,6 +4,7 @@ import { Album } from '../models/album.model';
 import { AuthService } from '../services/auth.service';
 import { AlbumsService } from '../services/albums.service';
 import { SongsService } from '../services/songs.service';
+import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -20,11 +21,16 @@ export class ModifyCreationsComponent implements OnInit {
    openedAlbumId: number | string | null = null;
    isLoading = true;
    errorMsg = '';
+   
+   // Maps para almacenar los archivos seleccionados
+   albumCoverFiles: Map<number | string, File> = new Map();
+   trackAudioFiles: Map<number | string, File> = new Map();
 
    constructor(
       private authService: AuthService, 
       private albumService: AlbumsService, 
-      private songService: SongsService
+      private songService: SongsService,
+      private apiService: ApiService
    ){}
 
    ngOnInit(): void {
@@ -115,9 +121,33 @@ export class ModifyCreationsComponent implements OnInit {
           console.log('[ModifyCreations] Track updated on backend:', updated);
           // If backend returns updated track, refresh local item fields that come from track
           this.artistSongs[idx] = { ...this.artistSongs[idx], ...updated } as SongCard;
+          
+          // Si hay un archivo de audio seleccionado, subirlo
+          const audioFile = this.trackAudioFiles.get(song.id);
+          if (audioFile) {
+            const formData = new FormData();
+            formData.append('file', audioFile);
+            formData.append('bitrate', '128');
+            formData.append('codec', 'mp3');
+            
+            this.apiService.uploadTrackAudio(String(song.id), formData).subscribe({
+              next: () => {
+                console.log('[ModifyCreations] Track audio uploaded');
+                this.trackAudioFiles.delete(song.id);
+                alert('Canción y audio actualizados correctamente');
+              },
+              error: (err) => {
+                console.error('[ModifyCreations] Error uploading audio:', err);
+                alert('Canción actualizada, pero hubo un error al subir el audio');
+              }
+            });
+          } else {
+            alert('Canción actualizada correctamente');
+          }
         },
         error: (err) => {
           console.error('[ModifyCreations] Error updating track:', err);
+          alert('Error al actualizar la canción');
           // Rollback
           this.artistSongs[idx] = original;
         }
@@ -135,28 +165,20 @@ export class ModifyCreationsComponent implements OnInit {
         } else {
           if (song.description !== original.description) albumUpdate.description = song.description;
         }
-        // cover/image changes must be handled via the dedicated backend endpoint
-        const coverChanged = (() => {
-          if (albumObj && albumObj.cover) return song.image && song.image !== albumObj.cover;
-          return song.image && song.image !== original.image;
-        })();
 
         // Price editing is only handled in the album editor. Do not propagate
         // song.price changes to the album here.
 
         const aidx = this.artistAlbums.findIndex(a => String(a.id) === String(albumId));
-        // Cover/image changes must be uploaded via the album upload form with a file.
-        // Here we only patch album metadata; cover upload is not handled in this editor.
-        if (!coverChanged) {
-          if (Object.keys(albumUpdate).length > 0) {
-            this.albumService.updateAlbum(albumId, albumUpdate).subscribe({
-              next: (resp) => {
-                console.log('[ModifyCreations] Album updated from song save:', resp);
-                if (aidx >= 0 && resp) this.artistAlbums[aidx] = resp as Album;
-              },
-              error: (err) => console.warn('[ModifyCreations] Error updating album from song save:', err)
-            });
-          }
+        
+        if (Object.keys(albumUpdate).length > 0) {
+          this.albumService.updateAlbum(albumId, albumUpdate).subscribe({
+            next: (resp) => {
+              console.log('[ModifyCreations] Album updated from song save:', resp);
+              if (aidx >= 0 && resp) this.artistAlbums[aidx] = resp as Album;
+            },
+            error: (err) => console.warn('[ModifyCreations] Error updating album from song save:', err)
+          });
         }
       }
     }
@@ -194,22 +216,49 @@ export class ModifyCreationsComponent implements OnInit {
           } else {
             this.artistAlbums[idx] = { ...this.artistAlbums[idx], ...payload } as Album;
           }
-          // If user changed the cover locally, also try to call the cover endpoint to ensure a cover record exists
-          if (album.cover && album.cover !== original?.cover) {
-            this.albumService.uploadAlbumCover(album.id as number | string).subscribe({
+          // Si hay un archivo de portada seleccionado, subirlo
+          const coverFile = this.albumCoverFiles.get(album.id);
+          if (coverFile) {
+            this.albumService.uploadAlbumCover(album.id as number | string, coverFile).subscribe({
               next: (a) => {
                 if (a) this.artistAlbums[idx] = a as Album;
+                this.albumCoverFiles.delete(album.id);
+                alert('Álbum y portada actualizados correctamente');
               },
-              error: (err) => console.warn('[ModifyCreations] Error creating cover after album patch:', err)
+              error: (err) => {
+                console.warn('[ModifyCreations] Error uploading cover:', err);
+                alert('Álbum actualizado, pero hubo un error al subir la portada');
+              }
             });
+          } else {
+            alert('Álbum actualizado correctamente');
           }
         },
         error: (err) => {
           console.error('[ModifyCreations] Error updating album:', err);
+          alert('Error al actualizar el álbum');
           // rollback
           if (original) this.artistAlbums[idx] = original;
         }
       });
     }
+   }
+
+   onAlbumCoverChange(event: Event, albumId: number | string): void {
+     const input = event.target as HTMLInputElement;
+     if (input.files && input.files.length > 0) {
+       this.albumCoverFiles.set(albumId, input.files[0]);
+     } else {
+       this.albumCoverFiles.delete(albumId);
+     }
+   }
+
+   onTrackAudioChange(event: Event, trackId: number | string): void {
+     const input = event.target as HTMLInputElement;
+     if (input.files && input.files.length > 0) {
+       this.trackAudioFiles.set(trackId, input.files[0]);
+     } else {
+       this.trackAudioFiles.delete(trackId);
+     }
    }
 }

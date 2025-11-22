@@ -46,6 +46,11 @@
       <textarea [(ngModel)]="editableItem.description"></textarea>
     </label>
 
+    <label>Imagen:
+      <input type="file" accept="image/*" (change)="onImageChange($event)" />
+      <small *ngIf="selectedImageFile">Seleccionado: {{ selectedImageFile.name }}</small>
+    </label>
+
     <div class="modal-actions">
       <button class="cancel-btn" (click)="closeEditionModal()">Cancelar</button>
       <button class="save-btn" (click)="saveChanges()">Guardar</button>
