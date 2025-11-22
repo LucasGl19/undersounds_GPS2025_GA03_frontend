@@ -32,9 +32,12 @@ export class UploadMerchComponent {
     stock: [null],
     sku: [''],
     labelId: [''],
+    // Deprecated URL-based cover fields (se manejarán por subida de archivo)
     coverUrl: [''],
     coverAlt: [''],
   });
+
+  imageFiles: File[] = [];
 
   ngOnInit(): void {
     this.auth.me().subscribe({
@@ -66,9 +69,7 @@ export class UploadMerchComponent {
       artistId: String(this.currentUser.id),
     };
     if (v.labelId && String(v.labelId).trim()) payload.labelId = String(v.labelId).trim();
-    if (v.coverUrl && String(v.coverUrl).trim()) {
-      payload.cover = { url: String(v.coverUrl).trim(), alt: v.coverAlt || 'merch' };
-    }
+    // Ya no enviamos coverUrl directamente; lo subimos después si hay archivo
 
     try {
       this.loading = true;
@@ -78,16 +79,37 @@ export class UploadMerchComponent {
         alert('Creado pero sin ID devuelto');
       } else {
         this.createdId = id;
+        // Subir imágenes si se seleccionaron
+        if (this.imageFiles.length) {
+          try {
+            const fd = new FormData();
+            this.imageFiles.forEach(f => fd.append('files', f));
+            await this.merch.uploadImages(id, fd).toPromise();
+          } catch (e: any) {
+            console.error('[UploadMerch] error subiendo imágenes', e);
+            alert('Producto creado pero fallo al subir imágenes: ' + (e?.error?.message || e?.message || 'Error'));
+          }
+        }
         alert('¡Producto creado!');
         // Navegar al detalle
         this.router.navigate(['/merchandising', id]);
       }
       this.form.reset({ type: 'camiseta', currency: 'EUR' });
+      this.imageFiles = [];
     } catch (e: any) {
       console.error('[UploadMerch] error creando merch', e);
       alert(`Error: ${e?.error?.message ?? e?.message ?? 'Error creando'}`);
     } finally {
       this.loading = false;
+    }
+  }
+
+  onImagesChange(ev: Event): void {
+    const input = ev.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.imageFiles = Array.from(input.files);
+    } else {
+      this.imageFiles = [];
     }
   }
 }

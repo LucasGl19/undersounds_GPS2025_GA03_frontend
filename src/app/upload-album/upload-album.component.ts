@@ -27,10 +27,13 @@ export class UploadAlbumComponent implements OnInit {
     currency: ['EUR'],
     genre: ['other'],     // select de un valor → lo convertimos a array
     tags: [''],           // CSV → lo convertimos a array
-    thumbnail: [''],      // de momento NO se envía
+    thumbnail: [''],      // mantenemos compatibilidad pero no se usa para upload directo
+    coverFile: [null],    // archivo de portada
     labelId: [''],        // opcional
     songs: this.fb.array([]) // sin required
   });
+
+  coverSelected: File | null = null;
 
   ngOnInit(): void {
     // Obtener el perfil del usuario autenticado
@@ -98,6 +101,16 @@ export class UploadAlbumComponent implements OnInit {
       const albumId = albumResp?.data?.id;
       if (!albumId) { alert('No llegó el id del álbum'); return; }
 
+        // Subir portada si se seleccionó archivo
+        if (this.coverSelected) {
+          try {
+            await this.api.uploadAlbumCover(albumId, this.coverSelected).toPromise();
+          } catch (e: any) {
+            console.error('[uploadAlbum] error subiendo portada', e);
+            alert('Álbum creado, pero fallo al subir portada: ' + (e?.error?.message || e?.message || 'Error'));
+          }
+        }
+
       // Construimos tracks sólo si hay títulos
       const tracks: TrackMinimal[] = this.songsArray.controls
         .map(c => String(c.value).trim())
@@ -111,9 +124,19 @@ export class UploadAlbumComponent implements OnInit {
       alert('¡Álbum creado correctamente!');
       this.form.reset({ currency: 'EUR', genre: 'other' });
       this.songsArray.clear();
+      this.coverSelected = null;
     } catch (e: any) {
       console.error('[uploadAlbum] error', e);
       alert(`Error creando álbum: ${e?.error?.message ?? e?.message ?? 'Error'}`);
+    }
+  }
+
+  onCoverFileChange(ev: Event): void {
+    const input = ev.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.coverSelected = input.files[0];
+    } else {
+      this.coverSelected = null;
     }
   }
 }
