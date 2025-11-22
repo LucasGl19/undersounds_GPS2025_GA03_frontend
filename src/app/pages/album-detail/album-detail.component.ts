@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Album } from '../../models/album.model';
 import { SongCard } from '../../models/song-card.model';
 import { ApiService } from '../../services/api.service';
 import { AlbumsService } from '../../services/albums.service';
+import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css']
 })
@@ -19,6 +21,8 @@ export class AlbumDetailComponent implements OnInit {
   private router = inject(Router);
   private apiService = inject(ApiService);
   private albumsService = inject(AlbumsService);
+  private cartService = inject(CartService);
+  private snack = inject(MatSnackBar);
 
   album: Album | null = null;
   tracks: SongCard[] = [];
@@ -141,5 +145,14 @@ export class AlbumDetailComponent implements OnInit {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  addAlbumToCart(): void {
+    if (!this.album) return;
+    this.cartService.addAlbum(this.album);
+    this.snack
+      .open('Álbum añadido al carrito', 'Ver', { duration: 3000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/cart']));
   }
 }

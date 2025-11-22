@@ -37,6 +37,13 @@
         <p class="album-description" *ngIf="album.description">
           {{ album.description }}
         </p>
+
+        <div class="album-actions">
+          <button class="btn-add-cart" (click)="addAlbumToCart()" [disabled]="!album">
+            Añadir al carrito
+          </button>
+          <a routerLink="/cart" class="link-go-cart">Ver carrito</a>
+        </div>
       </div>
     </div>
 

@@ -57,3 +57,23 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Carrito de compra (Albums)
+
+Se ha añadido soporte básico para añadir álbumes al carrito desde la página de detalle del álbum.
+
+Características:
+- Botón "Añadir al carrito" en detalle de álbum.
+- Persistencia en `localStorage` (`undersounds_cart_v1`).
+- Cálculo de subtotal y total (incluye coste de envío fijo si hay artículos).
+- Posibilidad de limpiar, aumentar/disminuir cantidad y eliminar artículos.
+
+Fichas clave:
+- Modelo: `src/app/models/cart-item.model.ts`
+- Servicio: `src/app/services/cart.service.ts`
+- Componentes afectados: `album-detail`, `cart`
+
+Próximos pasos sugeridos:
+- Añadir soporte para merch.
+- Mostrar contador de artículos en el header.
+- Integrar flujo de checkout real con backend.
