@@ -120,7 +120,7 @@ export class ApiService {
 
   // Obtener un álbum específico por ID
   getAlbumById(albumId: string): Observable<{ data: any }> {
-    return this.http.get<{ data: any }>(`${API}/albums/${albumId}`);
+    return this.http.get<{ data: any }>(`${API}/albums/${albumId}?include=cover`);
   }
 
   // --------- TRACKS ----------
