@@ -62,19 +62,4 @@
 
     <button type="submit" class="upload-btn">Subir Álbum</button>
   </div>
-
-  <!-- MISMA <form> -->
-  <div class="songs-album-container">
-    <h2>Agregar canciones al álbum</h2>
-    <div formArrayName="songs" id="songInputsContainer">
-      <div class="form-field" *ngFor="let ctrl of songsArray.controls; index as i">
-        <label>Nombre de la canción</label>
-        <input type="text" class="song-input" [formControlName]="i" />
-      </div>
-    </div>
-    <div class="button-container">
-      <button type="button" class="upload-btn" (click)="addSong()">Añadir canción</button>
-      <button type="button" class="delete-btn" (click)="removeLastSongInput()">Eliminar canción</button>
-    </div>
-  </div>
 </form>

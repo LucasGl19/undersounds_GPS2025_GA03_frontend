@@ -33,8 +33,10 @@
         <label>Título <input [(ngModel)]="song.title" /></label>
         <!-- Precio editing moved to album editor only -->
         <label>Descripción <textarea [(ngModel)]="song.description"></textarea></label>
-        <label>Portada <input type="text" [(ngModel)]="song.image" /></label>
-        <label>Archivo de audio <input type="audio" [(ngModel)]="song.audio" /></label>
+        <!-- Portada heredada del álbum, no se puede modificar aquí -->
+        <label>Archivo de audio <input type="file" accept="audio/*" (change)="onTrackAudioChange($event, song.id)" />
+          <small *ngIf="trackAudioFiles.get(song.id)">Seleccionado: {{ trackAudioFiles.get(song.id)?.name }}</small>
+        </label>
         <button class="save-btn" (click)="saveSong(song)">Guardar</button>
       </div>
 
@@ -67,7 +69,9 @@
         <label>Precio <input type="number" [(ngModel)]="a.price" /></label>
         <label>Divisa <input [(ngModel)]="a.currency" /></label>
         <label>Descripción <textarea [(ngModel)]="a.description"></textarea></label>
-        <label>Portada <input type="text" [(ngModel)]="a.cover" /></label>
+        <label>Portada <input type="file" accept="image/*" (change)="onAlbumCoverChange($event, a.id)" />
+          <small *ngIf="albumCoverFiles.get(a.id)">Seleccionado: {{ albumCoverFiles.get(a.id)?.name }}</small>
+        </label>
 
         <button class="save-btn" (click)="saveAlbum(a)">Guardar</button>
       </div>

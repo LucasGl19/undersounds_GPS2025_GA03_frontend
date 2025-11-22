@@ -29,8 +29,7 @@ export class UploadAlbumComponent implements OnInit {
     tags: [''],           // CSV → lo convertimos a array
     thumbnail: [''],      // mantenemos compatibilidad pero no se usa para upload directo
     coverFile: [null],    // archivo de portada
-    labelId: [''],        // opcional
-    songs: this.fb.array([]) // sin required
+    labelId: ['']         // opcional
   });
 
   coverSelected: File | null = null;
@@ -46,13 +45,6 @@ export class UploadAlbumComponent implements OnInit {
         console.error('[UploadAlbumComponent] Error loading profile:', err);
       }
     });
-  }
-
-  get songsArray(): FormArray { return this.form.get('songs') as FormArray; }
-  addSong() { this.songsArray.push(this.fb.control('')); }
-  removeLastSongInput() {
-    if (this.songsArray.length > 1) this.songsArray.removeAt(this.songsArray.length - 1);
-    else if (this.songsArray.length === 1) this.songsArray.clear();
   }
 
   async uploadAlbum(): Promise<void> {
@@ -111,19 +103,8 @@ export class UploadAlbumComponent implements OnInit {
           }
         }
 
-      // Construimos tracks sólo si hay títulos
-      const tracks: TrackMinimal[] = this.songsArray.controls
-        .map(c => String(c.value).trim())
-        .filter(Boolean)
-        .map((title, i) => ({ title, trackNumber: i + 1 }));
-
-      if (tracks.length) {
-        await this.api.addTracksToAlbum(albumId, tracks).toPromise();
-      }
-
       alert('¡Álbum creado correctamente!');
       this.form.reset({ currency: 'EUR', genre: 'other' });
-      this.songsArray.clear();
       this.coverSelected = null;
     } catch (e: any) {
       console.error('[uploadAlbum] error', e);
