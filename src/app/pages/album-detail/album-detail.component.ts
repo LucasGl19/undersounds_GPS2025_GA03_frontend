@@ -30,6 +30,13 @@ export class AlbumDetailComponent implements OnInit {
   errorMsg = '';
   showDebugInfo = environment.showDebugInfo;
 
+  private normalizeUrl(u?: string): string {
+    if (!u) return 'assets/images/covers/album-default.png';
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.startsWith('/')) return `${environment.contentApiUrl}${u}`;
+    return `${environment.contentApiUrl}/${u}`;
+  }
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const albumId = params['id'];
@@ -64,7 +71,7 @@ export class AlbumDetailComponent implements OnInit {
             genres: response.data.genres 
               ? response.data.genres.split(',').map((g: string) => g.trim()) 
               : [],
-            cover: response.data.cover?.url || 'assets/images/covers/album-default.png',
+            cover: this.normalizeUrl(response.data.cover?.url),
             artistName: response.data.artistName || 'Artista desconocido'
           };
 
@@ -100,7 +107,9 @@ export class AlbumDetailComponent implements OnInit {
             title: track.title || 'Sin título',
             artist: this.album?.artistName || 'Desconocido',
             description: track.description || '',
-            image: track.coverUrl || track?.album?.cover?.url || 'assets/images/covers/track-default.png',
+            image: track.coverUrl 
+              ? this.normalizeUrl(track.coverUrl) 
+              : (track?.album?.cover?.url ? this.normalizeUrl(track.album.cover.url) : 'assets/images/covers/track-default.png'),
             genre: track.genre || '',
             language: track.language || '',
             format: track.format || 'MP3',
