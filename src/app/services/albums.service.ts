@@ -1,13 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { Album } from '../models/album.model';
 import { ApiService, AlbumFilters } from './api.service';
-import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { map, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlbumsService {
   private apiService = inject(ApiService);
+  private apiBase = environment.contentApiUrl;
+
+  private normalizeUrl(u?: string): string {
+    if (!u) return 'assets/images/covers/album-default.png';
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.startsWith('/')) return `${this.apiBase}${u}`;
+    return `${this.apiBase}/${u}`;
+  }
 
   constructor() { }
   private albums: Album[] = [
@@ -84,7 +93,7 @@ export class AlbumsService {
           price: album.price || 0,
           currency: album.currency || 'EUR',
           genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
-          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          cover: this.normalizeUrl(album.cover?.url),
           artistName: 'Artista desconocido'
         }));
       })
@@ -109,7 +118,7 @@ export class AlbumsService {
           price: album.price || 0,
           currency: album.currency || 'EUR',
           genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
-          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          cover: this.normalizeUrl(album.cover?.url),
           artistName: album.artistName || 'Artista desconocido'
         })) as Album[];
 
@@ -140,16 +149,20 @@ export class AlbumsService {
           price: album.price || 0,
           currency: album.currency || 'EUR',
           genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
-          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          cover: this.normalizeUrl(album.cover?.url),
           artistName: album.artistName || 'Artista desconocido'
         } as Album;
       })
     );
   }
 
-  // Wrapper para llamar al endpoint que crea/actualiza la portada mínima del álbum
-  uploadAlbumCover(albumId: number | string) {
-    return this.apiService.albumCoverPost(String(albumId)).pipe(
+  // Subir portada real del álbum (archivo). Si no se proporciona file, se omite.
+  uploadAlbumCover(albumId: number | string, file?: File) {
+    if (!file) {
+      console.warn('[AlbumsService] uploadAlbumCover llamado sin file; se omite petición.');
+      return of(null);
+    }
+    return this.apiService.uploadAlbumCover(String(albumId), file).pipe(
       map((resp: any) => {
         const album = resp.data;
         if (!album) return null;
@@ -163,7 +176,7 @@ export class AlbumsService {
           price: album.price || 0,
           currency: album.currency || 'EUR',
           genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
-          cover: album.cover?.url || 'assets/images/covers/album-default.png',
+          cover: this.normalizeUrl(album.cover?.url),
           artistName: 'Artista desconocido'
         } as Album;
       })

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { MerchItem } from '../models/merch-item.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 type MerchType =
@@ -54,6 +54,13 @@ export interface MerchCreateDto {
 export class MerchService {
   private http = inject(HttpClient);
   private apiUrl: string = `${environment.contentApiUrl}/merch`;
+
+  private normalizeUrl(u?: string): string | undefined {
+    if (!u) return undefined;
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.startsWith('/')) return `${environment.contentApiUrl}${u}`;
+    return `${environment.contentApiUrl}/${u}`;
+  }
   // private merchItems: MerchItem[] = [
   //   {
   //     id: "1",
@@ -103,13 +110,26 @@ export class MerchService {
         }
       });
     }
-    return this.http.get<PaginatedMerchResponse>(`${this.apiUrl}`, {
-      params,
-    });
+    return this.http.get<PaginatedMerchResponse>(`${this.apiUrl}`, { params }).pipe(
+      map(resp => ({
+        ...resp,
+        data: (resp.data || []).map(item => ({
+          ...item,
+          cover: item.cover ? { ...item.cover, url: this.normalizeUrl(item.cover.url) as string } : item.cover
+        }))
+      }))
+    );
   }
 
   getMerchItemById(id: string): Observable<{ data: MerchItem }> {
-    return this.http.get<{ data: MerchItem }>(`${this.apiUrl}/${id}`);
+    return this.http.get<{ data: MerchItem }>(`${this.apiUrl}/${id}`).pipe(
+      map(resp => ({
+        data: resp.data ? {
+          ...resp.data,
+          cover: resp.data.cover ? { ...resp.data.cover, url: this.normalizeUrl(resp.data.cover.url) as string } : resp.data.cover
+        } : resp.data
+      }))
+    );
   }
 
   getArtistMerch(id: number | null): MerchItem[] {
@@ -128,7 +148,26 @@ export class MerchService {
     const form = new FormData();
     // El backend actual ignora el contenido y crea una imagen vacía, pero seguimos el contrato multipart
     if (file) form.append('file', file);
-    return this.http.post<{ data: MerchItem }>(`${this.apiUrl}/${merchId}/images`, form);
+    return this.http.post<{ data: MerchItem }>(`${this.apiUrl}/${merchId}/images`, form).pipe(
+      map(resp => ({
+        data: resp.data ? {
+          ...resp.data,
+          cover: resp.data.cover ? { ...resp.data.cover, url: this.normalizeUrl(resp.data.cover.url) as string } : resp.data.cover
+        } : resp.data
+      }))
+    );
+  }
+
+  // Nueva subida múltiple de imágenes (merch) usando campo 'files'
+  uploadImages(merchId: string, formData: FormData): Observable<{ data: MerchItem }> {
+    return this.http.post<{ data: MerchItem }>(`${this.apiUrl}/${merchId}/images`, formData).pipe(
+      map(resp => ({
+        data: resp.data ? {
+          ...resp.data,
+          cover: resp.data.cover ? { ...resp.data.cover, url: this.normalizeUrl(resp.data.cover.url) as string } : resp.data.cover
+        } : resp.data
+      }))
+    );
   }
 
   updateMerch(merchId: string, body: any): Observable<{ data: MerchItem }> {

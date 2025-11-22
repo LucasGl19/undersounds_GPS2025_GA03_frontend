@@ -53,15 +53,14 @@
     </label>
 
     <fieldset>
-      <legend>Portada (opcional)</legend>
-      <label>
-        URL imagen
-        <input formControlName="coverUrl" placeholder="https://..." />
-      </label>
-      <label>
-        Texto alternativo
-        <input formControlName="coverAlt" placeholder="Alt" />
-      </label>
+      <legend>Imágenes (subida de archivos)</legend>
+      <input type="file" multiple (change)="onImagesChange($event)" accept="image/*" />
+      <div *ngIf="imageFiles.length">
+        <small>{{ imageFiles.length }} archivo(s) seleccionados.</small>
+        <ul>
+          <li *ngFor="let f of imageFiles">{{ f.name }}</li>
+        </ul>
+      </div>
     </fieldset>
 
     <button type="submit" [disabled]="loading || form.invalid">{{ loading ? 'Creando...' : 'Crear producto' }}</button>

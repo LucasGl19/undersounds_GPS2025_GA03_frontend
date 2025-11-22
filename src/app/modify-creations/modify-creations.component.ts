@@ -145,38 +145,9 @@ export class ModifyCreationsComponent implements OnInit {
         // song.price changes to the album here.
 
         const aidx = this.artistAlbums.findIndex(a => String(a.id) === String(albumId));
-        // If cover changed, attempt to call the cover endpoint first (backend creates a minimal Image and links coverId)
-        if (coverChanged) {
-          this.albumService.uploadAlbumCover(albumId).subscribe({
-            next: (albumWithCover) => {
-              console.log('[ModifyCreations] Cover endpoint created/linked cover for album:', albumWithCover);
-              if (aidx >= 0 && albumWithCover) this.artistAlbums[aidx] = albumWithCover;
-              // continue with other partial updates if any
-              if (Object.keys(albumUpdate).length > 0) {
-                this.albumService.updateAlbum(albumId, albumUpdate).subscribe({
-                  next: (resp) => {
-                    console.log('[ModifyCreations] Album updated from song save:', resp);
-                    if (aidx >= 0 && resp) this.artistAlbums[aidx] = resp as Album;
-                  },
-                  error: (err) => console.warn('[ModifyCreations] Error updating album from song save:', err)
-                });
-              }
-            },
-            error: (err) => {
-              console.warn('[ModifyCreations] Error creating cover via backend endpoint:', err);
-              // fallback: try to update album fields anyway
-              if (Object.keys(albumUpdate).length > 0) {
-                this.albumService.updateAlbum(albumId, albumUpdate).subscribe({
-                  next: (resp) => {
-                    console.log('[ModifyCreations] Album updated from song save (fallback):', resp);
-                    if (aidx >= 0 && resp) this.artistAlbums[aidx] = resp as Album;
-                  },
-                  error: (err2) => console.warn('[ModifyCreations] Error updating album from song save (fallback):', err2)
-                });
-              }
-            }
-          });
-        } else {
+        // Cover/image changes must be uploaded via the album upload form with a file.
+        // Here we only patch album metadata; cover upload is not handled in this editor.
+        if (!coverChanged) {
           if (Object.keys(albumUpdate).length > 0) {
             this.albumService.updateAlbum(albumId, albumUpdate).subscribe({
               next: (resp) => {

@@ -96,7 +96,7 @@ export class AlbumDetailComponent implements OnInit {
             title: track.title || 'Sin título',
             artist: this.album?.artistName || 'Desconocido',
             description: track.description || '',
-            image: track.cover?.url || 'assets/images/covers/track-default.png',
+            image: track.coverUrl || track?.album?.cover?.url || 'assets/images/covers/track-default.png',
             genre: track.genre || '',
             language: track.language || '',
             format: track.format || 'MP3',

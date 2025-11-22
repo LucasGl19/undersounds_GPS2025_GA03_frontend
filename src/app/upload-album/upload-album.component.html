@@ -50,8 +50,9 @@
     </div>
 
     <div class="form-field">
-      <label for="thumbnail">URL de la portada</label>
-      <input id="thumbnail" type="text" formControlName="thumbnail" />
+      <label for="coverFile">Portada del álbum (imagen)</label>
+      <input id="coverFile" type="file" (change)="onCoverFileChange($event)" accept="image/*" />
+      <small *ngIf="coverSelected">Seleccionado: {{ coverSelected.name }}</small>
     </div>
 
   <div class="form-field">
