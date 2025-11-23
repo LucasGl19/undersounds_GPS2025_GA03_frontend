@@ -131,13 +131,11 @@ export class MerchService {
       }))
     );
   }
-
-  getArtistMerch(id: number | null): MerchItem[] {
-    if (!id) {
-      return [];
-    }
-    // return this.merchItems.filter((i) => i.artistId === id);
-    return [];
+  
+  
+  
+  getArtistMerch(id: number | null): Observable<PaginatedMerchResponse> {
+    return this.http.get<PaginatedMerchResponse>(`${this.apiUrl}?artistId=${id}`);
   }
 
   createMerch(body: MerchCreateDto): Observable<{ data: MerchItem }> {

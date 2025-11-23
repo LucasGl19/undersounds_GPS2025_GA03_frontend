@@ -1,0 +1,20 @@
+<div class="artist-merch">
+    <h3>Merchandising del artista</h3>
+    <ng-container *ngIf="!isLoading; else loading">
+        <div *ngIf="merchItems.length > 0; else noMerch">
+            <div class="merch-card" *ngFor="let merch of merchItems">
+                <img [src]="merch.cover?.url || 'assets/images/default-merch.png'" [alt]="merch.title" />
+                <h3>{{ merch.title }}</h3>
+                <p *ngIf="merch.createdAt">Lanzamiento: {{ merch.createdAt }}</p>
+            </div>
+        </div>
+
+        <ng-template #noMerch>
+            <p>Este artista no tiene merchandising disponible.</p>
+        </ng-template>
+    </ng-container>
+
+    <ng-template #loading>
+        <p>Cargando merchandising...</p>
+    </ng-template>
+</div>

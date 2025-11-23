@@ -23,17 +23,34 @@
          <button class="btn-view-favorites" (click)="navigateToUserFavorites()">Mis favoritos</button>
       </div>
       <div class="profile-page">
-        <img [src]="profile.avatarUrl || 'assets/images/ui/user-avatar.svg'" [alt]="'Foto de perfil de ' + profile.name"
-          class="profile-photo" />
-        <h2>{{ profile.name }}</h2>
+        <div class="profile-info">
 
-        <ng-container *ngIf="!isEditing(); else editMode">
-          <p *ngIf="profile.username" class="profile-username">{{ '@' + profile.username }}</p>
-          <p class="profile-email">{{ profile.email }}</p>
-          <p class="profile-role">Rol: {{ profile.role }}</p>
-          <p *ngIf="profile.bio" class="profile-bio">{{ profile.bio }}</p>
-          <p *ngIf="profile.createdAt" class="profile-date">Miembro desde: {{ profile.createdAt | date:'longDate' }}</p>
-          <app-artist-stats *ngIf="profile.role === 'artista'" [artistId]="profile.id"></app-artist-stats>
+          <img [src]="profile.avatarUrl || 'assets/images/ui/user-avatar.svg'"
+            [alt]="'Foto de perfil de ' + profile.name" class="profile-photo" />
+          <h2>{{ profile.name }}</h2>
+
+          <ng-container *ngIf="!isEditing(); else editMode">
+            <p *ngIf="profile.username" class="profile-username">{{ '@' + profile.username }}</p>
+            <p class="profile-email">{{ profile.email }}</p>
+            <p class="profile-role">Rol: {{ profile.role }}</p>
+            <p *ngIf="profile.bio" class="profile-bio">{{ profile.bio }}</p>
+            <p *ngIf="profile.createdAt" class="profile-date">Miembro desde: {{ profile.createdAt | date:'longDate' }}
+            </p>
+          </ng-container>
+        </div>
+
+        <ng-container *ngIf="profile.role == 'artista'">
+          <div class="profile-artist-info">
+            <app-artist-stats *ngIf="profile.role === 'artista'" [artistId]="profile.id"></app-artist-stats>
+            <app-artist-albums [artistId]="profile.id"></app-artist-albums>
+            <app-artist-merch [artistId]="profile.id ? +profile.id : undefined"></app-artist-merch>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="profile.role == 'oyente'">
+          <div class="profile-listener-info">
+            <app-user-orders [userId]="profile.id!"></app-user-orders>
+            <app-user-recommendations [userId]="profile.id!"></app-user-recommendations>
+          </div>
         </ng-container>
         <ng-template #editMode>
           <form [formGroup]="profileForm" class="profile-form">

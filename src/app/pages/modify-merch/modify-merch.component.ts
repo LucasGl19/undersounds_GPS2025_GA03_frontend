@@ -10,9 +10,9 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-modify-merch',
   imports: [FormsModule, CommonModule],
   templateUrl: './modify-merch.component.html',
-  styleUrl: './modify-merch.component.css'
+  styleUrl: './modify-merch.component.css',
 })
-export class ModifyMerchComponent implements OnInit{
+export class ModifyMerchComponent implements OnInit {
   merch: MerchItem[] = [];
   openedItemId: number | null = null;
   modalOpen = false;
@@ -58,9 +58,9 @@ export class ModifyMerchComponent implements OnInit{
     });
   }
 
-  openEditionModal(item : MerchItem) {
+  openEditionModal(item: MerchItem) {
     this.selectedItem = item;
-    this.editableItem = {... item};
+    this.editableItem = { ...item };
     this.modalOpen = true;
   }
 

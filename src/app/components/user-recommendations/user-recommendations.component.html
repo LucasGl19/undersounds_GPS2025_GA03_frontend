@@ -1,0 +1,23 @@
+<div class="user-recommendations">
+    <h2>Recomendaciones personalizadas</h2>
+    <div *ngIf="loading">
+        <p>Cargando recomendaciones...</p>
+    </div>
+
+    <div *ngIf="!loading && error">
+        <p class="error">{{ error }}</p>
+    </div>
+
+    <div *ngIf="!loading && !error && recommendations.length === 0">
+        <p>No hay recomendaciones disponibles.</p>
+    </div>
+
+    <div *ngIf="!loading && !error && recommendations.length > 0" class="recommendations-container">
+        <div class="album-card" *ngFor="let album of recommendations">
+            <img [src]="album.coverImageUrl || 'assets/images/default-album.png'" [alt]="album.title" />
+            <h4>{{ album.title }}</h4>
+            <p>{{ album.description }}</p>
+            <p class="price">{{ album.price | currency:album.currency }}</p>
+        </div>
+    </div>
+</div>

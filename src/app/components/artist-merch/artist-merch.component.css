@@ -1,0 +1,23 @@
+.artist-merch {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-width: 900px;
+}
+
+.merch-card {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.merch-card img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
