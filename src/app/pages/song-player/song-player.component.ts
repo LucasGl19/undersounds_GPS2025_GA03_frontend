@@ -4,10 +4,11 @@ import { SongCard } from '../../models/song-card.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 
 @Component({
   selector: 'app-song-player',
-  imports: [CommonModule],
+  imports: [CommonModule, CommentBoxComponent],
   templateUrl: './song-player.component.html',
   styleUrl: './song-player.component.css'
 })

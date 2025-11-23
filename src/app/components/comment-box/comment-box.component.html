@@ -1,0 +1,65 @@
+<div class="comments-wrapper">
+  <h3>Comentarios</h3>
+
+  <div class="comment" *ngFor="let c of comments">
+    <div class="comment-header">
+      <span class="comment-user">{{ c.userId || 'Usuario' }}</span>
+      <span class="comment-date">{{ c.createdAt | date:'short' }}</span>
+      
+      <button class="remove-btn" *ngIf="c.userId === currentUserId" (click)="delete(c.id)">
+        <img src="assets/images/ui/eliminar.png" alt="Eliminar" />
+      </button>
+      <button class="edit-btn" *ngIf="c.userId === currentUserId" (click)="toggleEdit(c)">✏️</button>
+    </div>
+
+    <!-- Formulario de edición -->
+    <p class="comment-text" *ngIf="!c.editing">{{ c.text }}</p>
+    <div *ngIf="c.editing" class="edit-form">
+      <textarea [(ngModel)]="c.editText"></textarea>
+      <button class="btn-save" (click)="saveEdit(c)">Guardar</button>
+      <button class="btn-cancel" (click)="c.editing = false">Cancelar</button>
+    </div>
+
+    <div class="comment-footer">
+      <button class="btn-like" (click)="like(c.id)">
+        <span [class.liked]="c.isLiked">❤️</span>
+        <span>{{ c.likes || 0 }}</span>
+      </button>
+      <button class="btn-reply" *ngIf="canComment" (click)="toggleReply(c)">💬Responder</button>
+    </div>
+
+    <!-- Formulario para responder un comentario -->
+    <div class="reply-form" *ngIf="canComment && c.showReplyBox">
+      <textarea [(ngModel)]="c.replyText" placeholder="Escribe una respuesta..."></textarea>
+      <button class="btn-send-reply" (click)="sendReply(c.id, c.replyText)">Responder</button>
+    </div>
+
+    <button class="btn-toggle-replies" *ngIf="c.replies?.length" (click)="c.showReplies = !c.showReplies">
+      {{ c.showReplies ? 'Ocultar respuestas' : 'Ver respuestas (' + c.replies.length + ')' }}
+    </button>
+
+    <div class="comment-replies" *ngIf="c.showReplies && c.replies?.length">
+      <div class="reply" *ngFor="let r of c.replies">
+        <div class="reply-header">
+          <span class="reply-user">{{ r.userId || 'Usuario' }}</span>
+          <span class="reply-date">{{ r.createdAt | date:'short' }}</span>
+
+          <!-- Botón de borrar solo si la respuesta es del usuario logueado -->
+          <button class="remove-btn" *ngIf="r.userId === currentUserId" (click)="deleteReply(c.id, r.id)">
+            <img src="assets/images/ui/eliminar.png" alt="Eliminar" />
+          </button>
+        </div>
+        <p class="reply-text">{{ r.text }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="comment-form" *ngIf="canComment; else cannot">
+    <textarea [(ngModel)]="newComment" placeholder="Escribe tu comentario..."></textarea>
+    <button class="btn-send" (click)="submit()">Enviar comentario</button>
+  </div>
+
+  <ng-template #cannot>
+    <p class="disabled-message">Solo puedes comentar si has comprado este producto.</p>
+  </ng-template>
+</div>

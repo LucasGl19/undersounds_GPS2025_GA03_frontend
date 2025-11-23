@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { map, of } from 'rxjs';
 
 export interface OrderItem {
   productId: string;
@@ -23,6 +23,7 @@ export interface Order {
 })
 export class OrdersService {
   private readonly baseUrl = 'http://localhost:8083/v1/orders';
+  purchasedItems: OrderItem[] = [];
   dummyOrders: Order[] = [
     {
       orderId: 'order007',
@@ -57,6 +58,14 @@ export class OrdersService {
 
   constructor(private http: HttpClient) {}
 
+  hasPurchased(userId: string, productId: string, type: 'album' | 'track' | 'merch') {
+    return this.getUserOrders(userId).pipe(
+      map(orders => orders.some(order => order.items.some(
+        (i=> i.productId === productId && i.type === type)
+      )))
+    );
+  }
+
   getAllOrders() {
     return this.http.get<Order[]>(this.baseUrl);
   }
@@ -67,7 +76,6 @@ export class OrdersService {
 
   getUserOrders(userId: string) {
     return this.http.get<Order[]>(`${this.baseUrl}/user/${userId}`);
-    // return of(this.dummyOrders);
   }
 
   createOrder(order: Order) {

@@ -32,10 +32,7 @@
           </span>
         </div>
 
-        <p class="merch-description" *ngIf="merch.description">
-          {{ merch.description }}
-        </p>
-
+        <p class="merch-description" *ngIf="merch.description">{{ merch.description }}</p>
         <div class="merch-dates">
           <span class="metadata-merch">
             <strong>Creado:</strong> {{ merch.createdAt | date:'medium' }}
@@ -46,6 +43,7 @@
         </div>
       </div>
     </div>
+    <app-comment-box [productId]="merch.id.toString()" type="merch"></app-comment-box>
   </div>
 </div>
 

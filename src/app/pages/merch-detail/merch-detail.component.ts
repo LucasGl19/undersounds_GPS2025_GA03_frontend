@@ -3,11 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MerchItem } from '../../models/merch-item.model'; 
 import { MerchService } from '../../services/merch.service';
 import { CommonModule } from '@angular/common';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 
 @Component({
   selector: 'app-merch-detail',
   templateUrl: './merch-detail.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, CommentBoxComponent],
   styleUrls: ['./merch-detail.component.css'],
 })
 export class MerchDetailComponent implements OnInit {

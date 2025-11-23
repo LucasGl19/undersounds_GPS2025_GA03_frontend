@@ -39,10 +39,8 @@
         </p>
 
         <div class="album-actions">
-          <button class="btn-add-cart" (click)="addAlbumToCart()" [disabled]="!album">
-            Añadir al carrito
-          </button>
-          <a routerLink="/cart" class="link-go-cart">Ver carrito</a>
+          <button class="btn-add-cart" (click)="addAlbumToCart()" [disabled]="!album">Añadir al carrito</button>
+          <a class="link-go-cart" (click)="navigateToCart()">Ver carrito</a>
         </div>
       </div>
     </div>
@@ -78,15 +76,16 @@
               <td class="col-duration">{{ formatDuration(track.durationSec) }}</td>
               <td class="col-plays">{{ track.playCount }}</td>
               <td class="col-action">
-                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">
-                  Reproducir
-                </button>
+                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">Reproducir</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+      <div class="album-comments-wrapper">
+        <app-comment-box  [productId]="album.id.toString()" type="album"></app-comment-box>
+      </div>
   </div>
 </div>
 

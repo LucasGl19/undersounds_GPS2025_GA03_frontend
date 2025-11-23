@@ -1,18 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Album } from '../../models/album.model';
 import { SongCard } from '../../models/song-card.model';
 import { ApiService } from '../../services/api.service';
 import { AlbumsService } from '../../services/albums.service';
 import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
-
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, MatSnackBarModule],
+  imports: [CommonModule, CommentBoxComponent],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css']
 })
@@ -96,7 +96,6 @@ export class AlbumDetailComponent implements OnInit {
       next: (response: any) => {
         console.log('[AlbumDetailComponent] Response from getTracks:', response);
         
-        // Mapear datos del backend al modelo SongCard y filtrar por albumId
         let tracks = (response.data || [])
           .filter((track: any) => {
             // Filtrar solo tracks que pertenezcan a este álbum
@@ -163,5 +162,9 @@ export class AlbumDetailComponent implements OnInit {
       .open('Álbum añadido al carrito', 'Ver', { duration: 3000 })
       .onAction()
       .subscribe(() => this.router.navigate(['/cart']));
+  }
+
+  navigateToCart() {
+    this.router.navigate(['/cart']);
   }
 }
