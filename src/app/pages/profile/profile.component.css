@@ -9,7 +9,8 @@ section {
 .profile-page {
   display: flex;
   margin: auto;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 2rem;
   align-items: flex-start;
   justify-content: space-evenly;
   font-family: sans-serif;
@@ -23,16 +24,19 @@ section {
 
 .profile-info {
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.profile-artist-info {
+.profile-artist-info, .profile-listener-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%; 
+  margin-top: 1rem;
 }
 
 .profile-photo {

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Album } from '../../models/album.model';
 import { AlbumsService } from '../../services/albums.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-artist-albums',
@@ -15,7 +16,7 @@ export class ArtistAlbumsComponent {
   isLoading: boolean = true;
   errorMsg: string = '';
 
-  constructor(private albumService: AlbumsService) {}
+  constructor(private albumService: AlbumsService, private router: Router) {}
 
   ngOnInit() {
     if (!this.artistId) {
@@ -35,5 +36,9 @@ export class ArtistAlbumsComponent {
         this.isLoading = false;
       },
     });
+  }
+
+  navigateToAlbumDetail(albumId: number) {
+    this.router.navigate(['/album', albumId]);
   }
 }

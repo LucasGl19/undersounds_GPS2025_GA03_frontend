@@ -5,6 +5,7 @@
     padding: 1rem;
     flex-direction: column;
     flex-wrap: wrap;
+    max-width: 900px;
 }
 
 .merch-card {

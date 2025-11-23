@@ -27,12 +27,14 @@
 }
 
 .merch-card {
+  max-width: 240px;
   background-color: var(--surface-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding: 0.5rem 0rem;
   box-shadow: 0 12px 24px rgba(26, 46, 71, 0.07);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -50,7 +52,7 @@
 }
 
 .merch-card__body {
-  padding: 1.5rem 1.5rem 1.75rem;
+  padding: 1.5rem 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -68,7 +70,14 @@
   line-height: 1.5;
 }
 
+.merch-card__meta{
+  width: 90%;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .merch-card__price {
+  margin-left: 1rem;
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.1em;

@@ -45,6 +45,12 @@
             <app-artist-merch [artistId]="profile.id ? +profile.id : undefined"></app-artist-merch>
           </div>
         </ng-container>
+        <ng-container *ngIf="profile.role == 'oyente'">
+          <div class="profile-listener-info">
+            <app-user-orders [userId]="profile.id!"></app-user-orders>
+            <app-user-recommendations [userId]="profile.id!"></app-user-recommendations>
+          </div>
+        </ng-container>
 
         <ng-template #editMode>
           <form [formGroup]="profileForm" class="profile-form">
