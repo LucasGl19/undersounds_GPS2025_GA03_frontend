@@ -1,0 +1,27 @@
+<section class="favorites-section">
+  <h1>Mis favoritos de merch</h1>
+  <div *ngIf="favMerch.length > 0; else noFavorites" class="merch-grid">
+    <article class="merch-card" *ngFor="let item of favMerch">
+      <figure class="merch-card__cover">
+        <img [src]="item.cover?.url" [alt]="'Imagen de ' + item.title" loading="lazy" />
+      </figure>
+      <div class="merch-card__body">
+        <h3>{{ item.title }}</h3>
+        <p class="merch-card__description">{{ item.description }}</p>
+        <div class="merch-card__metadata">
+          <span class="metadata-tag">{{ item.category }}</span>
+          <span class="metadata-tag" [ngClass]="item.stock > 0 ? 'in-stock' : 'out-of-stock'">
+            {{ item.stock > 0 ? 'Disponible' : 'Agotado' }}
+          </span>
+        </div>
+      </div>
+      <footer class="merch-card__meta">
+        <span class="merch-card__price">{{ item.priceCents / 100 | number:'1.2-2' }} {{ item.currency }}</span>
+      </footer>
+    </article>
+  </div>
+  <ng-template #noFavorites>
+    <p>No has añadido ningún artículo a favoritos todavía.</p>
+  </ng-template>
+</section>
+

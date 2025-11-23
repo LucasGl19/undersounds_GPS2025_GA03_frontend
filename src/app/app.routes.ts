@@ -23,6 +23,7 @@ import { ModifyCreationsComponent } from './modify-creations/modify-creations.co
 import { UploadSongComponent } from './upload-song/upload-song.component';
 import { UploadAlbumComponent } from './upload-album/upload-album.component';
 import { MerchDetailComponent } from './pages/merch-detail/merch-detail.component';
+import { UserFavoritesComponent } from './pages/user-favorites/user-favorites.component';
 import { UploadMerchComponent } from './upload-merch/upload-merch.component';
 
 export const routes: Routes = [
@@ -54,6 +55,7 @@ export const routes: Routes = [
 
       { path: 'upload-song', component: UploadSongComponent },
       {path: 'upload-album', component: UploadAlbumComponent},
+      {path: 'user-favorites', component: UserFavoritesComponent },
       {path: 'upload-merch', component: UploadMerchComponent},
 
       // Fallback

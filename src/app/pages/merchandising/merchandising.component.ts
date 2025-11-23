@@ -1,30 +1,12 @@
-export interface MerchItem {
-  id: string;
-  title: string;
-  description?: string;
-  category?: string;
-  priceCents: number;
-  currency?: string;
-  stock?: number;
-  sku?: string;
-  active?: boolean;
-  artistId?: number | null;
-  labelId?: number | null;
-  coverId?: string | null;
-  createdAt: string;
-  updatedAt: string;
-  artist?: any;
-  label?: any;
-  cover?: { url: string } | null;
-}
-
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MerchService } from '../../services/merch.service';
 import { Router } from '@angular/router';
+import { FavoritesService } from '../../services/favorites.service';
 import { AuthService } from '../../services/auth.service';
 import { Observable } from 'rxjs';
+import { MerchItem } from '../../models/merch-item.model'; // si lo tienes separado
 
 @Component({
   selector: 'app-merchandising',
@@ -35,32 +17,39 @@ import { Observable } from 'rxjs';
 })
 export class MerchandisingComponent implements OnInit {
   articles: MerchItem[] = [];
-  isLoading: boolean = false;
+  favorites: string[] = [];
+  userId: string | null = null;
+
+  isLoading = false;
   errorMessage: string | null = null;
 
   selectedSort: 'name' | 'createdAt' | 'price' | null = null;
-  searchQuery: string = '';
-  
-  private authService = inject(AuthService);
-  userRole$: Observable<string | null>;
-  isLoggedIn$: Observable<boolean>;
+  searchQuery = '';
 
-  constructor(private merchService: MerchService, private router: Router) {
-    this.userRole$ = this.authService.userRole$;
-    this.isLoggedIn$ = this.authService.isLoggedIn$;
-  }
+  private authService = inject(AuthService);
+  userRole$: Observable<string | null> = this.authService.userRole$;
+  isLoggedIn$: Observable<boolean> = this.authService.isLoggedIn$;
+
+  constructor(
+    private merchService: MerchService,
+    private favService: FavoritesService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.userId = this.authService.getUserId();
     this.loadMerch();
   }
 
   private loadMerch(): void {
     this.isLoading = true;
     this.errorMessage = null;
+
     this.merchService.getMerchItems({ sort: this.selectedSort || undefined }).subscribe({
       next: (response) => {
         this.articles = response.data;
         this.isLoading = false;
+        this.loadFavorites();
       },
       error: (err) => {
         console.error('[Merchandising] Error cargando merch', err);
@@ -70,17 +59,24 @@ export class MerchandisingComponent implements OnInit {
     });
   }
 
-  sortBy(criteria: 'name' | 'price' | 'createdAt') {
-    if (this.selectedSort === criteria) {
-      this.selectedSort = null;
-      this.loadMerch();
-      return;
+  private loadFavorites(): void {
+    if (this.userId) {
+      this.favService.getFavorites(this.userId).subscribe({
+        next: (res: any) => {
+          this.favorites = res.data.map((fav: any) => fav.merchId ?? fav.id);
+        },
+        error: (err) => {
+          console.error('Error al cargar favoritos', err);
+        },
+      });
     }
+  }
 
-    this.selectedSort = criteria;
-    // Recargar desde API usando sort del backend (evitamos inconsistencias con paginación futura)
+  sortBy(criteria: 'name' | 'price' | 'createdAt') {
+    this.selectedSort = this.selectedSort === criteria ? null : criteria;
     this.loadMerch();
   }
+
   searchArticles() {
     const query = this.searchQuery.trim().toLowerCase();
     if (!query) {
@@ -94,11 +90,30 @@ export class MerchandisingComponent implements OnInit {
         a.description?.toLowerCase().includes(query)
     );
   }
+
   navigateToMerchDetail(id: string) {
     this.router.navigate(['/merchandising', id]);
   }
 
   navigateToUploadMerch() {
     this.router.navigate(['/upload-merch']);
+  }
+
+  isFavorite(id: string): boolean {
+    return this.favorites.includes(id);
+  }
+
+  toggleFavorite(article: MerchItem, event: Event) {
+    event.stopPropagation();
+    if (!this.userId) {
+      alert('Debes iniciar sesión');
+      return;
+    }
+
+    const action = this.isFavorite(article.id)
+      ? this.favService.deleteMerchFromFavorites(this.userId, article.id)
+      : this.favService.addMerchToFavorites(this.userId, article.id);
+
+    action.subscribe(() => this.loadFavorites());
   }
 }

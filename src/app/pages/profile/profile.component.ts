@@ -167,4 +167,7 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+  navigateToUserFavorites() {
+    this.router.navigate(['/user-favorites']);
+  }
 }
