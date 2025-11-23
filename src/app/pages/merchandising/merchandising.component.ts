@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { FavoritesService } from '../../services/favorites.service';
 import { AuthService } from '../../services/auth.service';
 import { Observable } from 'rxjs';
-import { MerchItem } from '../../models/merch-item.model'; // si lo tienes separado
+import { MerchItem } from '../../models/merch-item.model'; 
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-merchandising',
@@ -33,7 +34,8 @@ export class MerchandisingComponent implements OnInit {
   constructor(
     private merchService: MerchService,
     private favService: FavoritesService,
-    private router: Router
+    private router: Router,
+    private cart: CartService
   ) {}
 
   ngOnInit(): void {
@@ -115,5 +117,29 @@ export class MerchandisingComponent implements OnInit {
       : this.favService.addMerchToFavorites(this.userId, article.id);
 
     action.subscribe(() => this.loadFavorites());
+  }
+
+  isInCart(id: string): boolean {
+    return this.cart['itemsSubject'].value.some(
+      i=> i.itemType === 'merch' && String(i.id) === String(id)
+    );
+  }
+
+  toggleCart(item: MerchItem, event: Event) {
+    event.stopPropagation();
+    if(this.isInCart(item.id)){
+      const cartItem = this.cart['itemsSubject'].value.find(
+        i=> i.itemType === 'merch' && String(i.id) === String(item.id)
+      );
+      if(cartItem) {
+        this.cart.remove(cartItem);
+      }
+    }
+    else {
+      this.cart.addMerch(item);
+    }
+  }
+  addToCart(item: MerchItem) {
+    this.cart.addMerch(item);
   }
 }
