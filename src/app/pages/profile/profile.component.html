@@ -20,6 +20,7 @@
         <button (click)="onDeleteAccount()" class="btn-delete-account">
           Borrar cuenta
         </button>
+         <button class="btn-view-favorites" (click)="navigateToUserFavorites()">Mis favoritos</button>
       </div>
       <div class="profile-page">
         <img [src]="profile.avatarUrl || 'assets/images/ui/user-avatar.svg'" [alt]="'Foto de perfil de ' + profile.name"
@@ -34,7 +35,6 @@
           <p *ngIf="profile.createdAt" class="profile-date">Miembro desde: {{ profile.createdAt | date:'longDate' }}</p>
           <app-artist-stats *ngIf="profile.role === 'artista'" [artistId]="profile.id"></app-artist-stats>
         </ng-container>
-
         <ng-template #editMode>
           <form [formGroup]="profileForm" class="profile-form">
             <!-- Sección de imagen de perfil -->

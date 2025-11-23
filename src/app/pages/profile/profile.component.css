@@ -387,6 +387,26 @@ textarea.form-control {
   animation: fadeIn 0.5s ease-out;
 }
 
+.btn-view-favorites {
+  padding: 0.75rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #ffc107, #ff9800); 
+}
+
+.btn-view-favorites:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #ffca2c, #ffb300);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   section {
