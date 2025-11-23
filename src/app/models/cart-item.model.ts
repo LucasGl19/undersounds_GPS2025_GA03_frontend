@@ -4,7 +4,7 @@ export interface CartItem {
   id: string | number;
   itemType: CartItemType;
   name: string;
-  price: number; // Precio en la misma unidad que Album.price (EUR)
+  price: number; 
   image: string;
   quantity: number;
 }

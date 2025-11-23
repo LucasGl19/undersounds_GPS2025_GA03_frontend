@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CartItem } from '../models/cart-item.model';
 import { Album } from '../models/album.model';
+import { MerchItem } from '../models/merch-item.model';
 
 const STORAGE_KEY = 'undersounds_cart_v1';
 
@@ -43,6 +44,27 @@ export class CartService {
         name: album.title,
         price: album.price || 0,
         image: album.cover,
+        quantity: 1,
+      };
+      this.itemsSubject.next([...this.itemsSubject.value, newItem]);
+    }
+    this.persist();
+  }
+
+  addMerch(item: MerchItem) {
+    const existing = this.itemsSubject.value.find(
+      i=> i.itemType === 'merch' && String(i.id) === String(item.id));
+    if(existing) {
+      existing.quantity++;
+      this.itemsSubject.next([...this.itemsSubject.value]);
+    }
+    else{
+      const newItem: CartItem = {
+        id: item.id,
+        itemType: 'merch',
+        name: item.title,
+        price: item.priceCents/100, 
+        image: item.cover?.url || 'assets/images/ui/no-image.png',
         quantity: 1,
       };
       this.itemsSubject.next([...this.itemsSubject.value, newItem]);

@@ -197,15 +197,35 @@
   transition: fill 0.2s ease, transform 0.2s ease;
 }
 
+.btn-add-cart {
+  padding: 0.45rem 1rem;
+  border-radius: 90px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-add-cart:not(:disabled) {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: #fff;
+}
+
+.btn-add-cart.in-cart {
+  background: #3f8ddc;
+  color: #fff;
+}
+
 
 .merch-card__meta {
   position: relative;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem 1.25rem;
   display: flex;
-  justify-content: flex-start; /* alinea el precio a la izquierda */
+  justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
-
 
 @media (max-width: 640px) {
   .merch-page {
