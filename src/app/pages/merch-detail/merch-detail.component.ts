@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MerchItem } from '../merchandising/merchandising.component';
+import { MerchItem } from '../../models/merch-item.model'; 
 import { MerchService } from '../../services/merch.service';
 import { CommonModule } from '@angular/common';
 
