@@ -101,6 +101,7 @@ export class ApiService {
         const value = (filters as any)[key];
         if (value !== undefined && value !== null && value !== '') {
           if (Array.isArray(value)) {
+            // The API expects comma-separated values for arrays like include
             params[key] = value.join(',');
           } else {
             params[key] = value.toString();
@@ -119,7 +120,7 @@ export class ApiService {
 
   // Obtener un álbum específico por ID
   getAlbumById(albumId: string): Observable<{ data: any }> {
-    return this.http.get<{ data: any }>(`${API}/albums/${albumId}`);
+    return this.http.get<{ data: any }>(`${API}/albums/${albumId}?include=cover`);
   }
 
   // --------- TRACKS ----------
@@ -165,5 +166,33 @@ export class ApiService {
   uploadTrackAudio(trackId: string, formData: FormData): Observable<{ data: any }> {
     return this.http.post<{ data: any }>(`${API}/tracks/${trackId}/audio`, formData);
 
+  }
+  
+  // --------- UPDATES (PATCH) ----------
+  // Actualizar álbum parcialmente
+  updateAlbum(albumId: string, body: any): Observable<{ data: any }> {
+    return this.http.patch<{ data: any }>(`${API}/albums/${albumId}`, body);
+  }
+
+  // Subir portada real para un álbum vía multipart
+  uploadAlbumCover(albumId: string, file: File): Observable<{ data: any }> {
+    const fd = new FormData();
+    fd.append('file', file);
+    return this.http.post<{ data: any }>(`${API}/albums/${albumId}/cover`, fd);
+  }
+
+  // Actualizar pista parcialmente
+  updateTrack(trackId: string, body: any): Observable<{ data: any }> {
+    return this.http.patch<{ data: any }>(`${API}/tracks/${trackId}`, body);
+  }
+
+  // Subir portada de una pista
+  // (Eliminado) Las pistas no tienen portada propia; usan la del álbum.
+
+  // Subir imágenes de merch (múltiples)
+  uploadMerchImages(merchId: string, files: File[]): Observable<{ data: any }> {
+    const fd = new FormData();
+    files.forEach(f => fd.append('files', f));
+    return this.http.post<{ data: any }>(`${API}/merch/${merchId}/images`, fd);
   }
 }

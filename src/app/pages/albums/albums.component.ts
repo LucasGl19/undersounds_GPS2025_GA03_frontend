@@ -123,6 +123,7 @@ export class AlbumsComponent implements OnInit {
     const filters: AlbumFilters = {
       page: this.currentPage,
       limit: this.itemsPerPage,
+      include: ['cover']
     };
 
     if (this.searchQuery) filters.q = this.searchQuery;

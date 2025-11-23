@@ -1,6 +1,12 @@
 <h1>Mis artículos de merch</h1>
 
-<div class="merch-grid">
+<div class="loading-state" *ngIf="isLoading">Cargando...</div>
+<div class="error-state" *ngIf="errorMessage">{{ errorMessage }}</div>
+<div class="empty-state" *ngIf="!isLoading && !errorMessage && merch.length === 0">
+  No tienes artículos de merchandising todavía.
+</div>
+
+<div class="merch-grid" *ngIf="!isLoading && !errorMessage">
   <article class="merch-card" *ngFor="let item of merch">
     
     <button class="edit-btn" (click)="openEditionModal(item)">
@@ -25,19 +31,24 @@
     <h2>Editar artículo</h2>
 
     <label>Nombre:
-      <input type="text" [(ngModel)]="editableItem.name">
+      <input type="text" [(ngModel)]="editableItem.title">
     </label>
 
-    <label>Precio:
-      <input type="number" [(ngModel)]="editableItem.price">
+    <label>Precio (€):
+      <input type="number" step="0.01" [(ngModel)]="editableItem.priceCents" [value]="editableItem.priceCents / 100">
+    </label>
+
+    <label>Stock:
+      <input type="number" [(ngModel)]="editableItem.stock">
     </label>
 
     <label>Descripción:
       <textarea [(ngModel)]="editableItem.description"></textarea>
     </label>
 
-    <label>Imagen (URL):
-      <input type="text" [(ngModel)]="editableItem.image">
+    <label>Imagen:
+      <input type="file" accept="image/*" (change)="onImageChange($event)" />
+      <small *ngIf="selectedImageFile">Seleccionado: {{ selectedImageFile.name }}</small>
     </label>
 
     <div class="modal-actions">
