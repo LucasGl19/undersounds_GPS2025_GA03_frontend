@@ -29,7 +29,7 @@
       <!-- Acciones para ARTISTAS -->
       <button
         type="button"
-        *ngIf="(userRole$ | async) === 'artist'"
+        *ngIf="(userRole$ | async) === 'artista'"
         class="header-link"
         (click)="navigateToModifyMerch()"
       >
@@ -38,7 +38,7 @@
 
       <button
         type="button"
-        *ngIf="(userRole$ | async) === 'artist'"
+        *ngIf="(userRole$ | async) === 'artista'"
         class="header-link"
         (click)="navigateToModifySection()"
       >
@@ -47,7 +47,7 @@
 
       <button
         type="button"
-        *ngIf="(userRole$ | async) === 'artist'"
+        *ngIf="(userRole$ | async) === 'artista'"
         class="header-link"
         (click)="navigateToUploadSong()"
       >
@@ -56,7 +56,7 @@
 
       <button
         type="button"
-        *ngIf="(userRole$ | async) === 'artist'"
+        *ngIf="(userRole$ | async) === 'artista'"
         class="header-link"
         (click)="navigateToUploadAlbum()"
       >

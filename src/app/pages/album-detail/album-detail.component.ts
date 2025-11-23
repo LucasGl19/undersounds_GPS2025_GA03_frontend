@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Album } from '../../models/album.model';
 import { SongCard } from '../../models/song-card.model';
 import { ApiService } from '../../services/api.service';
 import { AlbumsService } from '../../services/albums.service';
+import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css']
 })
@@ -19,12 +21,21 @@ export class AlbumDetailComponent implements OnInit {
   private router = inject(Router);
   private apiService = inject(ApiService);
   private albumsService = inject(AlbumsService);
+  private cartService = inject(CartService);
+  private snack = inject(MatSnackBar);
 
   album: Album | null = null;
   tracks: SongCard[] = [];
   isLoading = true;
   errorMsg = '';
   showDebugInfo = environment.showDebugInfo;
+
+  private normalizeUrl(u?: string): string {
+    if (!u) return 'assets/images/covers/album-default.png';
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.startsWith('/')) return `${environment.contentApiUrl}${u}`;
+    return `${environment.contentApiUrl}/${u}`;
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -60,7 +71,7 @@ export class AlbumDetailComponent implements OnInit {
             genres: response.data.genres 
               ? response.data.genres.split(',').map((g: string) => g.trim()) 
               : [],
-            cover: response.data.cover?.url || 'assets/images/covers/album-default.png',
+            cover: this.normalizeUrl(response.data.cover?.url),
             artistName: response.data.artistName || 'Artista desconocido'
           };
 
@@ -96,7 +107,9 @@ export class AlbumDetailComponent implements OnInit {
             title: track.title || 'Sin título',
             artist: this.album?.artistName || 'Desconocido',
             description: track.description || '',
-            image: track.cover?.url || 'assets/images/covers/track-default.png',
+            image: track.coverUrl 
+              ? this.normalizeUrl(track.coverUrl) 
+              : (track?.album?.cover?.url ? this.normalizeUrl(track.album.cover.url) : 'assets/images/covers/track-default.png'),
             genre: track.genre || '',
             language: track.language || '',
             format: track.format || 'MP3',
@@ -141,5 +154,14 @@ export class AlbumDetailComponent implements OnInit {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  addAlbumToCart(): void {
+    if (!this.album) return;
+    this.cartService.addAlbum(this.album);
+    this.snack
+      .open('Álbum añadido al carrito', 'Ver', { duration: 3000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/cart']));
   }
 }

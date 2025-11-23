@@ -20,6 +20,7 @@
         <button (click)="onDeleteAccount()" class="btn-delete-account">
           Borrar cuenta
         </button>
+         <button class="btn-view-favorites" (click)="navigateToUserFavorites()">Mis favoritos</button>
       </div>
       <div class="profile-page">
         <div class="profile-info">
@@ -51,7 +52,6 @@
             <app-user-recommendations [userId]="profile.id!"></app-user-recommendations>
           </div>
         </ng-container>
-
         <ng-template #editMode>
           <form [formGroup]="profileForm" class="profile-form">
             <!-- Sección de imagen de perfil -->

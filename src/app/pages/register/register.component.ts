@@ -44,7 +44,7 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirm: ['', [Validators.required]],
-      role: ['listener', [Validators.required]],
+      role: ['listener', [Validators.required]], // Enviar en inglés, backend devuelve español
     },
     { validators: this.passwordMatchValidator }
   );

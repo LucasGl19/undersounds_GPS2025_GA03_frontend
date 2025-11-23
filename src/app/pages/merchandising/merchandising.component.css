@@ -28,6 +28,7 @@
 
 .merch-card {
   max-width: 240px;
+  position: relative;
   background-color: var(--surface-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
@@ -42,6 +43,7 @@
 .merch-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 32px rgba(26, 46, 71, 0.12);
+  cursor: pointer;
 }
 
 .merch-card img {
@@ -77,16 +79,16 @@
 }
 
 .merch-card__price {
-  margin-left: 1rem;
+  margin-right: 48px;
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent-stronger);
+  
 }
 
 
-/*Selectores para ordenar*/
 .sort-tags {
   margin-top: 1.2rem;
   display: flex;
@@ -113,6 +115,26 @@
   background: #000;
   color: #fff;
   border-color: #000;
+}
+
+.btn-upload-merch {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+}
+
+.btn-upload-merch:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
 .search-bar {
@@ -165,6 +187,33 @@
   background-color: var(--accent-stronger);
   transform: translateY(-1px);
 }
+
+.fav-button {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+}
+
+.heart-icon {
+  width: 35px;
+  height: 35px;
+  transition: fill 0.2s ease, transform 0.2s ease;
+}
+
+
+.merch-card__meta {
+  position: relative;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: flex-start; /* alinea el precio a la izquierda */
+  align-items: center;
+}
+
 
 @media (max-width: 640px) {
   .merch-page {
