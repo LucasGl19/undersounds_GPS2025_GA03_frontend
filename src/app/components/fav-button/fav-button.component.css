@@ -3,20 +3,21 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #d0d7de;
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: #fff;
-  color: #24292f;
+  background: var(--surface-secondary);
+  color: var(--text-strong);
   font-weight: 500;
   cursor: pointer;
   transition: all 120ms ease;
 }
 
 .fav-button:hover {
-  background: #f6f8fa;
-  border-color: #b6c0ca;
+  background: var(--surface-primary);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .fav-button:active {
-  background: #eef2f6;
+  background: var(--surface-secondary);
 }

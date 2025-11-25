@@ -30,7 +30,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1.2rem;
-  box-shadow: 0 14px 30px rgba(26, 46, 71, 0.08);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
 }
 
 .empty-cart h2 {
@@ -69,7 +69,7 @@
 .btn-primary {
   background-color: var(--accent);
   color: #fff;
-  box-shadow: 0 10px 18px rgba(98, 153, 201, 0.3);
+  box-shadow: 0 10px 18px rgba(56, 189, 248, 0.3);
 }
 
 .btn-secondary {
@@ -81,7 +81,7 @@
 .btn-checkout {
   width: 100%;
   margin-top: 1.5rem;
-  background: var(--text-strong);
+  background: var(--accent);
   color: #fff;
 }
 
@@ -89,7 +89,7 @@
 .btn-secondary:hover,
 .btn-checkout:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(26, 46, 71, 0.12);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
 .cart-content {
@@ -113,7 +113,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   padding: 1.2rem 1.4rem;
-  box-shadow: 0 6px 18px rgba(26, 46, 71, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
 .cart-item-left {
@@ -196,7 +196,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
   padding: 1.8rem;
-  box-shadow: 0 12px 24px rgba(26, 46, 71, 0.08);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   gap: 1rem;

@@ -1,7 +1,7 @@
 .confirmation-page {
   min-height: calc(100vh - 200px);
   padding: 3rem 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--surface-background);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,11 +10,12 @@
 .confirmation-container {
   max-width: 800px;
   width: 100%;
-  background: white;
-  border-radius: 12px;
+  background: var(--surface-primary);
+  border-radius: 16px;
   padding: 3rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.5s ease-out;
+  border: 1px solid var(--border-subtle);
 }
 
 @keyframes slideUp {
@@ -33,12 +34,13 @@
   width: 80px;
   height: 80px;
   margin: 0 auto 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(56, 189, 248, 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid var(--accent);
 }
 
 @keyframes scaleIn {
@@ -53,7 +55,7 @@
 .success-icon svg {
   width: 50px;
   height: 50px;
-  color: white;
+  color: var(--accent);
   stroke-width: 3;
 }
 
@@ -62,34 +64,35 @@
   text-align: center;
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border-subtle);
 }
 
 .confirmation-header h1 {
   font-size: 2.25rem;
-  color: #1a1a1a;
+  color: var(--text-strong);
   margin: 0 0 0.75rem 0;
   font-weight: 700;
 }
 
 .subtitle {
   font-size: 1.1rem;
-  color: #666;
+  color: var(--text-muted);
   margin: 0 0 1rem 0;
 }
 
 .order-number {
   font-size: 0.95rem;
-  color: #333;
-  background-color: #f8f9fa;
+  color: var(--text-strong);
+  background-color: var(--surface-secondary);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   display: inline-block;
   margin-top: 1rem;
+  border: 1px solid var(--border-subtle);
 }
 
 .order-number strong {
-  color: #667eea;
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -100,22 +103,23 @@
 
 .details-section h2 {
   font-size: 1.35rem;
-  color: #333;
+  color: var(--text-strong);
   margin-bottom: 1rem;
   font-weight: 600;
 }
 
 .details-section h3 {
   font-size: 1.1rem;
-  color: #333;
+  color: var(--text-strong);
   margin-bottom: 0.75rem;
 }
 
 /* Información del pedido */
 .order-info {
-  background-color: #f8f9fa;
+  background-color: var(--surface-secondary);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
 }
 
 .info-row {
@@ -130,31 +134,31 @@
 }
 
 .info-row .label {
-  color: #666;
+  color: var(--text-muted);
 }
 
 .info-row .value {
-  color: #333;
+  color: var(--text-strong);
   font-weight: 500;
 }
 
 .info-row.highlight {
   padding-top: 0.75rem;
   margin-top: 0.75rem;
-  border-top: 2px solid #e0e0e0;
+  border-top: 2px solid var(--border-subtle);
   font-size: 1.15rem;
 }
 
 .info-row.highlight .label,
 .info-row.highlight .value {
   font-weight: 700;
-  color: #667eea;
+  color: var(--accent);
 }
 
 /* Items del pedido */
 .order-items {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -163,7 +167,7 @@
   grid-template-columns: 2fr auto auto auto;
   gap: 1rem;
   padding: 1.25rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-subtle);
   align-items: center;
 }
 
@@ -172,18 +176,18 @@
 }
 
 .order-item:nth-child(even) {
-  background-color: #f8f9fa;
+  background-color: var(--surface-secondary);
 }
 
 .item-info h3 {
   font-size: 1rem;
   margin: 0 0 0.25rem 0;
-  color: #333;
+  color: var(--text-strong);
 }
 
 .item-type {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-muted);
   margin: 0;
   text-transform: capitalize;
 }
@@ -191,28 +195,28 @@
 .item-quantity,
 .item-price {
   text-align: right;
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
 .item-total {
   text-align: right;
   font-size: 1.05rem;
-  color: #333;
+  color: var(--text-strong);
 }
 
 /* Caja de información */
 .info-box {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: rgba(56, 189, 248, 0.05);
   padding: 1.5rem;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent);
 }
 
 .info-box h3 {
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--text-strong);
 }
 
 .info-box ul {
@@ -222,7 +226,7 @@
 
 .info-box li {
   margin-bottom: 0.5rem;
-  color: #555;
+  color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.6;
 }
@@ -244,7 +248,7 @@
 .btn-secondary {
   padding: 0.875rem 2rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -255,24 +259,25 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent);
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+  background-color: var(--accent-stronger);
 }
 
 .btn-secondary {
-  background-color: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  background-color: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
 }
 
 .btn-secondary:hover {
-  background-color: #667eea;
+  background-color: var(--accent);
   color: white;
   transform: translateY(-2px);
 }
@@ -281,19 +286,20 @@
 .no-order {
   text-align: center;
   padding: 3rem;
-  background: white;
-  border-radius: 12px;
+  background: var(--surface-primary);
+  border-radius: 16px;
   max-width: 500px;
+  border: 1px solid var(--border-subtle);
 }
 
 .no-order h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-strong);
   margin-bottom: 1rem;
 }
 
 .no-order p {
-  color: #666;
+  color: var(--text-muted);
   margin-bottom: 2rem;
 }
 

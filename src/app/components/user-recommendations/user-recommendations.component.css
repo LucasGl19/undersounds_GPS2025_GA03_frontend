@@ -1,12 +1,14 @@
 .user-recommendations {
     display: flex;
     flex-direction: column;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 1.5rem;
     overflow-x: auto;
     width: 900px;
     max-width: 900px;
+    background-color: var(--surface-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .recommendations-container {
@@ -20,9 +22,9 @@
 
 .album-card {
     flex: 0 0 200px;
-    background-color: #f8f9fa;
+    background-color: var(--surface-secondary);
     border-radius: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-subtle);
     padding: 0.5rem;
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -30,8 +32,9 @@
 
 .album-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+    background-color: var(--surface-primary);
 }
 
 .album-card img {
@@ -45,19 +48,19 @@
 .album-card h4 {
     font-size: 16px;
     margin: 0.3rem 0;
-    color: #0055aa;
+    color: var(--text-strong);
     font-weight: 600;
 }
 
 .album-card p {
     font-size: 14px;
     margin: 0.2rem 0;
-    color: #333;
+    color: var(--text-muted);
 }
 
 .album-card .price {
     font-weight: bold;
-    color: #0055aa;
+    color: var(--accent);
 }
 
 @media (max-width: 600px) {
