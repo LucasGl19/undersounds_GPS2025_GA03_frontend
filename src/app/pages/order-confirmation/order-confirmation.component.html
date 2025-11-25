@@ -1,0 +1,116 @@
+<section class="confirmation-page">
+  <div class="confirmation-container" *ngIf="order">
+    <!-- Icono de éxito -->
+    <div class="success-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <!-- Mensaje de confirmación -->
+    <header class="confirmation-header">
+      <h1>¡Pedido confirmado!</h1>
+      <p class="subtitle">
+        Gracias por tu compra. Tu pedido ha sido procesado correctamente.
+      </p>
+      <p class="order-number">
+        Número de pedido: <strong>{{ order.orderId }}</strong>
+      </p>
+    </header>
+
+    <!-- Detalles del pedido -->
+    <div class="order-details">
+      <section class="details-section">
+        <h2>Detalles del pedido</h2>
+        
+        <div class="order-info">
+          <div class="info-row">
+            <span class="label">Fecha:</span>
+            <span class="value">{{ order.orderDate | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Total de artículos:</span>
+            <span class="value">{{ itemsCount }} {{ itemsCount === 1 ? 'artículo' : 'artículos' }}</span>
+          </div>
+          <div class="info-row highlight">
+            <span class="label">Total pagado:</span>
+            <span class="value">{{ orderTotal | number:'1.2-2' }} €</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Artículos del pedido -->
+      <section class="details-section">
+        <h2>Artículos comprados</h2>
+        
+        <div class="order-items">
+          <div class="order-item" *ngFor="let item of order.items">
+            <div class="item-info">
+              <h3>{{ item.productName }}</h3>
+              <p class="item-type">{{ item.type === 'album' ? 'Álbum' : 'Merchandising' }}</p>
+            </div>
+            <div class="item-quantity">
+              <span>x{{ item.quantity }}</span>
+            </div>
+            <div class="item-price">
+              <span>{{ item.unitPrice | number:'1.2-2' }} €</span>
+            </div>
+            <div class="item-total">
+              <strong>{{ (item.unitPrice * item.quantity) | number:'1.2-2' }} €</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Información adicional -->
+      <section class="details-section info-box">
+        <h3>📧 ¿Qué sigue?</h3>
+        <ul>
+          <li>Recibirás un email de confirmación con los detalles de tu pedido.</li>
+          <li>Los álbumes digitales estarán disponibles en tu biblioteca inmediatamente.</li>
+          <li>El merchandising físico será enviado en los próximos 3-5 días laborables.</li>
+          <li>Puedes consultar el estado de tu pedido en tu panel de usuario.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Acciones -->
+    <div class="confirmation-actions">
+      <button type="button" class="btn-secondary" (click)="printOrder()">
+        🖨️ Imprimir pedido
+      </button>
+      <button type="button" class="btn-secondary" (click)="viewMyOrders()">
+        📦 Ver mis pedidos
+      </button>
+      <button type="button" class="btn-primary" (click)="continueShopping()">
+        🎵 Seguir explorando
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje si no hay orden -->
+  <div class="no-order" *ngIf="!order">
+    <h2>No se encontró información del pedido</h2>
+    <p>Por favor, verifica tu historial de pedidos en tu panel de usuario.</p>
+    <button type="button" class="btn-primary" (click)="continueShopping()">
+      Volver al inicio
+    </button>
+  </div>
+</section>
+
+<!-- Estilos para impresión -->
+<style media="print">
+  .confirmation-actions,
+  .btn-primary,
+  .btn-secondary {
+    display: none !important;
+  }
+  
+  .confirmation-page {
+    background: white;
+  }
+  
+  .confirmation-container {
+    box-shadow: none;
+  }
+</style>

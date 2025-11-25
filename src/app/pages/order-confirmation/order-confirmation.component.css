@@ -1,0 +1,344 @@
+.confirmation-page {
+  min-height: calc(100vh - 200px);
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmation-container {
+  max-width: 800px;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icono de éxito */
+.success-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.success-icon svg {
+  width: 50px;
+  height: 50px;
+  color: white;
+  stroke-width: 3;
+}
+
+/* Header */
+.confirmation-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.confirmation-header h1 {
+  font-size: 2.25rem;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem 0;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+}
+
+.order-number {
+  font-size: 0.95rem;
+  color: #333;
+  background-color: #f8f9fa;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.order-number strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Secciones de detalles */
+.details-section {
+  margin-bottom: 2rem;
+}
+
+.details-section h2 {
+  font-size: 1.35rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.details-section h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.75rem;
+}
+
+/* Información del pedido */
+.order-info {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row .label {
+  color: #666;
+}
+
+.info-row .value {
+  color: #333;
+  font-weight: 500;
+}
+
+.info-row.highlight {
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+  border-top: 2px solid #e0e0e0;
+  font-size: 1.15rem;
+}
+
+.info-row.highlight .label,
+.info-row.highlight .value {
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Items del pedido */
+.order-items {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.order-item {
+  display: grid;
+  grid-template-columns: 2fr auto auto auto;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.item-info h3 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+  color: #333;
+}
+
+.item-type {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.item-quantity,
+.item-price {
+  text-align: right;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.item-total {
+  text-align: right;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+/* Caja de información */
+.info-box {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.info-box h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.info-box ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.info-box li {
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.info-box li:last-child {
+  margin-bottom: 0;
+}
+
+/* Acciones */
+.confirmation-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+  background-color: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Sin pedido */
+.no-order {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+}
+
+.no-order h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.no-order p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .confirmation-page {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .confirmation-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .confirmation-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-icon svg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .order-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .item-quantity,
+  .item-price,
+  .item-total {
+    text-align: left;
+  }
+
+  .confirmation-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}

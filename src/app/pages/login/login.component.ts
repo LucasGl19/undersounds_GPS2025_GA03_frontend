@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,10 +9,20 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   errorMessage: string = '';
+  returnUrl: string = '/';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    // Obtener la URL de retorno de los query params
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   onSubmit(form: any) {
     if (!form.valid) return;
@@ -27,7 +37,8 @@ export class LoginComponent {
     this.authService.login(emailOrUsername, password).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
-        this.router.navigate(['/']);
+        // Redirigir a la URL de retorno o al home
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (error) => {
         console.error('Login failed:', error);

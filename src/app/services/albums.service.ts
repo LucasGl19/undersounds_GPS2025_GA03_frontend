@@ -79,7 +79,8 @@ export class AlbumsService {
   getAlbumArtistFromBackend(artistId: number | string) {
     return this.apiService.getAlbums({ 
       artistId: String(artistId),
-      limit: 100 
+      limit: 100,
+      include: ['cover'] // Asegurar que se incluye la portada
     }).pipe(
       map(response => {
         // Mapear álbumes del backend al modelo Album del frontend
