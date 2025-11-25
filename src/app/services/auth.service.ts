@@ -56,7 +56,11 @@ export class AuthService {
   private readonly apiUrl = environment.usersApiUrl;
 
   register(dto: RegisterDto): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, dto);
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, dto).pipe(
+      tap((response) => {
+        this.handleAuthResponse(response);
+      })
+    );
   }
 
   login(emailOrUsername: string, password: string): Observable<AuthResponse> {
@@ -68,14 +72,18 @@ export class AuthService {
       .pipe(
         tap((response) => {
           console.log('[AuthService] Login response:', response);
-          this.role.next(response.role);
-          localStorage.setItem('role', response.role);
-          localStorage.setItem('user_id', response.user_id.toString());
-          console.log('[AuthService] Stored user_id:', response.user_id.toString());
-          this.storeTokens(response.tokens);
-          this.loggedIn.next(true);
+          this.handleAuthResponse(response);
         })
       );
+  }
+
+  private handleAuthResponse(response: AuthResponse): void {
+    this.role.next(response.role);
+    localStorage.setItem('role', response.role);
+    localStorage.setItem('user_id', response.user_id.toString());
+    console.log('[AuthService] Stored user_id:', response.user_id.toString());
+    this.storeTokens(response.tokens);
+    this.loggedIn.next(true);
   }
 
   me(): Observable<UserProfile> {

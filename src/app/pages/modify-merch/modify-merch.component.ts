@@ -33,12 +33,31 @@ export class ModifyMerchComponent implements OnInit {
   }
 
   private loadMyMerch(): void {
-    const userId = this.auth.getUserId();
+    let userId = this.auth.getUserId();
+    
     if (!userId) {
-      this.errorMessage = 'Debes iniciar sesión para ver tu merchandising';
+      // Try to fetch profile if userId is missing from localStorage but we might be logged in
+      this.auth.me().subscribe({
+        next: (profile) => {
+          if (profile && profile.id) {
+            // Update localStorage for future use
+            localStorage.setItem('user_id', profile.id);
+            this.fetchMerch(profile.id);
+          } else {
+            this.errorMessage = 'Debes iniciar sesión para ver tu merchandising';
+          }
+        },
+        error: () => {
+          this.errorMessage = 'Debes iniciar sesión para ver tu merchandising';
+        }
+      });
       return;
     }
 
+    this.fetchMerch(userId);
+  }
+
+  private fetchMerch(userId: string): void {
     this.isLoading = true;
     this.errorMessage = null;
 
@@ -96,55 +115,69 @@ export class ModifyMerchComponent implements OnInit {
       updateDto.stock = this.editableItem.stock;
     }
 
-    // Si no hay cambios, cerrar modal
-    if (Object.keys(updateDto).length === 0) {
+    const hasFieldChanges = Object.keys(updateDto).length > 0;
+    const hasImageChange = !!this.selectedImageFile;
+
+    // Si no hay cambios de ningún tipo, cerrar modal
+    if (!hasFieldChanges && !hasImageChange) {
       this.closeEditionModal();
       return;
     }
 
-    // Llamar al backend para actualizar
-    this.merchService.updateMerch(this.selectedItem.id, updateDto).subscribe({
-      next: (response) => {
-        console.log('[ModifyMerch] Updated successfully:', response);
-        // Actualizar item en lista local
-        Object.assign(this.selectedItem!, response.data);
-        
-        // Si hay una imagen seleccionada, subirla
-        if (this.selectedImageFile) {
-          const formData = new FormData();
-          formData.append('files', this.selectedImageFile);
-          
-          this.apiService.uploadMerchImages(this.selectedItem!.id, [this.selectedImageFile]).subscribe({
-            next: (imgResponse) => {
-              console.log('[ModifyMerch] Image uploaded:', imgResponse);
-              // Recargar el item para obtener la URL actualizada de la imagen
-              this.merchService.getMerchItemById(this.selectedItem!.id).subscribe({
-                next: (itemResponse) => {
-                  Object.assign(this.selectedItem!, itemResponse.data);
-                  // Actualizar también en la lista
-                  const idx = this.merch.findIndex(m => m.id === this.selectedItem!.id);
-                  if (idx >= 0) this.merch[idx] = itemResponse.data;
-                },
-                error: (err) => console.error('[ModifyMerch] Error reloading item:', err)
-              });
-              this.closeEditionModal();
-              alert('Merchandising e imagen actualizados correctamente');
-            },
-            error: (err) => {
-              console.error('[ModifyMerch] Error uploading image:', err);
-              alert('Merchandising actualizado, pero hubo un error al subir la imagen');
-              this.closeEditionModal();
-            }
-          });
-        } else {
-          this.closeEditionModal();
-          alert('Merchandising actualizado correctamente');
-        }
-      },
-      error: (err) => {
-        console.error('[ModifyMerch] Error updating merch:', err);
-        alert('Error al guardar los cambios');
+    // Función auxiliar para subir la imagen
+    const uploadImage = () => {
+      if (!this.selectedImageFile) {
+        this.closeEditionModal();
+        alert('Merchandising actualizado correctamente');
+        return;
       }
-    });
+
+      const formData = new FormData();
+      formData.append('files', this.selectedImageFile);
+      
+      this.merchService.uploadImages(this.selectedItem!.id, formData).subscribe({
+        next: (imgResponse) => {
+          console.log('[ModifyMerch] Image uploaded:', imgResponse);
+          // Recargar el item para obtener la URL actualizada de la imagen
+          this.merchService.getMerchItemById(this.selectedItem!.id).subscribe({
+            next: (itemResponse) => {
+              Object.assign(this.selectedItem!, itemResponse.data);
+              // Actualizar también en la lista
+              const idx = this.merch.findIndex(m => m.id === this.selectedItem!.id);
+              if (idx >= 0) this.merch[idx] = itemResponse.data;
+            },
+            error: (err) => console.error('[ModifyMerch] Error reloading item:', err)
+          });
+          this.closeEditionModal();
+          alert(hasFieldChanges ? 'Merchandising e imagen actualizados correctamente' : 'Imagen actualizada correctamente');
+        },
+        error: (err) => {
+          console.error('[ModifyMerch] Error uploading image:', err);
+          alert(hasFieldChanges ? 'Merchandising actualizado, pero hubo un error al subir la imagen' : 'Error al subir la imagen');
+          this.closeEditionModal();
+        }
+      });
+    };
+
+    // Si hay cambios en campos, actualizarlos primero
+    if (hasFieldChanges) {
+      this.merchService.updateMerch(this.selectedItem.id, updateDto).subscribe({
+        next: (response) => {
+          console.log('[ModifyMerch] Updated successfully:', response);
+          // Actualizar item en lista local
+          Object.assign(this.selectedItem!, response.data);
+          
+          // Luego subir la imagen si hay una seleccionada
+          uploadImage();
+        },
+        error: (err) => {
+          console.error('[ModifyMerch] Error updating merch:', err);
+          alert('Error al guardar los cambios');
+        }
+      });
+    } else {
+      // Solo hay cambio de imagen, subirla directamente
+      uploadImage();
+    }
   }
 }

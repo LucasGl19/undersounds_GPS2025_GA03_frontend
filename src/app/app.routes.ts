@@ -25,6 +25,8 @@ import { UploadAlbumComponent } from './upload-album/upload-album.component';
 import { MerchDetailComponent } from './pages/merch-detail/merch-detail.component';
 import { UserFavoritesComponent } from './pages/user-favorites/user-favorites.component';
 import { UploadMerchComponent } from './upload-merch/upload-merch.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { OrderConfirmationComponent } from './pages/order-confirmation/order-confirmation.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +44,8 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent },
       { path: 'home', component: EmptyComponent },
       { path: 'cart', component: CartComponent },
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'order-confirmation', component: OrderConfirmationComponent },
       { path: 'about', component: AboutComponent },
       { path: 'help', component: HelpComponent },
       { path: 'terms', component: TermsComponent },
@@ -49,6 +53,7 @@ export const routes: Routes = [
 
       { path: 'login', component: LoginComponent },
       { path: 'admin/dashboard', component: UserDashboardComponent },
+      { path: 'user-dashboard', component: UserDashboardComponent },
       { path: 'song-player/:id', component: SongPlayerComponent },
       { path : 'modify-merch', component: ModifyMerchComponent},
       { path: 'modify-creations', component: ModifyCreationsComponent},
