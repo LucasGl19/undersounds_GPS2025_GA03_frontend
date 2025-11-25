@@ -3,7 +3,7 @@ section {
   flex-direction: column;
   min-height: 70vh;
   padding: 2rem 1rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  background: transparent;
 }
 
 .profile-page {
@@ -13,13 +13,14 @@ section {
   gap: 2rem;
   align-items: flex-start;
   justify-content: space-evenly;
-  font-family: sans-serif;
-  background: white;
+  font-family: inherit;
+  background: var(--surface-primary);
   padding: 3rem 2rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   max-width: 1000px;
   width: 100%;
+  border: 1px solid var(--border-subtle);
 }
 
 .profile-info {
@@ -45,25 +46,25 @@ section {
   border-radius: 50%;
   margin-bottom: 1.5rem;
   object-fit: cover;
-  border: 5px solid #0066cc;
-  box-shadow: 0 5px 20px rgba(0, 102, 204, 0.3);
+  border: 4px solid var(--surface-background);
+  box-shadow: 0 0 0 4px var(--accent);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-photo:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 30px rgba(0, 102, 204, 0.4);
+  box-shadow: 0 0 0 6px var(--accent-stronger);
 }
 
 .profile-page h2 {
   margin: 0.5rem 0;
   font-size: 2rem;
-  color: #2c3e50;
+  color: var(--text-strong);
   font-weight: 700;
 }
 
 .profile-username {
-  color: #0066cc;
+  color: var(--accent);
   margin-top: 0.25rem;
   font-size: 1.1rem;
   font-weight: 500;
@@ -72,19 +73,19 @@ section {
 .profile-email {
   margin-top: 0.75rem;
   font-size: 1rem;
-  color: #555;
-  background: #f8f9fa;
+  color: var(--text-soft);
+  background: var(--surface-secondary);
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .profile-role {
   margin-top: 1rem;
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #0066cc, #0052a3);
+  color: #0f172a;
+  background: var(--accent);
   padding: 0.5rem 1.5rem;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -94,19 +95,19 @@ section {
   margin-top: 1.5rem;
   max-width: 500px;
   text-align: center;
-  color: #555;
+  color: var(--text-soft);
   line-height: 1.8;
   font-size: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 12px;
-  border-left: 4px solid #0066cc;
+  background: var(--surface-secondary);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--accent);
 }
 
 .profile-date {
   margin-top: 1.5rem;
   font-size: 0.9rem;
-  color: #888;
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -114,7 +115,7 @@ section {
   font-size: 1.1rem;
   text-align: center;
   max-width: 320px;
-  color: #555;
+  color: var(--text-soft);
 }
 
 .profile-actions {
@@ -130,18 +131,18 @@ section {
   font-size: 0.95rem;
   font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   color: #fff;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .profile-actions button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .profile-actions button:active {
@@ -149,27 +150,30 @@ section {
 }
 
 .btn-delete-account {
-  background: linear-gradient(135deg, #ff4d4d, #d90000);
+  background: var(--danger);
+  color: #fff;
 }
 
 .btn-delete-account:hover {
-  background: linear-gradient(135deg, #ff6666, #ff1a1a);
+  filter: brightness(1.1);
 }
 
 .btn-edit {
-  background: linear-gradient(135deg, #0066cc, #0052a3);
+  background: var(--accent);
+  color: #0f172a;
 }
 
 .btn-edit:hover {
-  background: linear-gradient(135deg, #0080ff, #0066cc);
+  background: var(--accent-stronger);
 }
 
 .btn-save {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
+  background: var(--success);
+  color: #fff;
 }
 
 .btn-save:hover:not(:disabled) {
-  background: linear-gradient(135deg, #34ce57, #28a745);
+  filter: brightness(1.1);
 }
 
 .btn-save:disabled {
@@ -179,11 +183,13 @@ section {
 }
 
 .btn-cancel {
-  background: linear-gradient(135deg, #6c757d, #495057);
+  background: var(--surface-tertiary);
+  color: var(--text-soft);
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: linear-gradient(135deg, #7d8a96, #6c757d);
+  background: var(--surface-secondary);
+  color: var(--text-strong);
 }
 
 .btn-cancel:disabled {
@@ -197,8 +203,8 @@ section {
   max-width: 500px;
   margin-top: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 16px;
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
 }
 
 /* Sección de subida de avatar */
@@ -212,15 +218,15 @@ section {
   align-items: center;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
-  border: 2px dashed #d0d0d0;
+  background: var(--surface-primary);
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--border-subtle);
   transition: all 0.3s ease;
 }
 
 .avatar-upload-container:hover {
-  border-color: #0066cc;
-  background: #f8f9ff;
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.05);
 }
 
 .avatar-preview {
@@ -232,14 +238,14 @@ section {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #0066cc;
-  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.2);
+  border: 4px solid var(--accent);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
   transition: all 0.3s ease;
 }
 
 .preview-image:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.3);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
 }
 
 .avatar-actions {
@@ -255,29 +261,29 @@ section {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #0066cc, #0052a3);
-  color: white;
+  background: var(--accent);
+  color: #0f172a;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(0, 102, 204, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-upload:hover {
-  background: linear-gradient(135deg, #0080ff, #0066cc);
+  background: var(--accent-stronger);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 102, 204, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-remove-image {
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #dc3545, #c82333);
-  color: white;
-  border: none;
-  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
   font-weight: 500;
   font-size: 0.85rem;
   cursor: pointer;
@@ -285,12 +291,12 @@ section {
 }
 
 .btn-remove-image:hover {
-  background: linear-gradient(135deg, #e74c3c, #dc3545);
+  background: rgba(239, 68, 68, 0.3);
   transform: translateY(-1px);
 }
 
 .image-hint {
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.8rem;
   text-align: center;
   font-style: italic;
@@ -305,7 +311,7 @@ section {
   display: block;
   margin-bottom: 0.6rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-strong);
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -314,7 +320,7 @@ section {
 
 .form-group label::before {
   content: '●';
-  color: #0066cc;
+  color: var(--accent);
   font-size: 0.7rem;
 }
 
@@ -322,27 +328,28 @@ section {
   width: 100%;
   padding: 0.9rem 1rem;
   font-size: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: inherit;
   transition: all 0.3s ease;
-  background: white;
+  background: var(--surface-background);
+  color: var(--text-strong);
 }
 
 .form-control:hover {
-  border-color: #bbb;
+  border-color: var(--text-muted);
 }
 
 .form-control:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
   transform: translateY(-1px);
 }
 
 .form-control::placeholder {
-  color: #aaa;
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -356,13 +363,13 @@ textarea.form-control {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #dc3545;
+  color: #fca5a5;
   font-size: 0.85rem;
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background: #ffe6e6;
-  border-radius: 6px;
-  border-left: 3px solid #dc3545;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--danger);
 }
 
 .error::before {
@@ -374,18 +381,18 @@ textarea.form-control {
 .profile-role-readonly {
   margin-top: 1.25rem;
   font-size: 0.95rem;
-  color: #555;
+  color: var(--text-soft);
   text-align: center;
   padding: 0.75rem;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  background: var(--surface-primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
 }
 
 .profile-role-readonly {
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #0066cc, #0052a3);
+  color: #0f172a;
+  background: var(--accent);
   border: none;
 }
 
@@ -410,19 +417,20 @@ textarea.form-control {
   font-size: 0.95rem;
   font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: linear-gradient(135deg, #ffc107, #ff9800); 
+  background: var(--warning);
+  color: #0f172a;
 }
 
 .btn-view-favorites:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(135deg, #ffca2c, #ffb300);
+  box-shadow: var(--shadow-lg);
+  filter: brightness(1.1);
 }
 
 /* Responsive */
