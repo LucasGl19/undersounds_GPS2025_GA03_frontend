@@ -196,6 +196,11 @@
   box-shadow: 0 12px 24px rgba(26, 46, 71, 0.07);
 }
 
+/* Make container positioned so fav button can be absolutely placed */
+.album-card {
+  position: relative;
+}
+
 .album-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 32px rgba(26, 46, 71, 0.12);
@@ -236,6 +241,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
+  margin-right: 48px; /* dejar espacio para el botón de favorito */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -298,9 +304,28 @@
   color: var(--text-soft);
 }
 
+/* Favorite button — match merchandising styles */
+.fav-button {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+}
+
+.heart-icon {
+  width: 35px;
+  height: 35px;
+  transition: fill 0.2s ease, transform 0.2s ease;
+}
+
 .album-card__price {
   font-weight: 600;
   color: var(--text-strong);
+  margin-right: 120px; /* dejar más espacio para el botón de favorito */
 }
 
 /* Indicadores de carga y sin resultados */
@@ -389,5 +414,9 @@
 
   .pagination-btn {
     width: 100%;
+  }
+  /* reducir margen del precio en pantallas pequeñas para evitar overflow */
+  .album-card__price {
+    margin-right: 48px;
   }
 }

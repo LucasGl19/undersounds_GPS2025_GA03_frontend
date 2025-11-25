@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Album } from '../../models/album.model';
 import { AlbumsService } from '../../services/albums.service';
+import { FavoritesService } from '../../services/favorites.service';
+import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { AlbumFilters } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
@@ -38,7 +40,11 @@ export class AlbumsComponent implements OnInit {
   availableTags: string[] = ['indie', 'experimental', 'acoustic', 'live', 'remix', 'instrumental', 'lo-fi', 'ambient', 'chill'];
   availableReleaseStates: string[] = ['draft', 'scheduled', 'published', 'archived'];
 
-  constructor(private albumsService: AlbumsService, private router: Router) {}
+  // Favorite-related state
+  favorites: string[] = [];
+  userId: string | null = null;
+
+  constructor(private albumsService: AlbumsService, private router: Router, private favService: FavoritesService, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.loadAlbums();
@@ -74,6 +80,8 @@ export class AlbumsComponent implements OnInit {
         this.totalPages = response.pagination.totalPages;
         this.dataSource = 'backend';
         this.isLoading = false;
+        // carga favoritos después de obtener álbumes
+        this.loadFavorites();
       },
       error: (error) => {
         if (this.showDebugInfo) {
@@ -85,6 +93,58 @@ export class AlbumsComponent implements OnInit {
         this.isLoading = false;
         this.useBackend = true;
         this.dataSource = 'backend';
+      }
+    });
+  }
+
+  private loadFavorites(): void {
+    this.userId = this.auth.getUserId();
+    if (!this.userId) return;
+    this.favService.getAlbumFavorites(this.userId).subscribe({
+      next: (res: any) => {
+        // Backend returns favorite tuples for albums: { targetId, album }
+        this.favorites = (res.data || []).map((f: any) => String(f.album?.id ?? f.targetId ?? f.id));
+      },
+      error: err => console.error('Error al cargar favoritos de álbumes', err)
+    });
+  }
+
+  isFavorite(id: string | number): boolean {
+    return this.favorites.includes(String(id));
+  }
+
+  toggleFavorite(album: Album, event: Event) {
+    // prevent card click and navigate
+    event.stopPropagation();
+    if (!this.userId) { alert('Debes iniciar sesión'); return; }
+
+    const id = String(album.id);
+    const currentlyFav = this.isFavorite(id);
+
+    // Optimistic update: toggle locally first so UI updates immediately
+    if (currentlyFav) {
+      this.favorites = this.favorites.filter(f => String(f) !== id);
+    } else {
+      this.favorites = [...this.favorites, id];
+    }
+
+    const request = currentlyFav
+      ? this.favService.deleteAlbumFromFavorites(this.userId!, id)
+      : this.favService.addAlbumToFavorites(this.userId!, id);
+
+    request.subscribe({
+      next: () => {
+        // refresh from server to keep in sync
+        this.loadFavorites();
+      },
+      error: (err) => {
+        console.error('Error toggle favorite', err);
+        // revert optimistic update on error
+        if (currentlyFav) {
+          this.favorites = [...this.favorites, id];
+        } else {
+          this.favorites = this.favorites.filter(f => String(f) !== id);
+        }
       }
     });
   }
