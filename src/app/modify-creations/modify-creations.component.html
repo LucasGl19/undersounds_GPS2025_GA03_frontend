@@ -38,6 +38,7 @@
           <small *ngIf="trackAudioFiles.get(song.id)">Seleccionado: {{ trackAudioFiles.get(song.id)?.name }}</small>
         </label>
         <button class="save-btn" (click)="saveSong(song)">Guardar</button>
+        <button class="delete-btn" (click)="deleteSong(song.id)" title="Eliminar canción">Eliminar</button>
       </div>
 
     </article>
@@ -74,6 +75,7 @@
         </label>
 
         <button class="save-btn" (click)="saveAlbum(a)">Guardar</button>
+        <button class="delete-btn" (click)="deleteAlbum(a.id)" title="Eliminar álbum">Eliminar</button>
       </div>
     </article>
   </div>

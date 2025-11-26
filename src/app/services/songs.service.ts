@@ -201,4 +201,15 @@ export class SongsService {
     );
   }
 
+  // Eliminar pista (intenta en backend; si se usa el mock local, la elimina de la lista local)
+  deleteTrack(trackId: number | string) {
+    return this.apiService.deleteTrack(String(trackId)).pipe(
+      map(() => {
+        // Si trabajamos con datos mock, eliminar del array local
+        this.songs = this.songs.filter(s => String(s.id) !== String(trackId));
+        return;
+      })
+    );
+  }
+
 }

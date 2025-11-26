@@ -184,6 +184,16 @@ export class AlbumsService {
     );
   }
 
+  // Eliminar álbum (intenta en backend; si se usan mocks, lo elimina localmente)
+  deleteAlbum(albumId: number | string) {
+    return this.apiService.deleteAlbum(String(albumId)).pipe(
+      map(() => {
+        this.albums = this.albums.filter(a => String(a.id) !== String(albumId));
+        return;
+      })
+    );
+  }
+
   // Método para obtener álbumes locales (mock)
   getAlbums(): Album[] {
     return this.albums;

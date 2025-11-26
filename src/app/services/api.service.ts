@@ -173,6 +173,11 @@ export class ApiService {
     return this.http.post<{ data: any }>(`${API}/tracks`, formData);
   }
   
+  // Eliminar una pista por ID
+  deleteTrack(trackId: string): Observable<void> {
+    return this.http.delete<void>(`${API}/tracks/${trackId}`);
+  }
+  
   // --------- UPDATES (PATCH) ----------
   // Actualizar álbum parcialmente
   updateAlbum(albumId: string, body: any): Observable<{ data: any }> {
@@ -184,6 +189,11 @@ export class ApiService {
     const fd = new FormData();
     fd.append('file', file);
     return this.http.post<{ data: any }>(`${API}/albums/${albumId}/cover`, fd);
+  }
+
+  // Eliminar un álbum por ID
+  deleteAlbum(albumId: string): Observable<void> {
+    return this.http.delete<void>(`${API}/albums/${albumId}`);
   }
 
   // Actualizar pista parcialmente
