@@ -180,4 +180,26 @@ export class ModifyMerchComponent implements OnInit {
       uploadImage();
     }
   }
+
+  deleteMerch(item: MerchItem) {
+    if (!item || !item.id) return;
+    const confirmed = confirm(`¿Eliminar "${item.title || 'este artículo'}"? Esta acción no se puede deshacer.`);
+    if (!confirmed) return;
+
+    this.isLoading = true;
+    const id = String(item.id);
+    this.merchService.deleteMerch(id).subscribe({
+      next: () => {
+        // quitar del array local
+        this.merch = this.merch.filter(m => String(m.id) !== id);
+        this.isLoading = false;
+        alert('Artículo eliminado correctamente');
+      },
+      error: (err) => {
+        console.error('[ModifyMerch] Error deleting merch:', err);
+        this.isLoading = false;
+        alert('Error al eliminar el artículo');
+      }
+    });
+  }
 }

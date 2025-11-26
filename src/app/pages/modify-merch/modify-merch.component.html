@@ -12,6 +12,9 @@
     <button class="edit-btn" (click)="openEditionModal(item)">
       <img src="assets/images/ui/edit.png" alt="Editar">
     </button>
+    <button class="delete-btn" (click)="deleteMerch(item)" title="Eliminar">
+      <img src="assets/images/ui/eliminar.png" alt="Eliminar">
+    </button>
 
     <figure class="merch-card__image">
       <img [src]="item.cover?.url" [alt]="item.title">

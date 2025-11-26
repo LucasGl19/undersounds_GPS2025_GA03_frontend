@@ -180,5 +180,9 @@ export class MerchService {
     return this.http.patch<{ data: MerchItem }>(`${this.apiUrl}/${merchId}`, body);
   }
 
+  deleteMerch(merchId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${merchId}`);
+  }
+
   constructor() {}
 }

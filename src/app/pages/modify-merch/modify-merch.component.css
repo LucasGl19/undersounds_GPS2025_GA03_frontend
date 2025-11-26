@@ -75,6 +75,47 @@ h1 {
     background-color: var(--surface-secondary);
 }
 
+/* Delete button: small, bottom-right, integrated look */
+.delete-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transition: transform .12s ease, background-color .12s ease, opacity .12s ease;
+  z-index: 4;
+}
+
+.delete-btn img {
+  width: 14px;
+  height: 14px;
+  filter: invert(1) opacity(.95);
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: rgba(0,0,0,0.22);
+}
+
+/* Make sure the image doesn't cover the bottom-right controls */
+.merch-card__image {
+  position: relative;
+}
+
+/* Slightly reduce spacing in the body so the delete button feels attached */
+.merch-card__body {
+  padding: 0.8rem 1rem 1.2rem 1rem;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
