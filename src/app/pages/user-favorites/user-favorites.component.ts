@@ -36,7 +36,17 @@ export class UserFavoritesComponent implements OnInit {
   // Resolve cover URL for both merch items and album favorites
   getImageUrl(entry: any): string {
     // entry can be a merch item (has .cover) or a favorite tuple (has .album)
-    const cover = entry.album ? entry.album.cover : entry.cover;
+    let cover;
+    if (entry.album) {
+      // Album favorite: use album.cover
+      cover = entry.album.cover;
+    } else if (entry.cover) {
+      // Merch item: use cover directly
+      cover = entry.cover;
+    } else {
+      return 'assets/images/covers/album-default.png';
+    }
+
     if (!cover) return 'assets/images/covers/album-default.png';
 
     const url = typeof cover === 'string' ? cover : (cover.url || '');
