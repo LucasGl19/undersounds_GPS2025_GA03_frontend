@@ -167,6 +167,11 @@ export class ApiService {
     return this.http.post<{ data: any }>(`${API}/tracks/${trackId}/audio`, formData);
 
   }
+
+  // Crear pista con audio (multipart)
+  createTrackWithAudio(formData: FormData): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(`${API}/tracks`, formData);
+  }
   
   // --------- UPDATES (PATCH) ----------
   // Actualizar álbum parcialmente
