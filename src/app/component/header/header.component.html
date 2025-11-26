@@ -9,14 +9,10 @@
 
     <!-- LOGGED IN -->
     <div *ngIf="isLoggedIn$ | async; else loggedOut" class="header__actions">
-      
+
       <!-- Admin -->
-      <button
-        type="button"
-        class="header-link"
-        *ngIf="(userRole$ | async) === 'admin'"
-        (click)="navigateToUserDashboard()"
-      >
+      <button type="button" class="header-link" *ngIf="(userRole$ | async) === 'admin'"
+        (click)="navigateToUserDashboard()">
         <mat-icon>dashboard</mat-icon>
         Usuarios
       </button>
@@ -27,39 +23,23 @@
       </button>
 
       <!-- Acciones para ARTISTAS -->
-      <button
-        type="button"
-        *ngIf="(userRole$ | async) === 'artista'"
-        class="header-link"
-        (click)="navigateToModifyMerch()"
-      >
+      <button type="button" *ngIf="(userRole$ | async) === 'artista'" class="header-link"
+        (click)="navigateToModifyMerch()">
         <span class="header-link__label">Mi merch</span>
       </button>
 
-      <button
-        type="button"
-        *ngIf="(userRole$ | async) === 'artista'"
-        class="header-link"
-        (click)="navigateToModifySection()"
-      >
+      <button type="button" *ngIf="(userRole$ | async) === 'artista'" class="header-link"
+        (click)="navigateToModifySection()">
         <span class="header-link__label">Modificar creaciones</span>
       </button>
 
-      <button
-        type="button"
-        *ngIf="(userRole$ | async) === 'artista'"
-        class="header-link"
-        (click)="navigateToUploadSong()"
-      >
+      <button type="button" *ngIf="(userRole$ | async) === 'artista'" class="header-link"
+        (click)="navigateToUploadSong()">
         <span class="header-link__label">subir canción</span>
       </button>
 
-      <button
-        type="button"
-        *ngIf="(userRole$ | async) === 'artista'"
-        class="header-link"
-        (click)="navigateToUploadAlbum()"
-      >
+      <button type="button" *ngIf="(userRole$ | async) === 'artista'" class="header-link"
+        (click)="navigateToUploadAlbum()">
         <span class="header-link__label">subir álbum</span>
       </button>
 

@@ -19,7 +19,7 @@
 
     <div class="merch-card__body">
       <h3>{{ item.title }}</h3>
-      <p class="merch-card__price">{{ item.priceCents }}</p>
+      <p class="merch-card__price">{{ item.priceCents/100 | currency:'EUR' }}</p>
     </div>
 
   </article>

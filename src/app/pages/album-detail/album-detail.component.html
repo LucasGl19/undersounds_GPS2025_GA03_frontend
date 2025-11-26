@@ -14,7 +14,7 @@
 
       <div class="album-info">
         <h1 class="album-title">{{ album.title }}</h1>
-        
+
         <div class="album-metadata">
           <span class="metadata-item" *ngIf="album.releaseDate">
             <strong>Lanzamiento:</strong> {{ album.releaseDate }}
@@ -39,10 +39,10 @@
         </p>
 
         <div class="album-actions">
-          <button class="btn-add-cart" (click)="addAlbumToCart()" [disabled]="!album">
-            Añadir al carrito
+          <button class="btn-add-cart" [ngClass]="{ 'added': isInCart }" (click)="addAlbumToCart()" [disabled]="!album">
+            {{ buttonText }}
           </button>
-          <a routerLink="/cart" class="link-go-cart">Ver carrito</a>
+          <a (click)="navigateToCart()" class="link-go-cart">Ver carrito</a>
         </div>
       </div>
     </div>

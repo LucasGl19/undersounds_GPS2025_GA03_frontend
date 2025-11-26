@@ -175,6 +175,11 @@
   transition: background-color .2s ease, transform .15s ease;
 }
 
+.btn-add-cart.added {
+  background-color: #4caf50 !important;
+  color: white;
+}
+
 .btn-add-cart:hover:not([disabled]) {
   background-color: var(--accent-stronger);
   transform: translateY(-2px);
@@ -195,6 +200,8 @@
 .link-go-cart:hover {
   text-decoration: underline;
 }
+
+
 
 /* Sección de canciones */
 .album-tracks-section {

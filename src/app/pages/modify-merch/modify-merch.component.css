@@ -6,10 +6,10 @@ h1 {
 }
 
 .merch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.5rem;
-  padding: 0 1.5rem;
+  padding-left: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
 .merch-card {
@@ -20,13 +20,14 @@ h1 {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: transform .25s ease;
-  max-width: 300px;
+  width: 300px;
 }
 
 .merch-card__image img {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .merch-card__body {

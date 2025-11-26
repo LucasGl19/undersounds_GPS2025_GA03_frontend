@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MerchItem } from '../../models/merch-item.model'; 
+import { MerchItem } from '../../models/merch-item.model';
 import { MerchService } from '../../services/merch.service';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../services/cart.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-merch-detail',
@@ -14,6 +16,11 @@ export class MerchDetailComponent implements OnInit {
   merch: MerchItem | null = null;
   isLoading: boolean = false;
   errorMsg: string = '';
+  private cartService = inject(CartService);
+  private snack = inject(MatSnackBar);
+
+  buttonText : String = "Añadir al carrito"
+  isInCart : boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,5 +63,20 @@ export class MerchDetailComponent implements OnInit {
 
   isInStock(): boolean {
     return !!this.merch?.stock && this.merch.stock > 0;
+  }
+
+  navigateToCart() {
+    this.router.navigate(['/cart']);
+  }
+
+  addMerchToCart() {
+    if (!this.merch) return;
+    this.cartService.addMerch(this.merch);
+        this.buttonText = "Artículo añadido";
+    this.isInCart = true;
+    this.snack
+      .open('Artículo añadido al carrito', 'Ver', { duration: 3000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/cart']));
   }
 }

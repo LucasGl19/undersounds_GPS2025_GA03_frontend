@@ -42,7 +42,7 @@
       </div>
 
       <footer class="merch-card__meta">
-        <span class="merch-card__price">{{ (item.priceCents / 100) | number:'1.2-2' }} {{ item.currency || 'EUR' }}</span>
+        <span class="merch-card__price">{{ (item.priceCents / 100) | currency: 'EUR' }}</span>
         <button type="button" class="btn-add-cart" (click)="toggleCart(item, $event)"
             [disabled]="item.stock !== undefined && item.stock === 0" [ngClass]="{ 'in-cart': isInCart(item.id) }"> 
             {{ isInCart(item.id) ? 'En el carrito' : 'Añadir al carrito' }}</button>
