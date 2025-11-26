@@ -27,6 +27,7 @@ import { UserFavoritesComponent } from './pages/user-favorites/user-favorites.co
 import { UploadMerchComponent } from './upload-merch/upload-merch.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { OrderConfirmationComponent } from './pages/order-confirmation/order-confirmation.component';
+import { ArtistDetailComponent } from './pages/artist-detail/artist-detail.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,7 @@ export const routes: Routes = [
       { path: 'albums', component: AlbumsComponent },
       { path: 'album/:id', component: AlbumDetailComponent },
       { path: 'artists', component: ArtistsComponent },
+      { path: 'artist/:id', component: ArtistDetailComponent },
       { path: 'merchandising', component: MerchandisingComponent },
       { path: 'merchandising/:id', component: MerchDetailComponent },
       { path: 'profile', component: ProfileComponent },

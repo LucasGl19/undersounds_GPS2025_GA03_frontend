@@ -1,0 +1,275 @@
+.artist-detail-page {
+  padding-bottom: 4rem;
+  background-color: var(--surface-background);
+  color: var(--text-soft);
+}
+
+.artist-header {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.artist-banner {
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.artist-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), var(--surface-background));
+}
+
+.artist-info-container {
+  position: relative;
+  margin-top: -100px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.artist-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--surface-background);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  flex-shrink: 0;
+}
+
+.artist-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artist-text {
+  padding-bottom: 1rem;
+}
+
+.artist-name {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+
+.artist-role {
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin: 0.5rem 0;
+}
+
+.artist-bio {
+  font-size: 1rem;
+  color: var(--text-soft);
+  max-width: 600px;
+  margin-bottom: 1rem;
+}
+
+.artist-meta {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 1rem;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+  color: var(--text-strong);
+}
+
+/* Albums Grid */
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2rem;
+}
+
+.album-card {
+  background: var(--surface-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.album-card:hover {
+  transform: translateY(-5px);
+}
+
+.album-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.album-info {
+  padding: 1rem;
+}
+
+.album-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-strong);
+}
+
+.album-info p {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Songs List */
+.songs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.song-row {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 4px;
+  background: var(--surface-primary);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.song-row:hover {
+  background: var(--surface-secondary);
+}
+
+.song-number {
+  width: 30px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.song-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  margin: 0 1rem;
+  object-fit: cover;
+}
+
+.song-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.song-title {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.song-album {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.song-duration {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.view-all-link {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.view-all-link a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.view-all-link a:hover {
+  text-decoration: underline;
+}
+
+/* Merch Grid */
+.merch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.merch-card {
+  background: var(--surface-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.merch-card:hover {
+  transform: translateY(-5px);
+}
+
+.merch-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.merch-info {
+  padding: 1rem;
+}
+
+.merch-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-strong);
+}
+
+.merch-price {
+  margin: 0.5rem 0 0;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  flex-direction: column;
+}
+
+.error-message {
+  color: var(--danger);
+}

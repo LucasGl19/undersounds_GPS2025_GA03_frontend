@@ -1,0 +1,84 @@
+<div class="artist-detail-page" *ngIf="!loading && artist; else loadingTpl">
+  <!-- Header / Banner -->
+  <header class="artist-header">
+    <div class="artist-banner" [style.backgroundImage]="'url(' + (artist.image || artist.avatarUrl || 'assets/images/artists/default-artist.svg') + ')'">
+      <div class="artist-banner-overlay"></div>
+    </div>
+    <div class="artist-info-container">
+      <div class="artist-avatar">
+        <img [src]="artist.avatarUrl || artist.image || 'assets/images/artists/default-artist.svg'" [alt]="artist.username || artist.name">
+      </div>
+      <div class="artist-text">
+        <h1 class="artist-name">{{ artist.username || artist.name }}</h1>
+        <p class="artist-role" *ngIf="artist.role">{{ artist.role }}</p>
+        <p class="artist-bio">{{ artist.bio || 'Sin biografía disponible.' }}</p>
+        <div class="artist-meta">
+          <span *ngIf="artist.nationality">{{ artist.nationality }}</span>
+          <span *ngIf="artist.createdAt">Miembro desde {{ artist.createdAt | date }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-container">
+    
+    <!-- Albums Section -->
+    <section class="section albums-section" *ngIf="albums.length > 0">
+      <h2>Álbumes</h2>
+      <div class="albums-grid">
+        <article class="album-card" *ngFor="let album of albums" [routerLink]="['/album', album.id]">
+          <img [src]="album.cover" [alt]="album.title" loading="lazy">
+          <div class="album-info">
+            <h3>{{ album.title }}</h3>
+            <p>{{ album.releaseDate }}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Songs Section -->
+    <section class="section songs-section" *ngIf="songs.length > 0">
+      <h2>Canciones Populares</h2>
+      <div class="songs-list">
+        <div class="song-row" *ngFor="let song of songs; let i = index" [routerLink]="['/song-player', song.id]">
+          <span class="song-number">{{ i + 1 }}</span>
+          <img [src]="song.image" [alt]="song.title" class="song-cover">
+          <div class="song-details">
+            <span class="song-title">{{ song.title }}</span>
+            <span class="song-album" *ngIf="song.albumId">Del álbum...</span>
+          </div>
+          <span class="song-duration">{{ song.durationSec }}s</span> <!-- Format duration properly later -->
+        </div>
+      </div>
+      <div class="view-all-link" *ngIf="songs.length >= 5">
+        <a [routerLink]="['/songs']" [queryParams]="{ artistId: artist.id }">Ver todas las canciones</a>
+      </div>
+    </section>
+
+    <!-- Merch Section -->
+    <section class="section merch-section" *ngIf="merch.length > 0">
+      <h2>Merchandising</h2>
+      <div class="merch-grid">
+        <article class="merch-card" *ngFor="let item of merch" [routerLink]="['/merchandising', item.id]">
+          <img [src]="item.cover?.url || 'assets/images/merch/merch-mug.svg'" [alt]="item.title" loading="lazy">
+          <div class="merch-info">
+            <h3>{{ item.title }}</h3>
+            <p class="merch-price">{{ (item.priceCents / 100) | number:'1.2-2' }} €</p> <!-- Adjust price formatting -->
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div *ngIf="albums.length === 0 && songs.length === 0 && merch.length === 0" class="empty-state">
+      <p>Este artista aún no ha publicado contenido.</p>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-container">
+    <p *ngIf="loading">Cargando perfil del artista...</p>
+    <p *ngIf="error" class="error-message">{{ error }}</p>
+  </div>
+</ng-template>
