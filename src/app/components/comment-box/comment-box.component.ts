@@ -27,12 +27,15 @@ export class CommentBoxComponent implements OnInit {
   }
 
   checkPermission() {
-    /*const userId = this.auth.getUserId();
+    const userId = this.auth.getUserId();
     if(!userId) {
       this.canComment = false;
       return;
     }
-
+    if (this.type === 'track') {
+      this.canComment = true;
+      return;
+    }
     this.ordersService.hasPurchased(userId, this.productId, this.type)
     .subscribe({
       next: (purchase) => {
@@ -42,8 +45,7 @@ export class CommentBoxComponent implements OnInit {
       error: () => {
         this.canComment = false;
       }
-    });*/
-    this.canComment = true;
+    });
   }
 
   loadComments() {
