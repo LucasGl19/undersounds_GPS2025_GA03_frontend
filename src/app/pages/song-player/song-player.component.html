@@ -14,7 +14,10 @@
 
     <div class="song-card__body">
       <h1>{{ song.title }}</h1>
-      <p class="song-card__artist">{{ song.artist }}</p>
+      <p class="song-card__artist">
+        <span>Autor: </span>
+        <a [routerLink]="['/artist', song.artistId]" class="artist-link">{{ song.artist }}</a>
+      </p>
 
       <div *ngIf="song.audio; else noAudio">
         <audio controls class="audio-player" preload="none" (play)="onPlay()" #audioRef>

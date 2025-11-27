@@ -63,3 +63,15 @@
   color: var(--text-muted);
   font-size: 1.1rem;
 }
+
+.artist-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.artist-link:hover {
+  text-decoration: underline;
+  color: var(--accent-light, #7dd3fc);
+}

@@ -14,6 +14,10 @@
 
       <div class="album-info">
         <h1 class="album-title">{{ album.title }}</h1>
+        <p class="album-artist" *ngIf="album.artistId">
+          <span>Autor: </span>
+          <a [routerLink]="['/artist', album.artistId]" class="artist-link">{{ album.artistName }}</a>
+        </p>
 
         <div class="album-metadata">
           <span class="metadata-item" *ngIf="album.releaseDate">
@@ -72,7 +76,6 @@
               <td class="col-title">
                 <div class="track-info">
                   <div class="track-title">{{ track.title }}</div>
-                  <div class="track-artist">{{ track.artist }}</div>
                 </div>
               </td>
               <td class="col-duration">{{ formatDuration(track.durationSec) }}</td>
