@@ -9,14 +9,15 @@ export interface AlbumCreateDto {
   title: string;
   description?: string | null;
   price?: number | null;
-  currency?: string | null;          // 'EUR', 'USD', etc.
-  releaseDate?: string | null;       // 'YYYY-MM-DD'
-  genres?: string[];                 // el backend admite array -> lo normaliza a CSV
-  tags?: string[];                   // idem
+  currency?: string | null; // 'EUR', 'USD', etc.
+  releaseDate?: string | null; // 'YYYY-MM-DD'
+  releaseState?: string | null; // 'draft', 'scheduled', 'published', 'archived'
+  genres?: string[]; // el backend admite array -> lo normaliza a CSV
+  tags?: string[]; // idem
   // Extras opcionales admitidos por el backend:
-  coverUrl?: string;                 // si lo envías, te crea una Image mínima
-  artistId: string;                  // requerido: ID del usuario autenticado
-  labelId?: string;                  // opcional - no se incluye si no tiene valor
+  coverUrl?: string; // si lo envías, te crea una Image mínima
+  artistId: string; // requerido: ID del usuario autenticado
+  labelId?: string; // opcional - no se incluye si no tiene valor
 }
 
 export interface TrackMinimal {
@@ -27,11 +28,11 @@ export interface TrackMinimal {
 
 export interface TrackCreateDto {
   title: string;
-  albumId: string;                   // requerido por el backend
+  albumId: string; // requerido por el backend
   durationSec?: number | null;
   trackNumber?: number | null;
   audio?: { codec?: string | null; bitrate?: number | null; url: string }; // opcional
-  lyrics?: { language?: string | null; text: string };                      // opcional
+  lyrics?: { language?: string | null; text: string }; // opcional
 }
 
 export interface TrackFilters {
@@ -46,8 +47,8 @@ export interface TrackFilters {
   language?: string;
   minDurationSec?: number;
   maxDurationSec?: number;
-  releasedFrom?: string;  // formato: YYYY-MM-DD
-  releasedTo?: string;    // formato: YYYY-MM-DD
+  releasedFrom?: string; // formato: YYYY-MM-DD
+  releasedTo?: string; // formato: YYYY-MM-DD
   sort?: 'title' | 'durationSec' | 'playCount';
   order?: 'asc' | 'desc';
   q?: string;
@@ -95,9 +96,9 @@ export class ApiService {
   // Obtener álbumes con filtros
   getAlbums(filters?: AlbumFilters): Observable<PaginatedAlbumResponse> {
     let params: any = {};
-    
+
     if (filters) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         const value = (filters as any)[key];
         if (value !== undefined && value !== null && value !== '') {
           if (Array.isArray(value)) {
@@ -114,13 +115,20 @@ export class ApiService {
   }
 
   // Añadir varias pistas a un álbum
-  addTracksToAlbum(albumId: string, tracks: TrackMinimal[]): Observable<{ data: any }> {
-    return this.http.post<{ data: any }>(`${API}/albums/${albumId}/tracks`, { tracks });
+  addTracksToAlbum(
+    albumId: string,
+    tracks: TrackMinimal[]
+  ): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(`${API}/albums/${albumId}/tracks`, {
+      tracks,
+    });
   }
 
   // Obtener un álbum específico por ID
   getAlbumById(albumId: string): Observable<{ data: any }> {
-    return this.http.get<{ data: any }>(`${API}/albums/${albumId}?include=cover`);
+    return this.http.get<{ data: any }>(
+      `${API}/albums/${albumId}?include=cover`
+    );
   }
 
   // --------- TRACKS ----------
@@ -131,9 +139,9 @@ export class ApiService {
   // Obtener tracks con filtros
   getTracks(filters?: TrackFilters): Observable<PaginatedTrackResponse> {
     let params: any = {};
-    
+
     if (filters) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         const value = (filters as any)[key];
         if (value !== undefined && value !== null && value !== '') {
           if (Array.isArray(value)) {
@@ -156,18 +164,33 @@ export class ApiService {
     return this.http.get<{ data: any }>(`${API}/tracks/${trackId}`);
   }
 
-
   // Obtener estadísticas de reproducción de un track
   getTrackStats(trackId: string): Observable<{ data: { playCount: number } }> {
-    return this.http.get<{ data: { playCount: number } }>(`${API}/tracks/${trackId}/stats`);
-  
+    return this.http.get<{ data: { playCount: number } }>(
+      `${API}/tracks/${trackId}/stats`
+    );
   }
   // Subir archivo de audio para una pista
-  uploadTrackAudio(trackId: string, formData: FormData): Observable<{ data: any }> {
-    return this.http.post<{ data: any }>(`${API}/tracks/${trackId}/audio`, formData);
+  uploadTrackAudio(
+    trackId: string,
+    formData: FormData
+  ): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(
+      `${API}/tracks/${trackId}/audio`,
+      formData
+    );
+  }
 
+  // Crear pista con audio (multipart)
+  createTrackWithAudio(formData: FormData): Observable<{ data: any }> {
+    return this.http.post<{ data: any }>(`${API}/tracks`, formData);
   }
   
+  // Eliminar una pista por ID
+  deleteTrack(trackId: string): Observable<void> {
+    return this.http.delete<void>(`${API}/tracks/${trackId}`);
+  }
+
   // --------- UPDATES (PATCH) ----------
   // Actualizar álbum parcialmente
   updateAlbum(albumId: string, body: any): Observable<{ data: any }> {
@@ -181,6 +204,11 @@ export class ApiService {
     return this.http.post<{ data: any }>(`${API}/albums/${albumId}/cover`, fd);
   }
 
+  // Eliminar un álbum por ID
+  deleteAlbum(albumId: string): Observable<void> {
+    return this.http.delete<void>(`${API}/albums/${albumId}`);
+  }
+
   // Actualizar pista parcialmente
   updateTrack(trackId: string, body: any): Observable<{ data: any }> {
     return this.http.patch<{ data: any }>(`${API}/tracks/${trackId}`, body);
@@ -192,7 +220,7 @@ export class ApiService {
   // Subir imágenes de merch (múltiples)
   uploadMerchImages(merchId: string, files: File[]): Observable<{ data: any }> {
     const fd = new FormData();
-    files.forEach(f => fd.append('files', f));
+    files.forEach((f) => fd.append('files', f));
     return this.http.post<{ data: any }>(`${API}/merch/${merchId}/images`, fd);
   }
 }

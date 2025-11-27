@@ -279,4 +279,52 @@ export class ModifyCreationsComponent implements OnInit {
        this.trackAudioFiles.delete(trackId);
      }
    }
+
+   // Eliminar una canción (desde el panel de edición)
+   deleteSong(songId: number | string): void {
+     if (!confirm('¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer.')) return;
+
+     this.songService.deleteTrack(songId).subscribe({
+       next: () => {
+         // Actualizar la lista local
+         this.artistSongs = this.artistSongs.filter(s => String(s.id) !== String(songId));
+         // Limpiar estado del editor si estaba abierto
+         if (this.openedSongId === songId) this.openedSongId = null;
+         // Limpieza de maps
+         this.trackAudioFiles.delete(songId);
+         alert('Canción eliminada correctamente');
+       },
+       error: (err) => {
+         console.error('[ModifyCreations] Error deleting track:', err);
+         alert('Hubo un error al eliminar la canción');
+       }
+     });
+   }
+
+  // Eliminar álbum desde el panel de edición
+  deleteAlbum(albumId: number | string): void {
+    if (!confirm('¿Estás seguro de que deseas eliminar este álbum y todas sus pistas? Esta acción no se puede deshacer.')) return;
+
+    this.albumService.deleteAlbum(albumId).subscribe({
+      next: () => {
+        // Eliminar del listado local
+        this.artistAlbums = this.artistAlbums.filter(a => String(a.id) !== String(albumId));
+
+        // Eliminar canciones pertenecientes a este álbum
+        this.artistSongs = this.artistSongs.filter(s => String((s as any).albumId) !== String(albumId));
+
+        // Limpiar estado del editor si estaba abierto
+        if (this.openedAlbumId === albumId) this.openedAlbumId = null;
+
+        // Limpiar archivos asociados
+        this.albumCoverFiles.delete(albumId);
+
+        alert('Álbum eliminado correctamente');
+      },
+      error: (err) => {
+        console.error('[ModifyCreations] Error deleting album:', err);
+        alert('Hubo un error al eliminar el álbum');
+      }
+    });
+  }
 }

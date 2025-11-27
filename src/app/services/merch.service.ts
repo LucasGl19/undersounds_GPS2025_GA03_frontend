@@ -135,7 +135,15 @@ export class MerchService {
   
   
   getArtistMerch(id: number | null): Observable<PaginatedMerchResponse> {
-    return this.http.get<PaginatedMerchResponse>(`${this.apiUrl}?artistId=${id}`);
+    return this.http.get<PaginatedMerchResponse>(`${this.apiUrl}?artistId=${id}`).pipe(
+      map(resp => ({
+        ...resp,
+        data: (resp.data || []).map(item => ({
+          ...item,
+          cover: item.cover ? { ...item.cover, url: this.normalizeUrl(item.cover.url) as string } : item.cover
+        }))
+      }))
+    );
   }
 
   createMerch(body: MerchCreateDto): Observable<{ data: MerchItem }> {
@@ -170,6 +178,10 @@ export class MerchService {
 
   updateMerch(merchId: string, body: any): Observable<{ data: MerchItem }> {
     return this.http.patch<{ data: MerchItem }>(`${this.apiUrl}/${merchId}`, body);
+  }
+
+  deleteMerch(merchId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${merchId}`);
   }
 
   constructor() {}

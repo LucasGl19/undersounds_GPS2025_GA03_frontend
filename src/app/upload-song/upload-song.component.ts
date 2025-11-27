@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -6,6 +6,7 @@ import { ApiService } from '../services/api.service';
 import { AuthService, UserProfile } from '../services/auth.service';
 import { AlbumsService } from '../services/albums.service';
 import { Album } from '../models/album.model';
+import { SongsService } from '../services/songs.service';
 
 @Component({
   selector: 'app-upload-song',
@@ -19,28 +20,36 @@ export class UploadSongComponent implements OnInit {
   private api = inject(ApiService);
   private auth = inject(AuthService);
   private albumsService = inject(AlbumsService);
+  private songsService = inject(SongsService);
+  private ngZone = inject(NgZone);
 
   currentUser: UserProfile | null = null;
   userAlbums: Album[] = [];
   loading = false;
-  createdTrackId: string | null = null;
-  uploadingAudio = false;
+  uploading = false;
+  
+  // Used for validation of track number
+  currentAlbumTracks: any[] = [];
 
   form = this.fb.group({
     title: ['', Validators.required],
     albumId: ['', Validators.required],
-    trackNumber: [null],
-    durationSec: [null],
-  });
-
-  audioForm = this.fb.group({
-    audioFile: [null as any, Validators.required],
+    trackNumber: [null as number | null, [Validators.required, Validators.min(1)]],
+    durationSec: [null as number | null, [Validators.required, Validators.min(1)]],
+    audioFile: [null as File | null, Validators.required],
     bitrate: ['128'],
     codec: ['mp3'],
   });
 
   ngOnInit(): void {
     this.loadUserAlbums();
+    
+    // Listen to album changes to calculate track number
+    this.form.get('albumId')?.valueChanges.subscribe(albumId => {
+      if (albumId) {
+        this.calculateNextTrackNumber(String(albumId));
+      }
+    });
   }
 
   private loadUserAlbums(): void {
@@ -77,10 +86,83 @@ export class UploadSongComponent implements OnInit {
     });
   }
 
+  private calculateNextTrackNumber(albumId: string): void {
+    // Fetch tracks for the selected album
+    this.songsService.getTracksFromBackend({ albumId: albumId, limit: 100 }).subscribe({
+      next: (response) => {
+        this.currentAlbumTracks = response.tracks;
+        
+        // Find max track number
+        let maxTrackNum = 0;
+        if (this.currentAlbumTracks && this.currentAlbumTracks.length > 0) {
+          this.currentAlbumTracks.forEach(t => {
+            if (t.trackNumber && t.trackNumber > maxTrackNum) {
+              maxTrackNum = t.trackNumber;
+            }
+          });
+        }
+        
+        // Set next track number
+        const nextNum = maxTrackNum + 1;
+        this.form.patchValue({ trackNumber: nextNum });
+      },
+      error: (err) => console.error('Error fetching album tracks:', err)
+    });
+  }
+
+  onAudioFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.form.patchValue({ audioFile: file });
+      
+      // Calculate duration
+      const objectUrl = URL.createObjectURL(file);
+      const audio = new Audio();
+      
+      audio.onloadedmetadata = () => {
+        const duration = audio.duration;
+        console.log('[UploadSongComponent] Detected duration:', duration);
+        
+        this.ngZone.run(() => {
+          if (isFinite(duration) && !isNaN(duration)) {
+            // Use floor to match typical file explorer behavior (truncation)
+            this.form.patchValue({ durationSec: Math.floor(duration) });
+          }
+        });
+        
+        URL.revokeObjectURL(objectUrl);
+      };
+
+      audio.onerror = (err) => {
+        console.error('[UploadSongComponent] Error loading audio metadata:', err);
+        URL.revokeObjectURL(objectUrl);
+      };
+
+      audio.src = objectUrl;
+    }
+  }
+
+  get formattedDuration(): string {
+    const sec = this.form.value.durationSec;
+    if (sec === null || sec === undefined) return '';
+    const minutes = Math.floor(sec / 60);
+    const seconds = sec % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
   async submit(): Promise<void> {
     if (this.form.invalid) { 
       this.form.markAllAsTouched(); 
       return; 
+    }
+
+    // Validate track number uniqueness manually
+    const trackNum = this.form.value.trackNumber;
+    const exists = this.currentAlbumTracks.some(t => t.trackNumber === trackNum);
+    if (exists) {
+      alert(`El número de pista ${trackNum} ya existe en este álbum. Por favor elige otro.`);
+      return;
     }
 
     if (!this.currentUser) {
@@ -89,66 +171,33 @@ export class UploadSongComponent implements OnInit {
     }
 
     try {
-      const response = await this.api.createTrack({
-        title: String(this.form.value.title).trim(),
-        albumId: String(this.form.value.albumId).trim(),
-        trackNumber: this.form.value.trackNumber ? Number(this.form.value.trackNumber) : null,
-        durationSec: this.form.value.durationSec ? Number(this.form.value.durationSec) : null
-      }).toPromise();
+      this.uploading = true;
       
-      // Guardar el ID de la canción creada
-      if (response && response.data && response.data.id) {
-        this.createdTrackId = response.data.id;
-        console.log('[UploadSongComponent] Track created with ID:', this.createdTrackId);
+      const formData = new FormData();
+      formData.append('title', String(this.form.value.title).trim());
+      formData.append('albumId', String(this.form.value.albumId).trim());
+      if (this.form.value.trackNumber) formData.append('trackNumber', String(this.form.value.trackNumber));
+      if (this.form.value.durationSec) formData.append('durationSec', String(this.form.value.durationSec));
+      
+      // Audio file
+      const file = this.form.value.audioFile;
+      if (file) {
+        formData.append('file', file);
+        formData.append('bitrate', String(this.form.value.bitrate || '128'));
+        formData.append('codec', String(this.form.value.codec || 'mp3'));
       }
+
+      await this.api.createTrackWithAudio(formData).toPromise();
       
-      alert('¡Canción creada correctamente! Ahora puedes subir el archivo de audio.');
+      alert('¡Canción creada y subida correctamente!');
+      this.form.reset({ bitrate: '128', codec: 'mp3' });
+      this.currentAlbumTracks = [];
+      this.uploading = false;
+      
     } catch (error: any) {
       console.error('[UploadSongComponent] Error creating track:', error);
       alert(`Error al crear la canción: ${error?.error?.message ?? error?.message ?? 'Error'}`);
-    }
-  }
-
-  onAudioFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.audioForm.patchValue({ audioFile: file });
-      console.log('[UploadSongComponent] Audio file selected:', file.name);
-    }
-  }
-
-  async submitAudio(): Promise<void> {
-    if (!this.audioForm.value.audioFile || !this.createdTrackId) {
-      alert('Por favor selecciona un archivo de audio.');
-      return;
-    }
-
-    const audioFile = this.audioForm.value.audioFile as File;
-    const bitrate = this.audioForm.value.bitrate || '128';
-    const codec = this.audioForm.value.codec || 'mp3';
-
-    try {
-      this.uploadingAudio = true;
-      console.log('[UploadSongComponent] Uploading audio for track:', this.createdTrackId);
-      
-      const formData = new FormData();
-      formData.append('file', audioFile);
-      formData.append('bitrate', String(bitrate));
-      formData.append('codec', String(codec));
-
-      // Llamar directamente al endpoint usando HttpClient
-      await this.api.uploadTrackAudio(this.createdTrackId, formData).toPromise();
-      
-      alert('¡Archivo de audio subido correctamente!');
-      this.createdTrackId = null;
-      this.audioForm.reset();
-      this.form.reset();
-      this.uploadingAudio = false;
-    } catch (error: any) {
-      console.error('[UploadSongComponent] Error uploading audio:', error);
-      alert(`Error al subir el audio: ${error?.error?.message ?? error?.message ?? 'Error'}`);
-      this.uploadingAudio = false;
+      this.uploading = false;
     }
   }
 }

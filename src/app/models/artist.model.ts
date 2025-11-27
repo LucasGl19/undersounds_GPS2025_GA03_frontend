@@ -1,8 +1,12 @@
 export interface Artist {
-  name: string;
-  genre: string;
-  bio: string;
-  image: string;
-  nationality: string;
-  createdAt: string;
+  id?: string;
+  name?: string;
+  username?: string;
+  genre?: string;
+  role?: string;
+  bio?: string;
+  image?: string;
+  avatarUrl?: string;
+  nationality?: string;
+  createdAt?: string;
 }

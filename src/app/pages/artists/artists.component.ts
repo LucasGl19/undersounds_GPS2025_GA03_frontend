@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Artist } from '../../models/artist.model';
 import { ArtistsService } from '../../services/artists.service';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, takeUntil } 
 @Component({
   selector: 'app-artists',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './artists.component.html',
   styleUrl: './artists.component.css',
 })

@@ -32,7 +32,17 @@
           </span>
         </div>
 
-        <p class="merch-description" *ngIf="merch.description">{{ merch.description }}</p>
+        <p class="merch-description" *ngIf="merch.description">
+          {{ merch.description }}
+        </p>
+
+        <div class="merch-actions">
+          <button class="btn-add-cart" [ngClass]="{ 'added': isInCart }" (click)="addMerchToCart()" [disabled]="!merch">
+            {{ buttonText}}
+          </button>
+          <a (click)="navigateToCart()" class="link-go-cart">Ver carrito</a>
+        </div>
+
         <div class="merch-dates">
           <span class="metadata-merch">
             <strong>Creado:</strong> {{ merch.createdAt | date:'medium' }}

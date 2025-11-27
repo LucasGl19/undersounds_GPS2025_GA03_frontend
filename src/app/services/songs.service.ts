@@ -135,6 +135,14 @@ export class SongsService {
     };
 
     const streamUrl = normalizeUrl(`/tracks/${track.id}/stream`);
+    // Determinar la URL del cover: priorizar coverUrl directo del backend, luego album.cover.url
+    let coverImageUrl = 'assets/images/covers/cover-ambient.svg';
+    if (track.coverUrl) {
+      coverImageUrl = normalizeUrl(track.coverUrl);
+    } else if (track.album?.cover?.url) {
+      coverImageUrl = normalizeUrl(track.album.cover.url);
+    }
+
     const mapped = {
       id: track.id,
       title: track.title || 'Sin título',
@@ -143,7 +151,7 @@ export class SongsService {
       description: track.album?.description || 'Sin descripción',
       format: 'Streaming digital',
       price: track.album?.price ? `${track.album.price} ${track.album.currency || 'EUR'}` : 'Gratis',
-      image: track.album?.cover?.url ? normalizeUrl(track.album.cover.url) : 'assets/images/covers/cover-ambient.svg',
+      image: coverImageUrl,
       // Usar SIEMPRE el endpoint de streaming del backend
       audio: streamUrl,
       durationSec: track.durationSec || 0,
@@ -190,6 +198,17 @@ export class SongsService {
   updateTrack(trackId: number | string, body: Partial<SongCard>) {
     return this.apiService.updateTrack(String(trackId), body).pipe(
       map((resp: any) => this.mapBackendTrackToSongCard(resp.data))
+    );
+  }
+
+  // Eliminar pista (intenta en backend; si se usa el mock local, la elimina de la lista local)
+  deleteTrack(trackId: number | string) {
+    return this.apiService.deleteTrack(String(trackId)).pipe(
+      map(() => {
+        // Si trabajamos con datos mock, eliminar del array local
+        this.songs = this.songs.filter(s => String(s.id) !== String(trackId));
+        return;
+      })
     );
   }
 

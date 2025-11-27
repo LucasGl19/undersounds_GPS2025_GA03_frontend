@@ -40,7 +40,7 @@
     <h2 *ngIf="searchQuery">Resultados de búsqueda ({{ backendArtists.length }})</h2>
     <h2 *ngIf="!searchQuery">Artistas ({{ backendArtists.length }})</h2>
     <div class="artist-grid">
-      <article class="artist-card" *ngFor="let artist of backendArtists">
+      <article class="artist-card" *ngFor="let artist of backendArtists" [routerLink]="['/artist', artist.id]">
         <img
           [src]="artist.avatarUrl || 'assets/images/artists/default-artist.svg'"
           [alt]="'Perfil de ' + artist.username"
@@ -62,7 +62,7 @@
   
   <!-- Fallback a artistas locales si el backend falla y no hay búsqueda -->
   <div class="artist-grid" *ngIf="!isSearching && backendArtists.length === 0 && !searchQuery && artists.length > 0">
-    <article class="artist-card" *ngFor="let artist of artists">
+    <article class="artist-card" *ngFor="let artist of artists" [routerLink]="['/artist', artist.id]">
       <img
         [src]="artist.image"
         [alt]="'Retrato de ' + artist.name"
