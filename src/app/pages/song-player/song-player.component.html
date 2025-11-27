@@ -4,6 +4,7 @@
 
   <div class="song-layout" *ngIf="song && !isLoading">
     <article class="song-card song-card--large">
+
       <figure class="song-card__cover song-card__cover--large">
         <img [src]="song.image" [alt]="song.title" />
       </figure>
@@ -24,20 +25,24 @@
             <p>⚠️ No hay audio disponible para esta canción</p>
           </div>
         </ng-template>
-    <div class="song-card__body">
-      <h1>{{ song.title }}</h1>
-      <p class="song-card__artist">
-        <span>Autor: </span>
-        <a [routerLink]="['/artist', song.artistId]" class="artist-link">{{ song.artist }}</a>
-      </p>
+
+        <!-- SEGUNDA SECCIÓN DE DATOS (YA CORRECTAMENTE DENTRO DEL MISMO BODY) -->
+        <h1>{{ song.title }}</h1>
+
+        <p class="song-card__artist">
+          <span>Autor: </span>
+          <a [routerLink]="['/artist', song.artistId]" class="artist-link">{{ song.artist }}</a>
+        </p>
 
         <div class="song-card__plays" *ngIf="song.playCount !== undefined">
           <span style="font-size: 1.2rem;">🎧</span>
-          <strong>{{ song.playCount || 0 }}</strong> {{ song.playCount === 1 ? 'reproducción' : 'reproducciones' }}
+          <strong>{{ song.playCount || 0 }}</strong> 
+          {{ song.playCount === 1 ? 'reproducción' : 'reproducciones' }}
         </div>
 
         <p class="song-card__description">{{ song.description }}</p>
       </div>
+
     </article>
 
     <aside class="song-comment-section">

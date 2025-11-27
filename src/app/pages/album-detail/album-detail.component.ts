@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Album } from '../../models/album.model';
 import { SongCard } from '../../models/song-card.model';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
+import { ArtistsService } from '../../services/artists.service';
 import { environment } from '../../../environments/environment';
 import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 import { of } from 'rxjs';
