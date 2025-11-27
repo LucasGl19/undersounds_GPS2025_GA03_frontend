@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ExploreComponent } from './pages/explore/explore.component';
 import { SongsComponent } from './pages/songs/songs.component';
 import { AlbumsComponent } from './pages/albums/albums.component';
 import { AlbumDetailComponent } from './pages/album-detail/album-detail.component';
@@ -34,7 +35,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutBasicoComponent,
     children: [
-      { path: '', redirectTo: 'songs', pathMatch: 'full' },
+      { path: '', component: ExploreComponent },
       { path: 'songs', component: SongsComponent },
       { path: 'albums', component: AlbumsComponent },
       { path: 'album/:id', component: AlbumDetailComponent },
@@ -44,7 +45,7 @@ export const routes: Routes = [
       { path: 'merchandising/:id', component: MerchDetailComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'home', component: EmptyComponent },
+      { path: 'home', redirectTo: '', pathMatch: 'full' },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'order-confirmation', component: OrderConfirmationComponent },
