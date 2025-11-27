@@ -24,6 +24,12 @@
             <p>⚠️ No hay audio disponible para esta canción</p>
           </div>
         </ng-template>
+    <div class="song-card__body">
+      <h1>{{ song.title }}</h1>
+      <p class="song-card__artist">
+        <span>Autor: </span>
+        <a [routerLink]="['/artist', song.artistId]" class="artist-link">{{ song.artist }}</a>
+      </p>
 
         <div class="song-card__plays" *ngIf="song.playCount !== undefined">
           <span style="font-size: 1.2rem;">🎧</span>

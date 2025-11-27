@@ -36,6 +36,16 @@
           {{ merch.description }}
         </p>
 
+        <p class="merch-artist" *ngIf="artistName || artistLinkId">
+          <strong>Autor: </strong>
+          <ng-container *ngIf="artistLinkId; else plainArtist">
+            <a [routerLink]="['/artist', artistLinkId]" class="artist-link">{{ artistName || 'Ver artista' }}</a>
+          </ng-container>
+          <ng-template #plainArtist>
+            <span>{{ artistName || 'Artista desconocido' }}</span>
+          </ng-template>
+        </p>
+
         <div class="merch-actions">
           <button class="btn-add-cart" [ngClass]="{ 'added': isInCart }" (click)="addMerchToCart()" [disabled]="!merch">
             {{ buttonText}}

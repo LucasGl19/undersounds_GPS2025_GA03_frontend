@@ -56,10 +56,16 @@ export class ArtistsService {
   }
 
   getArtistById(id: string): Observable<Artist> {
+    // 1. Intentar mock local (IDs simples)
     const mockArtist = this.artists.find(a => a.id === id);
-    if (mockArtist) {
-      return of(mockArtist);
+    if (mockArtist) return of(mockArtist);
+
+    // 2. Backend espera userId numérico. Si el id no es numérico, no se podrá resolver.
+    if (!/^\d+$/.test(id)) {
+      // No es un número: devolver artista desconocido para evitar peticiones inútiles
+      return of({ id, name: 'Artista desconocido' });
     }
+
     const params = new HttpParams()
       .set('userId', id)
       .set('page', '1')
@@ -68,9 +74,7 @@ export class ArtistsService {
     return this.http.get<PagedUsers>(this.apiUrl, { params }).pipe(
       map(response => {
         const artist = response.items?.[0];
-        if (!artist) {
-          throw new Error('Artista no encontrado');
-        }
+        if (!artist) return { id, name: 'Artista desconocido' };
         return this.mapUserToArtist(artist);
       })
     );

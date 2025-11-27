@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SongCard } from '../models/song-card.model';
 import { ApiService, TrackFilters } from './api.service';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -146,8 +146,8 @@ export class SongsService {
     const mapped = {
       id: track.id,
       title: track.title || 'Sin título',
-      artist: track.album?.artist?.name || track.album?.artistId || 'Artista desconocido',
-      artistId: track.album?.artistId ? parseInt(track.album.artistId) : 0,
+      artist: 'Artista desconocido', // Se resolverá luego con ArtistsService si hay artistId
+      artistId: track.album?.artistId || '',
       description: track.album?.description || 'Sin descripción',
       format: 'Streaming digital',
       price: track.album?.price ? `${track.album.price} ${track.album.currency || 'EUR'}` : 'Gratis',
@@ -168,14 +168,6 @@ export class SongsService {
       playCount: track.stats?.playCount || 0,
     };
     
-    // Log para debug
-    if (track.audio) {
-      console.log(`🎵 Track "${mapped.title}" tiene audio:`, track.audio);
-      console.log(`   Mapeado a: ${mapped.audio}`);
-    } else {
-      console.warn(`⚠️ Track "${mapped.title}" NO tiene objeto audio`, track);
-    }
-    
     return mapped;
   }
 
@@ -187,7 +179,7 @@ export class SongsService {
     return this.songs.find(song => song.id === id);
   }
 
-  // Obtener canción individual del backend por ID
+  // Obtener canción individual del backend por ID (resolviendo nombre de artista aparte)
   getTrackByIdFromBackend(trackId: string): Observable<SongCard> {
     return this.apiService.getTrackById(trackId).pipe(
       map(response => this.mapBackendTrackToSongCard(response.data))

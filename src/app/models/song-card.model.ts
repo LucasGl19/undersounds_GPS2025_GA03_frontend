@@ -1,6 +1,6 @@
 export interface SongCard {
   id: number | string; // Puede ser number (mock) o string (backend UUID)
-  artistId: number;
+  artistId: number | string; // Backend usa UUID string, mock usa number
   title: string;
   artist: string;
   description: string;

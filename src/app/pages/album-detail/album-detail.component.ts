@@ -1,18 +1,20 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Album } from '../../models/album.model';
 import { SongCard } from '../../models/song-card.model';
 import { ApiService } from '../../services/api.service';
-import { AlbumsService } from '../../services/albums.service';
 import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
 import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, CommentBoxComponent],
+  imports: [CommonModule, MatSnackBarModule, CommentBoxComponent, RouterModule],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css'],
 })
@@ -20,9 +22,9 @@ export class AlbumDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private apiService = inject(ApiService);
-  private albumsService = inject(AlbumsService);
   private cartService = inject(CartService);
   private snack = inject(MatSnackBar);
+  private artistsService = inject(ArtistsService);
 
   buttonText : String = "Añadir al carrito"
   isInCart : boolean = false;
@@ -31,7 +33,7 @@ export class AlbumDetailComponent implements OnInit {
   tracks: SongCard[] = [];
   isLoading = true;
   errorMsg = '';
-  showDebugInfo = environment.showDebugInfo;
+  // Debug desactivado; mantener código limpio
 
   private normalizeUrl(u?: string): string {
     if (!u) return 'assets/images/covers/album-default.png';
@@ -53,10 +55,7 @@ export class AlbumDetailComponent implements OnInit {
     this.isLoading = true;
     this.errorMsg = '';
 
-    console.log(
-      '[AlbumDetailComponent] Starting to load album with ID:',
-      albumId
-    );
+    // Cargar detalles de álbum
 
     // Obtener detalles del álbum
     this.apiService.getAlbumById(albumId).subscribe({
@@ -81,10 +80,8 @@ export class AlbumDetailComponent implements OnInit {
             artistName: response.data.artistName || 'Artista desconocido',
           };
 
-          console.log('[AlbumDetailComponent] Album loaded:', this.album);
-
-          // Obtener canciones del álbum
-          this.loadAlbumTracks(albumId);
+          // Resolver nombre de artista y después cargar tracks
+          this.resolveArtistNameAndThenLoadTracks(albumId);
         }
       },
       error: (error: any) => {
@@ -95,16 +92,33 @@ export class AlbumDetailComponent implements OnInit {
     });
   }
 
-  private loadAlbumTracks(albumId: string): void {
-    console.log('[AlbumDetailComponent] Loading tracks for albumId:', albumId);
+  private resolveArtistNameAndThenLoadTracks(albumId: string): void {
+    if (!this.album) {
+      this.loadAlbumTracks(albumId);
+      return;
+    }
+    const placeholder = !this.album.artistName || this.album.artistName === 'Artista desconocido';
+    const artistId = this.album.artistId;
+    const isNumericId = typeof artistId !== 'undefined' && String(artistId).match(/^\d+$/);
 
+    if (placeholder && isNumericId) {
+      this.artistsService
+        .getArtistById(String(artistId))
+        .pipe(catchError(() => of(null)))
+        .subscribe((artist) => {
+          if (artist && this.album) {
+            this.album.artistName = artist.name || artist.username || this.album.artistName;
+          }
+          this.loadAlbumTracks(albumId);
+        });
+    } else {
+      this.loadAlbumTracks(albumId);
+    }
+  }
+
+  private loadAlbumTracks(albumId: string): void {
     this.apiService.getTracks({ albumId, limit: 100 }).subscribe({
       next: (response: any) => {
-        console.log(
-          '[AlbumDetailComponent] Response from getTracks:',
-          response
-        );
-
         // Mapear datos del backend al modelo SongCard y filtrar por albumId
         let tracks = (response.data || [])
           .filter((track: any) => {
@@ -136,19 +150,9 @@ export class AlbumDetailComponent implements OnInit {
 
         this.tracks = tracks;
 
-        if (this.showDebugInfo) {
-          console.log(
-            '[AlbumDetailComponent] Filtered tracks for album ' + albumId + ':',
-            this.tracks
-          );
-        }
-
         this.isLoading = false;
       },
       error: (error: any) => {
-        if (this.showDebugInfo) {
-          console.error('[AlbumDetailComponent] Error loading tracks:', error);
-        }
         // No mostramos error si no hay canciones, simplemente dejamos el array vacío
         this.isLoading = false;
       },
