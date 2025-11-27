@@ -1,20 +1,20 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Album } from '../../models/album.model';
 import { SongCard } from '../../models/song-card.model';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
-import { ArtistsService } from '../../services/artists.service';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, MatSnackBarModule, RouterModule],
+  imports: [CommonModule, MatSnackBarModule, CommentBoxComponent, RouterModule],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css'],
 })
@@ -188,4 +188,5 @@ export class AlbumDetailComponent implements OnInit {
       .onAction()
       .subscribe(() => this.router.navigate(['/cart']));
   }
+
 }

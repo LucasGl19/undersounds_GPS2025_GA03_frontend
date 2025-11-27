@@ -32,7 +32,6 @@
   gap: 3rem;
 }
 
-/* Hero section con portada e info */
 .album-hero {
   display: grid;
   grid-template-columns: 300px 1fr;
@@ -195,6 +194,7 @@
   color: var(--accent);
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .link-go-cart:hover {
@@ -373,6 +373,21 @@ td {
   color: #ef4444;
   text-align: center;
   max-width: 400px;
+}
+
+/*Para ajustar la caja de comentarios*/
+.album-comments-wrapper {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--surface-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+
+.album-comments-wrapper app-comment-box {
+  display: block;
+  max-width: 100%;
 }
 
 /* Responsive */

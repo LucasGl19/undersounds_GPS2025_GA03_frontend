@@ -81,15 +81,16 @@
               <td class="col-duration">{{ formatDuration(track.durationSec) }}</td>
               <td class="col-plays">{{ track.playCount }}</td>
               <td class="col-action">
-                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">
-                  Reproducir
-                </button>
+                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">Reproducir</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+      <div class="album-comments-wrapper">
+        <app-comment-box  [productId]="album.id.toString()" type="album"></app-comment-box>
+      </div>
   </div>
 </div>
 

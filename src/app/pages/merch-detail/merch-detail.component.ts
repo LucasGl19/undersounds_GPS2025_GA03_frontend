@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MerchItem } from '../../models/merch-item.model';
 import { MerchService } from '../../services/merch.service';
 import { CommonModule } from '@angular/common';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 import { CartService } from '../../services/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ArtistsService } from '../../services/artists.service';
@@ -12,7 +13,7 @@ import { catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-merch-detail',
   templateUrl: './merch-detail.component.html',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CommentBoxComponent],
   styleUrls: ['./merch-detail.component.css'],
 })
 export class MerchDetailComponent implements OnInit {
