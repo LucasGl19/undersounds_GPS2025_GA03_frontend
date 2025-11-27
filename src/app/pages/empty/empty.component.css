@@ -1,5 +1,9 @@
 .empty-state {
-    background-color: #dfffea;
+    background-color: var(--surface-background);
     height: 700px;
-    font-family: sans-serif;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

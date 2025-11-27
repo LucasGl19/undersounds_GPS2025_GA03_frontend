@@ -102,13 +102,13 @@
 }
 
 .metadata-item.stock-in-stock {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
 }
 
 .metadata-item.stock-out {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
 }
 
 .merch-category {
@@ -289,7 +289,7 @@ td {
 
 .error-message {
   font-size: 1.1rem;
-  color: #991b1b;
+  color: #ef4444;
   text-align: center;
   max-width: 400px;
 }

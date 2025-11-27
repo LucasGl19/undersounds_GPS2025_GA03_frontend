@@ -2,23 +2,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.75rem;
-  padding: 0.85rem 2rem;
-  background-color: var(--surface-primary);
+  gap: 2rem;
+  padding: 1rem 2rem;
+  background-color: var(--surface-background);
   border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 73px; /* Adjust based on header height */
+  z-index: 190;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(15, 23, 42, 0.9);
 }
 
 .nav-bar__label {
-  font-size: 0.72rem;
-  letter-spacing: 0.32em;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-muted);
+  font-weight: 600;
+  margin-right: 1rem;
 }
 
 .nav-bar__list {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -26,31 +34,46 @@
 
 .nav-bar__list button {
   border: none;
-  background: none;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-strong);
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  color: var(--text-soft);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .nav-bar__list button:hover,
 .nav-bar__list button:focus-visible {
-  background-color: rgba(98, 153, 201, 0.12);
-  color: var(--accent-stronger);
+  color: var(--text-strong);
+  background-color: var(--surface-secondary);
+}
+
+/* Active state simulation (if we had routerLinkActive, but here we use buttons) */
+.nav-bar__list button.active {
+  color: var(--accent);
+  background-color: rgba(56, 189, 248, 0.1);
 }
 
 @media (max-width: 720px) {
   .nav-bar {
     flex-direction: column;
     gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    top: 60px;
   }
 
   .nav-bar__list {
-    gap: 0.5rem;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-bar__label {
+    display: none;
   }
 }

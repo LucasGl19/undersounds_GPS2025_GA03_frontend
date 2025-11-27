@@ -98,8 +98,7 @@ export class RegisterComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.authService.storeTokens(response.tokens);
-          localStorage.setItem('role', response.role);
+          // AuthService handles token storage and state update
           this.submitting.set(false);
           this.router.navigateByUrl('/profile');
         },

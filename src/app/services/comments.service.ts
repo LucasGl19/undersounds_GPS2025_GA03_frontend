@@ -14,22 +14,38 @@ export class CommentsService {
   getAlbumComments(albumId: string) {
     return this.http.get(`${this.api}/albums/${albumId}/comments`);
   }
-  addAlbumComment(albumId: string, text: string) {
-    return this.http.post(`${this.api}/albums/${albumId}/comments`, {text});
+
+  addAlbumComment(albumId: string, text: string, rating: number =5) {
+    return this.http.post(`${this.api}/albums/${albumId}/comments`, {
+      targetType: 'album',
+      targetId: albumId,
+      text,   
+      rating
+    });
   }
 
   getTrackComments(trackId: string) {
     return this.http.get(`${this.api}/tracks/${trackId}/comments`);
   }
-  addTrackComment(trackId: string, text: string) {
-    return this.http.post(`${this.api}/tracks/${trackId}/comments`, {text})
+  
+  addTrackComment(trackId: string, text: string, rating: number =5) {
+    return this.http.post(`${this.api}/tracks/${trackId}/comments`, {
+      targetType: 'track',
+      targetId: trackId,
+      text,
+      rating});
   }
 
   getArticleComments(articleId: string) {
     return this.http.get(`${this.api}/merch/${articleId}/comments`);
   }
-  addArticleComment(articleId: string, text: string) {
-    return this.http.post(`${this.api}/merch/${articleId}/comments`,{text});
+
+  addArticleComment(articleId: string, text: string, rating: number =5) {
+    return this.http.post(`${this.api}/merch/${articleId}/comments`,{
+      targetType: 'merch',
+      targetId: articleId,
+      text,
+      rating});
   }
 
   likeComment(commentId: string) {

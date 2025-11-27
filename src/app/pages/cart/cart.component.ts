@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartItem } from '../../models/cart-item.model';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -15,9 +16,17 @@ import { CartService } from '../../services/cart.service';
 export class CartComponent implements OnDestroy {
   cartItems: CartItem[] = [];
   private sub: Subscription;
+  isLoggedIn = false;
 
-  constructor(private router: Router, private cart: CartService) {
+  constructor(
+    private router: Router, 
+    private cart: CartService,
+    private authService: AuthService
+  ) {
     this.sub = this.cart.items$.subscribe(items => (this.cartItems = items));
+    this.authService.isLoggedIn$.subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+    });
   }
 
   // Getter para el coste de envío (lo provee el servicio)
@@ -54,7 +63,18 @@ export class CartComponent implements OnDestroy {
   }
 
   checkout() {
-    alert('Placeholder para el proceso de compra.');
+    // Verificar si el usuario está autenticado
+    if (!this.isLoggedIn) {
+      // Guardar la URL actual para redirigir después del login
+      const returnUrl = '/checkout';
+      this.router.navigate(['/login'], { 
+        queryParams: { returnUrl } 
+      });
+      return;
+    }
+
+    // Navegar a la página de checkout
+    this.router.navigate(['/checkout']);
   }
 
   navigateToSongs() {

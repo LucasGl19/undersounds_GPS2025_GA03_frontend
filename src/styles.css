@@ -1,15 +1,36 @@
 :root {
-  color-scheme: light;
-  --layout-max-width: 1120px;
-  --surface-primary: #ffffff;
-  --surface-secondary: #f3f6fb;
-  --border-subtle: #d7dce5;
-  --text-strong: #102a43;
-  --text-soft: #4f5d75;
-  --text-muted: #6b7a8f;
-  --accent: #3c88c8;
-  --accent-stronger: #1f6aa8;
-  --surface-background: #eef3fb;
+  color-scheme: dark;
+  --layout-max-width: 1200px;
+  
+  /* Modern Dark Theme Palette */
+  --surface-background: #0f172a; /* Deep dark blue/slate */
+  --surface-primary: #1e293b;    /* Lighter slate for cards */
+  --surface-secondary: #334155;  /* Even lighter for inputs/hovers */
+  --surface-tertiary: #475569;
+  
+  --border-subtle: #334155;
+  
+  --text-strong: #f8fafc;        /* Almost white */
+  --text-soft: #cbd5e1;          /* Light gray */
+  --text-muted: #94a3b8;         /* Muted gray */
+  
+  --accent: #38bdf8;             /* Electric Sky Blue */
+  --accent-stronger: #0ea5e9;    /* Darker Sky Blue */
+  --accent-glow: rgba(56, 189, 248, 0.3);
+
+  --danger: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px var(--accent-glow);
 }
 
 * {
@@ -21,13 +42,21 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: linear-gradient(180deg, var(--surface-background) 0%, #ffffff 35%);
-  font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--surface-background);
   color: var(--text-soft);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-  color: inherit;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-stronger);
 }
 
 button {
@@ -41,13 +70,24 @@ img {
 }
 
 main.layout-content {
-  min-height: 68vh;
-  background: transparent;
+  min-height: 80vh;
+  padding-top: 2rem;
 }
 
-section {
-  position: relative;
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+::-webkit-scrollbar-track {
+  background: var(--surface-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-secondary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-tertiary);
+}

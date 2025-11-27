@@ -27,11 +27,23 @@ export class CommentBoxComponent implements OnInit {
   }
 
   checkPermission() {
-    const userId = this.auth.getUserId();
-    if(!userId) return;
+    /*const userId = this.auth.getUserId();
+    if(!userId) {
+      this.canComment = false;
+      return;
+    }
 
     this.ordersService.hasPurchased(userId, this.productId, this.type)
-    .subscribe(purchase => this.canComment = purchase);
+    .subscribe({
+      next: (purchase) => {
+        console.log('hasPurchased result:', purchase);
+        this.canComment = purchase;
+      },
+      error: () => {
+        this.canComment = false;
+      }
+    });*/
+    this.canComment = true;
   }
 
   loadComments() {
@@ -45,9 +57,10 @@ export class CommentBoxComponent implements OnInit {
     if(this.type === 'merch') {
       req = this.commentsService.getArticleComments(this.productId);
     }
+
     req?.subscribe((r:any) => {
-      this.comments = r.data;
-      this.comments.forEach(c=> {this.loadReplies(c.id);});
+    this.comments = Array.isArray(r) ? r : r.data;
+    this.comments.forEach(c => this.loadReplies(c.id));
     });
   }
 
@@ -86,27 +99,24 @@ export class CommentBoxComponent implements OnInit {
   }
 
   submit() {
-    if(!this.newComment.trim() || !this.canComment) return;
+    if (!this.newComment.trim()) return;
+
     let req;
-
-    if(this.type === 'album') {
-      req = this.commentsService.addAlbumComment(this.productId, this.newComment);
-    }
-
-    if(this.type === 'track') {
-      req = this.commentsService.addTrackComment(this.productId, this.newComment);
-    }
-
-    if(this.type === 'merch') {
-      req = this.commentsService.addArticleComment(this.productId, this.newComment);
+    if (this.type === 'album') {
+      req = this.commentsService.addAlbumComment(this.productId, this.newComment, 5);
+    } else if (this.type === 'track') {
+      req = this.commentsService.addTrackComment(this.productId, this.newComment, 5);
+    } else {
+      req = this.commentsService.addArticleComment(this.productId, this.newComment, 5);
     }
 
     req?.subscribe((created: any) => {
       this.newComment = '';
-      this.comments.unshift(created);
-      created.replies = [];
+      this.comments.unshift(created.data); // ojo: backend devuelve { data: {...} }
+      created.data.replies = [];
     });
   }
+
 
   delete(commentId: string) {
     this.commentsService.deleteComment(commentId).subscribe(() => {

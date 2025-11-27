@@ -221,7 +221,25 @@ export class ModifyCreationsComponent implements OnInit {
           if (coverFile) {
             this.albumService.uploadAlbumCover(album.id as number | string, coverFile).subscribe({
               next: (a) => {
-                if (a) this.artistAlbums[idx] = a as Album;
+                if (a) {
+                  // Update album in list
+                  this.artistAlbums[idx] = a as Album;
+                  
+                  // Force cache bust for the new image
+                  const timestamp = new Date().getTime();
+                  const newCoverUrl = `${a.cover}?t=${timestamp}`;
+                  this.artistAlbums[idx].cover = newCoverUrl;
+
+                  // Update all songs belonging to this album
+                  this.artistSongs.forEach((song, sIdx) => {
+                    if (String((song as any).albumId) === String(album.id)) {
+                      this.artistSongs[sIdx] = { 
+                        ...song, 
+                        image: newCoverUrl 
+                      };
+                    }
+                  });
+                }
                 this.albumCoverFiles.delete(album.id);
                 alert('Álbum y portada actualizados correctamente');
               },

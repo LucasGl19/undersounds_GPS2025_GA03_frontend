@@ -23,4 +23,17 @@ export class FavoritesService {
   deleteMerchFromFavorites(userId: string, merchId: string) {
     return this.http.delete(`${this.api}/users/${userId}/favorites/merch/${merchId}`);
   }
+
+  // Albums favorites
+  getAlbumFavorites(userId: string) {
+    return this.http.get(`${this.api}/users/${userId}/favorites/albums`);
+  }
+
+  addAlbumToFavorites(userId: string, albumId: string) {
+    return this.http.post(`${this.api}/users/${userId}/favorites/albums`, { albumId: albumId });
+  }
+
+  deleteAlbumFromFavorites(userId: string, albumId: string) {
+    return this.http.delete(`${this.api}/users/${userId}/favorites/albums/${albumId}`);
+  }
 }
