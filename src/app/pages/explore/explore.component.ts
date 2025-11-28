@@ -63,7 +63,7 @@ export class ExploreComponent implements OnInit {
          this.featuredArtists = artistsRes.items.map((user: any) => ({
              id: String(user.id),
              name: user.name || user.username,
-             image: user.avatarUrl || user.avatar_url || 'assets/images/default-artist.png',
+             image: user.avatarUrl || user.avatar_url || 'assets/images/artists/default-artist.svg',
              genre: 'Artist', 
              bio: user.bio
          }));

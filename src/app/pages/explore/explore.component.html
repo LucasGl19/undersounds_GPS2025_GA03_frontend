@@ -68,7 +68,7 @@
     <div class="grid-artists">
       <div class="card artist-card" *ngFor="let artist of featuredArtists" [routerLink]="['/artist', artist.id]">
         <div class="artist-image">
-          <img [src]="artist.image || artist.avatarUrl || 'assets/images/default-artist.png'" [alt]="artist.name" onerror="this.src='assets/images/default-artist.png'">
+          <img [src]="artist.image || artist.avatarUrl || 'assets/images/artists/default-artist.svg'" [alt]="artist.name" onerror="this.src='assets/images/artists/default-artist.svg'">
         </div>
         <div class="artist-info">
           <h3>{{ artist.name }}</h3>
