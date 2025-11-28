@@ -143,8 +143,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   private simulatePaymentProcessing(paymentMethod: string): Promise<void> {
     return new Promise((resolve) => {
-      const delay = paymentMethod === 'paypal' ? 1500 : 
-                    paymentMethod === 'transfer' ? 1000 : 2000;
+      const delay = paymentMethod === 'paypal' ? 1500 : 2000;
       
       setTimeout(() => resolve(), delay);
     });
