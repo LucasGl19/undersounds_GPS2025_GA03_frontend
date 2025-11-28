@@ -9,11 +9,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ArtistsService } from '../../services/artists.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatIconModule } from '@angular/material/icon';
+import { MerchStats, StatsService } from '../../services/stats.service';
 
 @Component({
   selector: 'app-merch-detail',
   templateUrl: './merch-detail.component.html',
-  imports: [CommonModule, RouterModule, CommentBoxComponent],
+  imports: [CommonModule, RouterModule, CommentBoxComponent, MatIconModule],
   styleUrls: ['./merch-detail.component.css'],
 })
 export class MerchDetailComponent implements OnInit {
@@ -25,9 +27,11 @@ export class MerchDetailComponent implements OnInit {
   private cartService = inject(CartService);
   private snack = inject(MatSnackBar);
   private artistsService = inject(ArtistsService);
+  private statsService = inject(StatsService);
 
-  buttonText : String = "Añadir al carrito"
-  isInCart : boolean = false;
+  buttonText: String = 'Añadir al carrito';
+  isInCart: boolean = false;
+  merchStats: MerchStats | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,6 +46,7 @@ export class MerchDetailComponent implements OnInit {
       return;
     }
     this.loadMerchItem(merchId);
+    this.loadMerchStats(merchId);
   }
 
   loadMerchItem(id: string) {
@@ -80,7 +85,7 @@ export class MerchDetailComponent implements OnInit {
   addMerchToCart() {
     if (!this.merch) return;
     this.cartService.addMerch(this.merch);
-        this.buttonText = "Artículo añadido";
+    this.buttonText = 'Artículo añadido';
     this.isInCart = true;
     this.snack
       .open('Artículo añadido al carrito', 'Ver', { duration: 3000 })
@@ -112,5 +117,19 @@ export class MerchDetailComponent implements OnInit {
           this.artistLinkId = idStr;
         }
       });
+  }
+
+  loadMerchStats(merchId: string) {
+    this.statsService.getMerchStats(merchId).subscribe({
+      next: (stats) => {
+        this.merchStats = stats;
+      },
+      error: (error: any) => {
+        console.error(
+          'Error al cargar las estadísticas de merchandising',
+          error
+        );
+      },
+    });
   }
 }

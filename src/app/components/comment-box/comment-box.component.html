@@ -3,9 +3,14 @@
 
   <div class="comment" *ngFor="let c of comments">
     <div class="comment-header">
-      <span class="comment-user">{{ c.userId || 'Usuario' }}</span>
+      <div>
+        <span class="comment-user">{{ c.userId || 'Usuario' }}</span>
+        Valoración: 
+        <i *ngFor="let star of [1,2,3,4,5]" class="star">
+          {{ star <= c.rating ? '★' : '☆' }} </i>
+      </div>
       <span class="comment-date">{{ c.createdAt | date:'short' }}</span>
-      
+
       <button class="remove-btn" *ngIf="c.userId === currentUserId" (click)="delete(c.id)">
         <img src="assets/images/ui/eliminar.png" alt="Eliminar" />
       </button>
@@ -42,6 +47,7 @@
       <div class="reply" *ngFor="let r of c.replies">
         <div class="reply-header">
           <span class="reply-user">{{ r.userId || 'Usuario' }}</span>
+
           <span class="reply-date">{{ r.createdAt | date:'short' }}</span>
 
           <!-- Botón de borrar solo si la respuesta es del usuario logueado -->
@@ -55,6 +61,11 @@
   </div>
 
   <div class="comment-form" *ngIf="canComment; else cannot">
+    <div class="star-rating">
+      Valoración:
+      <i *ngFor="let star of [1,2,3,4,5]" class="star" (click)="rating = star">
+        {{ star <= rating ? '★' : '☆' }} </i>
+    </div>
     <textarea [(ngModel)]="newComment" placeholder="Escribe tu comentario..."></textarea>
     <button class="btn-send" (click)="submit()">Enviar comentario</button>
   </div>

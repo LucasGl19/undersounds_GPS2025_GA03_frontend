@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { map, Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlbumsService {
   private apiService = inject(ApiService);
@@ -18,7 +18,7 @@ export class AlbumsService {
     return `${this.apiBase}/${u}`;
   }
 
-  constructor() { }
+  constructor() {}
   private albums: Album[] = [
     {
       id: 1,
@@ -31,7 +31,7 @@ export class AlbumsService {
       currency: 'EUR',
       genres: ['Pop', 'Electro'],
       cover: 'assets/images/covers/album1.png',
-      artistName: 'Ecos del Rocío'
+      artistName: 'Ecos del Rocío',
     },
     {
       id: 2,
@@ -49,7 +49,8 @@ export class AlbumsService {
     {
       id: 3,
       title: 'Groove Arcade',
-      description: 'Groove en estado puro, disfruta del sonido de las percusiones infinitas.',
+      description:
+        'Groove en estado puro, disfruta del sonido de las percusiones infinitas.',
       artistId: 1,
       releaseDate: '09/08/2025',
       releaseState: 'Publicado',
@@ -58,8 +59,7 @@ export class AlbumsService {
       genres: ['Electronic', 'Techno'],
       cover: 'assets/images/covers/album3.png',
       artistName: 'Mapin',
-    }
-
+    },
   ];
 
   getAlbum() {
@@ -69,66 +69,80 @@ export class AlbumsService {
   getAlbumArtist(id: number | string): Album[] {
     // Primero intenta obtener del backend
     const artistIdStr = String(id);
-    
+
     // Aquí hacemos una llamada síncrona, pero eventualmente esto debería ser async
     // Por ahora, retornamos los datos locales filtrados
-    return this.albums.filter(a => a.artistId == id);
+    return this.albums.filter((a) => a.artistId == id);
   }
 
   // Obtener álbumes del backend de forma async
   getAlbumArtistFromBackend(artistId: number | string) {
-    return this.apiService.getAlbums({ 
-      artistId: String(artistId),
-      limit: 100,
-      include: ['cover'] // Asegurar que se incluye la portada
-    }).pipe(
-      map(response => {
-        // Mapear álbumes del backend al modelo Album del frontend
-        return (response.data || []).map((album: any) => ({
-          id: album.id,
-          title: album.title || 'Sin título',
-          description: album.description || '',
-          artistId: album.artistId || artistId,
-          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
-          releaseState: album.releaseState || 'draft',
-          price: album.price || 0,
-          currency: album.currency || 'EUR',
-          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
-          cover: this.normalizeUrl(album.cover?.url),
-          artistName: 'Artista desconocido'
-        }));
+    return this.apiService
+      .getAlbums({
+        artistId: String(artistId),
+        limit: 100,
+        include: ['cover'], // Asegurar que se incluye la portada
       })
-    );
+      .pipe(
+        map((response) => {
+          // Mapear álbumes del backend al modelo Album del frontend
+          return (response.data || []).map((album: any) => ({
+            id: album.id,
+            title: album.title || 'Sin título',
+            description: album.description || '',
+            artistId: album.artistId || artistId,
+            releaseDate: album.releaseDate
+              ? new Date(album.releaseDate).toLocaleDateString('es-ES')
+              : '',
+            releaseState: album.releaseState || 'draft',
+            price: album.price || 0,
+            currency: album.currency || 'EUR',
+            genres: album.genres
+              ? album.genres.split(',').map((g: string) => g.trim())
+              : [],
+            cover: this.normalizeUrl(album.cover?.url),
+            artistName: 'Artista desconocido',
+          }));
+        })
+      );
   }
 
-  saveAlbumAsFavorite(albumId: String) : void {
+  saveAlbumAsFavorite(albumId: String): void {
     console.log(`Álbum con ID ${albumId} guardado como favorito.`);
   }
 
   // Método para obtener todos los álbumes del backend con filtros
-  getAlbumsFromBackend(filters: AlbumFilters): Observable<{ albums: Album[]; pagination: { totalPages: number } }> {
+  getAlbumsFromBackend(
+    filters: AlbumFilters
+  ): Observable<{ albums: Album[]; pagination: { totalPages: number } }> {
     return this.apiService.getAlbums(filters).pipe(
-      map(response => {
+      map((response) => {
         const albums = (response.data || []).map((album: any) => ({
           id: album.id,
           title: album.title || 'Sin título',
           description: album.description || '',
           artistId: album.artistId || '',
-          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseDate: album.releaseDate
+            ? new Date(album.releaseDate).toLocaleDateString('es-ES')
+            : '',
           releaseState: album.releaseState || 'draft',
           price: album.price || 0,
           currency: album.currency || 'EUR',
-          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          genres: album.genres
+            ? album.genres.split(',').map((g: string) => g.trim())
+            : [],
           cover: this.normalizeUrl(album.cover?.url),
-          artistName: album.artistName || 'Artista desconocido'
+          artistName: album.artistName || 'Artista desconocido',
         })) as Album[];
 
         // Calcular totalPages basado en el total y limit
-        const totalPages = Math.ceil((response.meta?.total || 0) / (response.meta?.limit || 20));
+        const totalPages = Math.ceil(
+          (response.meta?.total || 0) / (response.meta?.limit || 20)
+        );
 
         return {
           albums,
-          pagination: { totalPages }
+          pagination: { totalPages },
         };
       })
     );
@@ -145,13 +159,17 @@ export class AlbumsService {
           title: album.title || 'Sin título',
           description: album.description || '',
           artistId: album.artistId || '',
-          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseDate: album.releaseDate
+            ? new Date(album.releaseDate).toLocaleDateString('es-ES')
+            : '',
           releaseState: album.releaseState || 'draft',
           price: album.price || 0,
           currency: album.currency || 'EUR',
-          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          genres: album.genres
+            ? album.genres.split(',').map((g: string) => g.trim())
+            : [],
           cover: this.normalizeUrl(album.cover?.url),
-          artistName: album.artistName || 'Artista desconocido'
+          artistName: album.artistName || 'Artista desconocido',
         } as Album;
       })
     );
@@ -160,7 +178,9 @@ export class AlbumsService {
   // Subir portada real del álbum (archivo). Si no se proporciona file, se omite.
   uploadAlbumCover(albumId: number | string, file?: File) {
     if (!file) {
-      console.warn('[AlbumsService] uploadAlbumCover llamado sin file; se omite petición.');
+      console.warn(
+        '[AlbumsService] uploadAlbumCover llamado sin file; se omite petición.'
+      );
       return of(null);
     }
     return this.apiService.uploadAlbumCover(String(albumId), file).pipe(
@@ -172,13 +192,17 @@ export class AlbumsService {
           title: album.title || 'Sin título',
           description: album.description || '',
           artistId: album.artistId || '',
-          releaseDate: album.releaseDate ? new Date(album.releaseDate).toLocaleDateString('es-ES') : '',
+          releaseDate: album.releaseDate
+            ? new Date(album.releaseDate).toLocaleDateString('es-ES')
+            : '',
           releaseState: album.releaseState || 'draft',
           price: album.price || 0,
           currency: album.currency || 'EUR',
-          genres: album.genres ? album.genres.split(',').map((g: string) => g.trim()) : [],
+          genres: album.genres
+            ? album.genres.split(',').map((g: string) => g.trim())
+            : [],
           cover: this.normalizeUrl(album.cover?.url),
-          artistName: 'Artista desconocido'
+          artistName: 'Artista desconocido',
         } as Album;
       })
     );
@@ -188,7 +212,9 @@ export class AlbumsService {
   deleteAlbum(albumId: number | string) {
     return this.apiService.deleteAlbum(String(albumId)).pipe(
       map(() => {
-        this.albums = this.albums.filter(a => String(a.id) !== String(albumId));
+        this.albums = this.albums.filter(
+          (a) => String(a.id) !== String(albumId)
+        );
         return;
       })
     );

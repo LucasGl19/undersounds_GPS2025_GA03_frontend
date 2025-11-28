@@ -3,7 +3,7 @@
   padding: 1.5rem;
   border-radius: 14px;
   background: var(--surface-secondary);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 /* Cada comentario */
@@ -12,7 +12,14 @@
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1.2rem;
-  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+}
+
+.star {
+  font-size: 20px;
+  cursor: pointer;
+  color: gold;
+  user-select: none;
 }
 
 /* Header del comentario */
@@ -28,6 +35,7 @@
 .comment-user {
   font-weight: 600;
   color: var(--text-strong);
+  margin-right: 1rem;
 }
 
 .comment-date {
@@ -163,7 +171,7 @@
 
 .btn-send:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .disabled-message {
@@ -173,7 +181,8 @@
 }
 
 /* Botones eliminar/editar */
-.remove-btn, .edit-btn {
+.remove-btn,
+.edit-btn {
   border: none;
   background: transparent;
   cursor: pointer;
@@ -188,7 +197,8 @@
   object-fit: contain;
 }
 
-.remove-btn:hover, .edit-btn:hover {
+.remove-btn:hover,
+.edit-btn:hover {
   opacity: 1;
 }
 
@@ -202,7 +212,8 @@
   border: 1px solid var(--border-subtle);
 }
 
-.btn-save, .btn-cancel {
+.btn-save,
+.btn-cancel {
   margin-top: .4rem;
   padding: .45rem 1.2rem;
   border-radius: 8px;
@@ -210,4 +221,3 @@
   font-size: .85rem;
   border: none;
 }
-

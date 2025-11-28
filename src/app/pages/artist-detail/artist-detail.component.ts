@@ -11,11 +11,12 @@ import { SongCard } from '../../models/song-card.model';
 import { MerchItem } from '../../models/merch-item.model';
 import { forkJoin, switchMap, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ArtistStatsComponent } from '../../components/artist-stats/artist-stats.component';
 
 @Component({
   selector: 'app-artist-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ArtistStatsComponent],
   templateUrl: './artist-detail.component.html',
   styleUrls: ['./artist-detail.component.css']
 })

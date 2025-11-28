@@ -16,6 +16,7 @@ export class CommentBoxComponent implements OnInit {
   canComment  = false;
   comments: any[] = [];
   newComment = "";
+  rating = 0;
   currentUserId: string | null = null;
   
   constructor(private commentsService: CommentsService, private ordersService: OrdersService, private auth: AuthService) {}
@@ -105,11 +106,11 @@ export class CommentBoxComponent implements OnInit {
 
     let req;
     if (this.type === 'album') {
-      req = this.commentsService.addAlbumComment(this.productId, this.newComment, 5);
+      req = this.commentsService.addAlbumComment(this.productId, this.newComment, this.rating);
     } else if (this.type === 'track') {
-      req = this.commentsService.addTrackComment(this.productId, this.newComment, 5);
+      req = this.commentsService.addTrackComment(this.productId, this.newComment, this.rating);
     } else {
-      req = this.commentsService.addArticleComment(this.productId, this.newComment, 5);
+      req = this.commentsService.addArticleComment(this.productId, this.newComment, this.rating);
     }
 
     req?.subscribe((created: any) => {

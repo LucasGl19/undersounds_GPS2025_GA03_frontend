@@ -50,14 +50,7 @@
           </select>
         </div>
 
-        <!-- Idioma -->
-        <div class="filter-group">
-          <label for="language-select">Idioma:</label>
-          <select id="language-select" [(ngModel)]="selectedLanguage" (change)="applyFilters()" class="filter-select">
-            <option value="">Todos</option>
-            <option *ngFor="let lang of availableLanguages" [value]="lang">{{ lang }}</option>
-          </select>
-        </div>
+
       </div>
 
       <div class="filters-row">

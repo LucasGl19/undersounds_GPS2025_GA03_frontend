@@ -38,7 +38,7 @@ export class ArtistAlbumsComponent {
     });
   }
 
-  navigateToAlbumDetail(albumId: number) {
+  navigateToAlbumPage(albumId: number) {
     this.router.navigate(['/album', albumId]);
   }
 }

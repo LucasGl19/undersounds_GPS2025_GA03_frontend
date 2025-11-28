@@ -86,6 +86,32 @@
   color: var(--text-strong);
 }
 
+.merch-dates {
+  display: flex;
+  gap: 0.3rem;
+  flex-direction: column;
+}
+
+.metadata-item.stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.metadata-item.stats strong {
+  color: white;
+  font-weight: 600;
+}
+
+
+.stats-item {
+  padding: 0.6rem;
+  border-radius: 12px;
+  background-color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
 .metadata-item strong {
   color: var(--text-muted);
   font-weight: 500;

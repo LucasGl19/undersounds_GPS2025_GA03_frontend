@@ -11,11 +11,19 @@ import { environment } from '../../../environments/environment';
 import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AlbumStats, StatsService } from '../../services/stats.service';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, MatSnackBarModule, CommentBoxComponent, RouterModule],
+  imports: [
+    CommonModule,
+    MatSnackBarModule,
+    CommentBoxComponent,
+    RouterModule,
+    MatIconModule,
+  ],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css'],
 })
@@ -26,15 +34,18 @@ export class AlbumDetailComponent implements OnInit {
   private cartService = inject(CartService);
   private snack = inject(MatSnackBar);
   private artistsService = inject(ArtistsService);
+  private statsService = inject(StatsService);
 
-  buttonText : String = "Añadir al carrito"
-  isInCart : boolean = false;
+  buttonText: String = 'Añadir al carrito';
+  isInCart: boolean = false;
 
   album: Album | null = null;
   tracks: SongCard[] = [];
   isLoading = true;
   errorMsg = '';
   // Debug desactivado; mantener código limpio
+  showDebugInfo = environment.showDebugInfo;
+  albumStats: AlbumStats | null = null;
 
   private normalizeUrl(u?: string): string {
     if (!u) return 'assets/images/covers/album-default.png';
@@ -48,6 +59,7 @@ export class AlbumDetailComponent implements OnInit {
       const albumId = params['id'];
       if (albumId) {
         this.loadAlbumDetail(albumId);
+        this.loadAlbumStats(albumId);
       }
     });
   }
@@ -98,9 +110,11 @@ export class AlbumDetailComponent implements OnInit {
       this.loadAlbumTracks(albumId);
       return;
     }
-    const placeholder = !this.album.artistName || this.album.artistName === 'Artista desconocido';
+    const placeholder =
+      !this.album.artistName || this.album.artistName === 'Artista desconocido';
     const artistId = this.album.artistId;
-    const isNumericId = typeof artistId !== 'undefined' && String(artistId).match(/^\d+$/);
+    const isNumericId =
+      typeof artistId !== 'undefined' && String(artistId).match(/^\d+$/);
 
     if (placeholder && isNumericId) {
       this.artistsService
@@ -108,13 +122,22 @@ export class AlbumDetailComponent implements OnInit {
         .pipe(catchError(() => of(null)))
         .subscribe((artist) => {
           if (artist && this.album) {
-            this.album.artistName = artist.name || artist.username || this.album.artistName;
+            this.album.artistName =
+              artist.name || artist.username || this.album.artistName;
           }
           this.loadAlbumTracks(albumId);
         });
     } else {
       this.loadAlbumTracks(albumId);
     }
+  }
+
+  private loadAlbumStats(albumId: string): void {
+    this.statsService.getAlbumStats(albumId).subscribe({
+      next: (stats: AlbumStats) => {
+        this.albumStats = stats;
+      },
+    });
   }
 
   private loadAlbumTracks(albumId: string): void {
@@ -182,12 +205,11 @@ export class AlbumDetailComponent implements OnInit {
   addAlbumToCart(): void {
     if (!this.album) return;
     this.cartService.addAlbum(this.album);
-    this.buttonText = "Álbum añadido";
+    this.buttonText = 'Álbum añadido';
     this.isInCart = true;
     this.snack
       .open('Álbum añadido al carrito', 'Ver', { duration: 3000 })
       .onAction()
       .subscribe(() => this.router.navigate(['/cart']));
   }
-
 }

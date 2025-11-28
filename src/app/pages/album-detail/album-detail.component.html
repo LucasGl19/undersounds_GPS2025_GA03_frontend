@@ -24,7 +24,7 @@
             <strong>Lanzamiento:</strong> {{ album.releaseDate }}
           </span>
           <span class="metadata-item" *ngIf="album.price > 0">
-            <strong>Precio:</strong> {{ album.price }} {{ album.currency }}
+            <strong>Precio:</strong> {{ album.price | currency:album.currency }}
           </span>
           <span class="metadata-item" *ngIf="!album.price || album.price === 0">
             <strong>Precio:</strong> Gratis
@@ -32,6 +32,19 @@
           <span class="metadata-item state" [ngClass]="'state-' + album.releaseState">
             {{ album.releaseState }}
           </span>
+          <div class="metadata-item stats">
+            <div class="stats-item">
+              <mat-icon class="mat-icon">play_arrow</mat-icon><span> {{ albumStats?.albumPlays || 0 }} reproducciones
+              </span>
+            </div>
+            <div class="stats-item">
+              <mat-icon class="mat-icon">shopping_cart</mat-icon><span>{{ albumStats?.albumSales || 0 }} ventas</span>
+            </div>
+            <div class="stats-item">
+              <mat-icon class="mat-icon">star_rate</mat-icon><span> {{ albumStats?.albumRate || 0 }} / 5
+                estrellas</span>
+            </div>
+          </div>
         </div>
 
         <div class="album-genres" *ngIf="album.genres && album.genres.length > 0">

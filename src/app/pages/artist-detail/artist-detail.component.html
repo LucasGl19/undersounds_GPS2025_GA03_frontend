@@ -17,6 +17,7 @@
           <span *ngIf="artist.createdAt">Miembro desde {{ artist.createdAt | date }}</span>
         </div>
       </div>
+      <app-artist-stats [artistId]="artist.id"></app-artist-stats>
     </div>
   </header>
 
@@ -63,7 +64,7 @@
           <img [src]="item.cover?.url || 'assets/images/merch/merch-mug.svg'" [alt]="item.title" loading="lazy">
           <div class="merch-info">
             <h3>{{ item.title }}</h3>
-            <p class="merch-price">{{ (item.priceCents / 100) | number:'1.2-2' }} €</p> <!-- Adjust price formatting -->
+            <p class="merch-price">{{ (item.priceCents / 100) | currency: item.currency }}</p> <!-- Adjust price formatting -->
           </div>
         </article>
       </div>
