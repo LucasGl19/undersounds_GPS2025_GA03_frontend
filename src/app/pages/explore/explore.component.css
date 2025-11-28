@@ -201,14 +201,20 @@
 
 /* Artist Card Specifics */
 .artist-image {
+  position: relative;
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 1rem;
   background-color: var(--surface-secondary);
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+}
+
+.artist-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .artist-info {

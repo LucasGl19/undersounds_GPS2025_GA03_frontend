@@ -118,15 +118,17 @@
             <div class="payment-methods">
               <label class="payment-option">
                 <input type="radio" formControlName="paymentMethod" value="card" />
-                <span>💳 Tarjeta de crédito/débito</span>
+                <span class="payment-method-content">
+                  <img src="assets/images/ui/credit-card-logo.svg" alt="Tarjeta" class="payment-logo" />
+                  <span>Tarjeta de crédito/débito</span>
+                </span>
               </label>
               <label class="payment-option">
                 <input type="radio" formControlName="paymentMethod" value="paypal" />
-                <span>💰 PayPal</span>
-              </label>
-              <label class="payment-option">
-                <input type="radio" formControlName="paymentMethod" value="transfer" />
-                <span>🏦 Transferencia bancaria</span>
+                <span class="payment-method-content">
+                  <img src="assets/images/ui/paypal-logo.svg" alt="PayPal" class="payment-logo" />
+                  <span>PayPal</span>
+                </span>
               </label>
             </div>
 
@@ -181,10 +183,6 @@
 
             <div class="payment-info" *ngIf="checkoutForm.get('paymentMethod')?.value === 'paypal'">
               <p>Serás redirigido a PayPal para completar el pago de forma segura.</p>
-            </div>
-
-            <div class="payment-info" *ngIf="checkoutForm.get('paymentMethod')?.value === 'transfer'">
-              <p>Recibirás instrucciones para realizar la transferencia bancaria por email.</p>
             </div>
           </section>
 

@@ -60,6 +60,10 @@
             {{ buttonText}}
           </button>
           <a (click)="navigateToCart()" class="link-go-cart">Ver carrito</a>
+          <!-- Admin: eliminar merch -->
+          <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteMerch()">
+            Eliminar merch
+          </button>
         </div>
 
         <div class="merch-dates">

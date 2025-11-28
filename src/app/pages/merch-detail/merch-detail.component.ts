@@ -10,12 +10,16 @@ import { ArtistsService } from '../../services/artists.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
 import { MerchStats, StatsService } from '../../services/stats.service';
 
 @Component({
   selector: 'app-merch-detail',
   templateUrl: './merch-detail.component.html',
-  imports: [CommonModule, RouterModule, CommentBoxComponent, MatIconModule],
+  imports: [CommonModule, RouterModule, CommentBoxComponent, MatIconModule, MatDialogModule],
   styleUrls: ['./merch-detail.component.css'],
 })
 export class MerchDetailComponent implements OnInit {
@@ -28,6 +32,12 @@ export class MerchDetailComponent implements OnInit {
   private snack = inject(MatSnackBar);
   private artistsService = inject(ArtistsService);
   private statsService = inject(StatsService);
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
 
   buttonText: String = 'Añadir al carrito';
   isInCart: boolean = false;
@@ -130,6 +140,30 @@ export class MerchDetailComponent implements OnInit {
           error
         );
       },
+    });
+  }
+
+  confirmDeleteMerch(): void {
+    if (!this.merch) return;
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: this.merch.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok || !this.merch) return;
+      this.merchService.deleteMerch(String(this.merch.id)).subscribe({
+        next: () => {
+          this.snack.open('Artículo de merch eliminado', undefined, {
+            duration: 2000,
+          });
+          this.router.navigate(['/merchandising']);
+        },
+        error: (err) => {
+          console.error('Error eliminando merch', err);
+          this.snack.open('No se pudo eliminar el artículo', undefined, {
+            duration: 3000,
+          });
+        },
+      });
     });
   }
 }

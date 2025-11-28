@@ -106,16 +106,19 @@
   padding: 0.75rem;
   background-color: var(--surface-secondary);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.95rem;
   color: var(--text-strong);
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  font-weight: 500;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
   border-color: var(--accent);
+  background-color: var(--surface-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .form-group input.error {
@@ -187,12 +190,39 @@
   color: var(--text-strong);
 }
 
+.payment-method-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.payment-logo {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
 .card-details {
   background-color: var(--surface-secondary);
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 12px;
   margin-top: 1rem;
   border: 1px solid var(--border-subtle);
+}
+
+.card-details .form-group input {
+  background-color: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  font-family: inherit;
+}
+
+.card-details .form-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .payment-info {

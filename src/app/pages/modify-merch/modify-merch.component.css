@@ -50,29 +50,36 @@ h1 {
 
 .edit-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--surface-primary);
-  border: none;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .edit-btn img {
-  width: 24px;
-  height: 24px;
-  filter: invert(1); /* Invert icon color for dark mode if it's black */
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
 }
 
 .edit-btn:hover {
-    transform: translateY(-2px);
-    background-color: var(--surface-secondary);
+  transform: translateY(-2px) scale(1.05);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.edit-btn:hover img {
+  opacity: 1;
 }
 
 /* Delete button: small, bottom-right, integrated look */
