@@ -41,6 +41,11 @@
         </div>
 
         <p class="song-card__description">{{ song.description }}</p>
+
+        <!-- Admin-only delete button -->
+        <div>
+          <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteSong()">Eliminar canción</button>
+        </div>
       </div>
 
     </article>

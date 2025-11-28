@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SongCard } from '../../models/song-card.model';
@@ -6,11 +6,16 @@ import { SongsService } from '../../services/songs.service';
 import { FormsModule } from '@angular/forms';
 import { ApiService, TrackFilters } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-songs',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './songs.component.html',
   styleUrls: ['./songs.component.css'],
 })
@@ -21,6 +26,12 @@ export class SongsComponent implements OnInit {
     dataSource: 'backend' | 'mock' = 'backend'; // Indica la fuente de datos actual
   errorMsg: string = '';
   showDebugInfo: boolean = environment.showDebugInfo;
+  private dialog = inject(MatDialog);
+  private snack = inject(MatSnackBar);
+  private authService = inject(AuthService);
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
   
   // Filtros
   searchQuery: string = '';
@@ -231,6 +242,27 @@ export class SongsComponent implements OnInit {
       this.currentPage--;
       this.loadSongs();
     }
+  }
+
+  confirmDeleteSong(song: SongCard): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: song.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+      this.songService.deleteTrack(String(song.id)).subscribe({
+        next: () => {
+          this.songs = this.songs.filter((s) => String(s.id) !== String(song.id));
+          this.snack.open('Canción eliminada', undefined, { duration: 2000 });
+        },
+        error: (err) => {
+          console.error('Error eliminando canción', err);
+          this.snack.open('No se pudo eliminar la canción', undefined, {
+            duration: 3000,
+          });
+        },
+      });
+    });
   }
 }
 

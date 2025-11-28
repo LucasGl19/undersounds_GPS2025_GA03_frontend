@@ -12,7 +12,11 @@ import { CommentBoxComponent } from '../../components/comment-box/comment-box.co
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AlbumStats, StatsService } from '../../services/stats.service';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-album-detail',
@@ -23,6 +27,7 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
     CommentBoxComponent,
     RouterModule,
     MatIconModule,
+    MatDialogModule,
   ],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css'],
@@ -35,6 +40,12 @@ export class AlbumDetailComponent implements OnInit {
   private snack = inject(MatSnackBar);
   private artistsService = inject(ArtistsService);
   private statsService = inject(StatsService);
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
 
   buttonText: String = 'Añadir al carrito';
   isInCart: boolean = false;
@@ -211,5 +222,49 @@ export class AlbumDetailComponent implements OnInit {
       .open('Álbum añadido al carrito', 'Ver', { duration: 3000 })
       .onAction()
       .subscribe(() => this.router.navigate(['/cart']));
+  }
+
+  confirmDeleteAlbum(): void {
+    if (!this.album) return;
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: this.album.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok || !this.album) return;
+      this.apiService.deleteAlbum(String(this.album.id)).subscribe({
+        next: () => {
+          this.snack.open('Álbum eliminado', undefined, { duration: 2000 });
+          this.router.navigate(['/albums']);
+        },
+        error: (err) => {
+          console.error('Error eliminando álbum', err);
+          this.snack.open('No se pudo eliminar el álbum', undefined, {
+            duration: 3000,
+          });
+        },
+      });
+    });
+  }
+
+  confirmDeleteTrack(track: SongCard, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: track.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+      this.apiService.deleteTrack(String(track.id)).subscribe({
+        next: () => {
+          this.tracks = this.tracks.filter((t) => String(t.id) !== String(track.id));
+          this.snack.open('Canción eliminada', undefined, { duration: 2000 });
+        },
+        error: (err) => {
+          console.error('Error eliminando canción', err);
+          this.snack.open('No se pudo eliminar la canción', undefined, {
+            duration: 3000,
+          });
+        },
+      });
+    });
   }
 }

@@ -126,6 +126,10 @@
 
       <footer class="song-card__meta">
         <span class="song-card__format">{{ song.format }}</span>
+        <!-- Admin: eliminar canción desde listado -->
+        <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="$event.stopPropagation(); confirmDeleteSong(song)">
+          Eliminar
+        </button>
       </footer>
     </article>
   </div>

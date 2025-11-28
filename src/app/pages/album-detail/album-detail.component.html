@@ -60,6 +60,10 @@
             {{ buttonText }}
           </button>
           <a (click)="navigateToCart()" class="link-go-cart">Ver carrito</a>
+          <!-- Admin: eliminar álbum -->
+          <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteAlbum()">
+            Eliminar álbum
+          </button>
         </div>
       </div>
     </div>
@@ -95,6 +99,7 @@
               <td class="col-plays">{{ track.playCount }}</td>
               <td class="col-action">
                 <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">Reproducir</button>
+                <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteTrack(track, $event)">Eliminar</button>
               </td>
             </tr>
           </tbody>

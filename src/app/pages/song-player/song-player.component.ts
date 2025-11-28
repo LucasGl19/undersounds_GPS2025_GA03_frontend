@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
 import { ArtistsService } from '../../services/artists.service';
 import { SongCard } from '../../models/song-card.model';
@@ -6,10 +6,15 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-song-player',
-  imports: [CommonModule, RouterModule,CommentBoxComponent],
+  imports: [CommonModule, RouterModule, CommentBoxComponent, MatDialogModule, MatSnackBarModule],
   templateUrl: './song-player.component.html',
   styleUrl: './song-player.component.css'
 })
@@ -18,6 +23,12 @@ export class SongPlayerComponent implements OnInit {
   isLoading: boolean = true;
   errorMsg: string = '';
   @ViewChild('audioRef') audioRef!: ElementRef<HTMLAudioElement>;
+  private dialog = inject(MatDialog);
+  private snack = inject(MatSnackBar);
+  private authService = inject(AuthService);
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
   
   constructor(
     private route: ActivatedRoute,
@@ -94,6 +105,25 @@ export class SongPlayerComponent implements OnInit {
       if (artist && this.song) {
         this.song.artist = artist.name || artist.username || this.song.artist;
       }
+    });
+  }
+
+  confirmDeleteSong(): void {
+    const s = this.song;
+    if (!s) return;
+    const ref = this.dialog.open(ConfirmDialogComponent, { data: { name: s.title } });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+      this.songService.deleteTrack(String(s.id)).subscribe({
+        next: () => {
+          this.snack.open('Canción eliminada', undefined, { duration: 2000 });
+          history.length > 1 ? history.back() : location.assign('/songs');
+        },
+        error: (err) => {
+          console.error('Error eliminando canción', err);
+          this.snack.open('No se pudo eliminar la canción', undefined, { duration: 3000 });
+        },
+      });
     });
   }
 }
