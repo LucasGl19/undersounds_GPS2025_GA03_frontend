@@ -90,14 +90,15 @@ export class ArtistsComponent implements OnInit, OnDestroy {
   }
   
   sortBy(criteria: 'name' | 'createdAt') {
-    if (this.isSearching && this.selectedSort === criteria) return;
-    this.selectedSort = criteria;
-    this.triggerReload();
-  }
-
-  toggleSortOrder() {
     if (this.isSearching) return;
-    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+
+    if(this.selectedSort === criteria) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    }
+    else {
+      this.selectedSort = criteria;
+      this.sortOrder = 'asc';
+    }
     this.triggerReload();
   }
 

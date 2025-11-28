@@ -21,11 +21,16 @@
     <div class="search-elements-container">
       <div class="sort-controls">
         <span class="sort-label">Ordenar por:</span>
-        <button (click)="sortBy('name')" [disabled]="isSearching" [ngClass]="{ active: selectedSort === 'name'}">Nombre</button>
-        <button (click)="sortBy('createdAt')" [disabled]="isSearching" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha alta</button>
-        <button class="order-toggle" (click)="toggleSortOrder()" [disabled]="isSearching">
-          {{ sortOrder === 'asc' ? 'Ascendente' : 'Descendente' }}
-        </button>
+
+      <button (click)="sortBy('name')" [disabled]="isSearching" [ngClass]="{ active: selectedSort === 'name'}">
+        Nombre
+        <span *ngIf="selectedSort === 'name'"> {{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
+      </button>
+      <button (click)="sortBy('createdAt')" [disabled]="isSearching" [ngClass]="{ active: selectedSort === 'createdAt'}">
+        Fecha alta
+        <span *ngIf="selectedSort === 'createdAt'">
+          {{ sortOrder === 'asc' ? '↑' : '↓' }} </span>
+      </button>
       </div>
     </div>
   </header>
