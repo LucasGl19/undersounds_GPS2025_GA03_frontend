@@ -25,6 +25,7 @@ export class MerchandisingComponent implements OnInit {
   errorMessage: string | null = null;
 
   selectedSort: 'name' | 'createdAt' | 'price' | null = null;
+  selectedOrder: 'asc' | 'desc' = 'asc';
   searchQuery = '';
 
   private authService = inject(AuthService);
@@ -47,7 +48,10 @@ export class MerchandisingComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.merchService.getMerchItems({ sort: this.selectedSort || undefined }).subscribe({
+    this.merchService.getMerchItems({ 
+      sort: this.selectedSort || undefined,
+      order: this.selectedSort ? this.selectedOrder : undefined
+    }).subscribe({
       next: (response) => {
         this.articles = response.data;
         this.isLoading = false;
@@ -55,7 +59,7 @@ export class MerchandisingComponent implements OnInit {
       },
       error: (err) => {
         console.error('[Merchandising] Error cargando merch', err);
-        this.errorMessage = 'Error cargando productos de merchandising';
+        this.errorMessage = 'Error cargando artículos. Por favor, inténtalo de nuevo más tarde.';
         this.isLoading = false;
       },
     });
@@ -75,7 +79,13 @@ export class MerchandisingComponent implements OnInit {
   }
 
   sortBy(criteria: 'name' | 'price' | 'createdAt') {
-    this.selectedSort = this.selectedSort === criteria ? null : criteria;
+    if (this.selectedSort === criteria) {
+      // Toggle order
+      this.selectedOrder = this.selectedOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.selectedSort = criteria;
+      this.selectedOrder = 'asc';
+    }
     this.loadMerch();
   }
 
