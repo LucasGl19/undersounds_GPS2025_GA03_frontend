@@ -15,12 +15,13 @@ export class CommentsService {
     return this.http.get(`${this.api}/albums/${albumId}/comments`);
   }
 
-  addAlbumComment(albumId: string, text: string, rating: number =5) {
+  addAlbumComment(albumId: string, text: string, rating: number =5, userId: string) {
     return this.http.post(`${this.api}/albums/${albumId}/comments`, {
       targetType: 'album',
       targetId: albumId,
       text,   
-      rating
+      rating,
+      userId
     });
   }
 
@@ -40,12 +41,14 @@ export class CommentsService {
     return this.http.get(`${this.api}/merch/${articleId}/comments`);
   }
 
-  addArticleComment(articleId: string, text: string, rating: number =5) {
+  addArticleComment(articleId: string, text: string, rating: number =5, userId: string) {
     return this.http.post(`${this.api}/merch/${articleId}/comments`,{
       targetType: 'merch',
       targetId: articleId,
       text,
-      rating});
+      rating,
+      userId
+    });
   }
 
   likeComment(commentId: string) {
