@@ -13,7 +13,6 @@ export interface AlbumCreateDto {
   releaseDate?: string | null; // 'YYYY-MM-DD'
   releaseState?: string | null; // 'draft', 'scheduled', 'published', 'archived'
   genres?: string[]; // el backend admite array -> lo normaliza a CSV
-  tags?: string[]; // idem
   // Extras opcionales admitidos por el backend:
   coverUrl?: string; // si lo envías, te crea una Image mínima
   artistId: string; // requerido: ID del usuario autenticado
@@ -70,7 +69,6 @@ export interface AlbumFilters {
   artistId?: string;
   labelId?: string;
   genre?: string;
-  tag?: string;
   releaseState?: string;
   q?: string;
 }

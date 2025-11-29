@@ -69,11 +69,6 @@
     </div>
 
     <div class="form-field">
-      <label for="tags">Tags (coma)</label>
-      <input id="tags" type="text" formControlName="tags" />
-    </div>
-
-    <div class="form-field">
       <label for="coverFile">Portada del álbum (imagen)</label>
       <input id="coverFile" type="file" (change)="onCoverFileChange($event)" accept="image/*" />
       <small *ngIf="coverSelected">Seleccionado: {{ coverSelected.name }}</small>

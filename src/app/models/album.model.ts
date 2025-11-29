@@ -9,6 +9,5 @@ export interface Album {
     currency: string;
     genres: string[];
     cover: string;
-    tags?: string;
     artistName: string;
 }

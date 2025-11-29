@@ -27,7 +27,6 @@ export class AlbumsComponent implements OnInit {
   // Filtros
   searchQuery: string = '';
   selectedGenre: string = '';
-  selectedTag: string = '';
   selectedReleaseState: string = '';
 
   // Paginación
@@ -37,7 +36,6 @@ export class AlbumsComponent implements OnInit {
 
   // Listas para los selects
   availableGenres: string[] = ['Rock', 'Pop', 'Jazz', 'Electronic', 'Hip Hop', 'Classical', 'Folk', 'Metal', 'Reggae', 'Blues', 'Ambient', 'Synthwave', 'Lofi', 'Shoegaze', 'House'];
-  availableTags: string[] = ['indie', 'experimental', 'acoustic', 'live', 'remix', 'instrumental', 'lo-fi', 'ambient', 'chill'];
   availableReleaseStates: string[] = ['draft', 'scheduled', 'published', 'archived'];
 
   // Favorite-related state
@@ -188,7 +186,6 @@ export class AlbumsComponent implements OnInit {
 
     if (this.searchQuery) filters.q = this.searchQuery;
     if (this.selectedGenre) filters.genre = this.selectedGenre;
-    if (this.selectedTag) filters.tag = this.selectedTag;
     if (this.selectedReleaseState) filters.releaseState = this.selectedReleaseState;
 
     return filters;
@@ -207,7 +204,6 @@ export class AlbumsComponent implements OnInit {
   clearFilters() {
     this.searchQuery = '';
     this.selectedGenre = '';
-    this.selectedTag = '';
     this.selectedReleaseState = '';
     this.currentPage = 1;
     this.loadAlbums();
