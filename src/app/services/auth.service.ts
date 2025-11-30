@@ -45,15 +45,44 @@ export interface DeleteAccountResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private loggedIn = new BehaviorSubject<boolean>(!!this.getAccessToken());
+  private loggedIn = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.loggedIn.asObservable();
-  private role = new BehaviorSubject<string | null>(
-    localStorage.getItem('role')
-  );
+  private role = new BehaviorSubject<string | null>(null);
   userRole$ = this.role.asObservable();
 
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.usersApiUrl;
+
+  /**
+   * Initialize auth state on app startup.
+   * If a token exists, validate it against /me. Otherwise ensure clean state.
+   */
+  initialize(): Promise<void> {
+    const token = this.getAccessToken();
+    if (!token) {
+      // No token: ensure logged-out state and clear any stale role
+      this.loggedIn.next(false);
+      this.role.next(null);
+      localStorage.removeItem('role');
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      this.me().subscribe({
+        next: (profile) => {
+          this.loggedIn.next(true);
+          this.role.next(profile.role);
+          localStorage.setItem('role', profile.role);
+          resolve();
+        },
+        error: () => {
+          // Invalid/expired token: clear session and proceed
+          this.clearTokens();
+          resolve();
+        },
+      });
+    });
+  }
 
   register(dto: RegisterDto): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, dto).pipe(

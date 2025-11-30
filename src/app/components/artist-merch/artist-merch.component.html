@@ -2,13 +2,18 @@
     <h3>Merchandising del artista</h3>
     <ng-container *ngIf="!isLoading; else loading">
         <div *ngIf="merchItems.length > 0; else noMerch">
-            <div class="merch-card" *ngFor="let merch of merchItems">
-                <img [src]="merch.cover?.url || 'assets/images/default-merch.png'" [alt]="merch.title" />
-                <h3>{{ merch.title }}</h3>
-                <p *ngIf="merch.createdAt">Lanzamiento: {{ merch.createdAt }}</p>
+            <div class="merch-container">
+                <article class="merch-card" *ngFor="let item of merchItems" (click)="navigateToMerchPage(item.id)">
+                    <img [src]="item.cover?.url || 'assets/images/merch/merch-mug.svg'" [alt]="item.title"
+                        loading="lazy">
+                    <div class="merch-info">
+                        <h3>{{ item.title }}</h3>
+                        <p class="merch-price">{{ (item.priceCents / 100) | currency: item.currency }}</p>
+                        <!-- Adjust price formatting -->
+                    </div>
+                </article>
             </div>
         </div>
-
         <ng-template #noMerch>
             <p>Este artista no tiene merchandising disponible.</p>
         </ng-template>

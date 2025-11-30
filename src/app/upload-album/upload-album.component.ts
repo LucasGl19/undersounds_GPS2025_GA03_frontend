@@ -25,8 +25,8 @@ export class UploadAlbumComponent implements OnInit {
     date: [''],
     price: [null],
     currency: ['EUR'],
+    releaseState: ['draft'],
     genre: ['other'],     // select de un valor → lo convertimos a array
-    tags: [''],           // CSV → lo convertimos a array
     thumbnail: [''],      // mantenemos compatibilidad pero no se usa para upload directo
     coverFile: [null],    // archivo de portada
     labelId: ['']         // opcional
@@ -74,9 +74,9 @@ export class UploadAlbumComponent implements OnInit {
       description: v.description ? String(v.description).trim() || null : null,
       releaseDate: v.date ? String(v.date).trim() || null : null,
       price: v.price ? Number(v.price) : null,
+      releaseState: v.releaseState ? String(v.releaseState).trim() : null,
       currency: v.currency ? String(v.currency).trim() : null,
       genres: v.genre ? [String(v.genre).trim()].filter(Boolean) : [],
-      tags: v.tags ? String(v.tags).split(',').map((s: string) => s.trim()).filter(Boolean) : [],
       artistId: userId,  // Asegurado como string
     };
 

@@ -14,13 +14,17 @@
 
       <div class="album-info">
         <h1 class="album-title">{{ album.title }}</h1>
-        
+        <p class="album-artist" *ngIf="album.artistId">
+          <span>Autor: </span>
+          <a [routerLink]="['/artist', album.artistId]" class="artist-link">{{ album.artistName }}</a>
+        </p>
+
         <div class="album-metadata">
           <span class="metadata-item" *ngIf="album.releaseDate">
             <strong>Lanzamiento:</strong> {{ album.releaseDate }}
           </span>
           <span class="metadata-item" *ngIf="album.price > 0">
-            <strong>Precio:</strong> {{ album.price }} {{ album.currency }}
+            <strong>Precio:</strong> {{ album.price | currency:album.currency }}
           </span>
           <span class="metadata-item" *ngIf="!album.price || album.price === 0">
             <strong>Precio:</strong> Gratis
@@ -28,6 +32,19 @@
           <span class="metadata-item state" [ngClass]="'state-' + album.releaseState">
             {{ album.releaseState }}
           </span>
+          <div class="metadata-item stats">
+            <div class="stats-item">
+              <mat-icon class="mat-icon">play_arrow</mat-icon><span> {{ albumStats?.albumPlays || 0 }} reproducciones
+              </span>
+            </div>
+            <div class="stats-item">
+              <mat-icon class="mat-icon">shopping_cart</mat-icon><span>{{ albumStats?.albumSales || 0 }} ventas</span>
+            </div>
+            <div class="stats-item">
+              <mat-icon class="mat-icon">star_rate</mat-icon><span> {{ albumStats?.albumRate || 0 }} / 5
+                estrellas</span>
+            </div>
+          </div>
         </div>
 
         <div class="album-genres" *ngIf="album.genres && album.genres.length > 0">
@@ -39,10 +56,14 @@
         </p>
 
         <div class="album-actions">
-          <button class="btn-add-cart" (click)="addAlbumToCart()" [disabled]="!album">
-            Añadir al carrito
+          <button class="btn-add-cart" [ngClass]="{ 'added': isInCart }" (click)="addAlbumToCart()" [disabled]="!album">
+            {{ buttonText }}
           </button>
-          <a routerLink="/cart" class="link-go-cart">Ver carrito</a>
+          <a (click)="navigateToCart()" class="link-go-cart">Ver carrito</a>
+          <!-- Admin: eliminar álbum -->
+          <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteAlbum()">
+            Eliminar álbum
+          </button>
         </div>
       </div>
     </div>
@@ -72,21 +93,22 @@
               <td class="col-title">
                 <div class="track-info">
                   <div class="track-title">{{ track.title }}</div>
-                  <div class="track-artist">{{ track.artist }}</div>
                 </div>
               </td>
               <td class="col-duration">{{ formatDuration(track.durationSec) }}</td>
               <td class="col-plays">{{ track.playCount }}</td>
               <td class="col-action">
-                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">
-                  Reproducir
-                </button>
+                <button class="btn-play" (click)="navigateToSongPlayer(track.id); $event.stopPropagation()">Reproducir</button>
+                <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteTrack(track, $event)">Eliminar</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+      <div class="album-comments-wrapper">
+        <app-comment-box  [productId]="album.id.toString()" type="album"></app-comment-box>
+      </div>
   </div>
 </div>
 

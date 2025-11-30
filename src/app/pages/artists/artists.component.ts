@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Artist } from '../../models/artist.model';
 import { ArtistsService } from '../../services/artists.service';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, takeUntil } 
 @Component({
   selector: 'app-artists',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './artists.component.html',
   styleUrl: './artists.component.css',
 })
@@ -89,14 +90,15 @@ export class ArtistsComponent implements OnInit, OnDestroy {
   }
   
   sortBy(criteria: 'name' | 'createdAt') {
-    if (this.isSearching && this.selectedSort === criteria) return;
-    this.selectedSort = criteria;
-    this.triggerReload();
-  }
-
-  toggleSortOrder() {
     if (this.isSearching) return;
-    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+
+    if(this.selectedSort === criteria) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    }
+    else {
+      this.selectedSort = criteria;
+      this.sortOrder = 'asc';
+    }
     this.triggerReload();
   }
 

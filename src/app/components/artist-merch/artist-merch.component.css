@@ -1,27 +1,64 @@
 .artist-merch {
     display: flex;
+    flex-direction: column;
     border: 1px solid var(--border-subtle);
     border-radius: 16px;
     padding: 1.5rem;
-    flex-direction: column;
-    flex-wrap: wrap;
     max-width: 900px;
-    background-color: var(--surface-primary);
+    overflow-x: auto;
+    background-color: #0f172a;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.merch-card {
-    width: 200px;
+.merch-container {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-    color: var(--text-strong);
+    width: 100%;
+    flex-direction: row;
+    gap: 2rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.5rem;
+    scroll-behavior: smooth;
+    flex-wrap: nowrap; 
+
+}
+
+.merch-card {
+    min-width: 180px;
+    max-width: 180px;
+    background: var(--surface-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.merch-card:hover {
+    transform: translateY(-5px);
 }
 
 .merch-card img {
-    width: 100%;
-    border-radius: 8px;
+    height: 75%;
+    aspect-ratio: 1;
     object-fit: cover;
-    border: 1px solid var(--border-subtle);
+}
+
+.merch-info {
+    padding: 1rem;
+}
+
+.merch-info h3 {
+    margin: 0;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-strong);
+}
+
+.merch-price {
+    margin: 0 0;
+    font-weight: bold;
+    color: var(--accent);
 }

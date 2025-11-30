@@ -8,7 +8,7 @@ export interface MerchItem {
   stock?: number;
   sku?: string;
   active?: boolean;
-  artistId?: number | null;
+  artistId?: number | string | null; // backend puede enviar UUID string
   labelId?: number | null;
   coverId?: string | null;
   createdAt: string;

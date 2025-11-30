@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SongCard } from '../models/song-card.model';
 import { ApiService, TrackFilters } from './api.service';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -135,15 +135,23 @@ export class SongsService {
     };
 
     const streamUrl = normalizeUrl(`/tracks/${track.id}/stream`);
+    // Determinar la URL del cover: priorizar coverUrl directo del backend, luego album.cover.url
+    let coverImageUrl = 'assets/images/covers/cover-ambient.svg';
+    if (track.coverUrl) {
+      coverImageUrl = normalizeUrl(track.coverUrl);
+    } else if (track.album?.cover?.url) {
+      coverImageUrl = normalizeUrl(track.album.cover.url);
+    }
+
     const mapped = {
       id: track.id,
       title: track.title || 'Sin título',
-      artist: track.album?.artist?.name || track.album?.artistId || 'Artista desconocido',
-      artistId: track.album?.artistId ? parseInt(track.album.artistId) : 0,
+      artist: 'Artista desconocido', // Se resolverá luego con ArtistsService si hay artistId
+      artistId: track.album?.artistId || '',
       description: track.album?.description || 'Sin descripción',
       format: 'Streaming digital',
       price: track.album?.price ? `${track.album.price} ${track.album.currency || 'EUR'}` : 'Gratis',
-      image: track.album?.cover?.url ? normalizeUrl(track.album.cover.url) : 'assets/images/covers/cover-ambient.svg',
+      image: coverImageUrl,
       // Usar SIEMPRE el endpoint de streaming del backend
       audio: streamUrl,
       durationSec: track.durationSec || 0,
@@ -160,14 +168,6 @@ export class SongsService {
       playCount: track.stats?.playCount || 0,
     };
     
-    // Log para debug
-    if (track.audio) {
-      console.log(`🎵 Track "${mapped.title}" tiene audio:`, track.audio);
-      console.log(`   Mapeado a: ${mapped.audio}`);
-    } else {
-      console.warn(`⚠️ Track "${mapped.title}" NO tiene objeto audio`, track);
-    }
-    
     return mapped;
   }
 
@@ -179,7 +179,7 @@ export class SongsService {
     return this.songs.find(song => song.id === id);
   }
 
-  // Obtener canción individual del backend por ID
+  // Obtener canción individual del backend por ID (resolviendo nombre de artista aparte)
   getTrackByIdFromBackend(trackId: string): Observable<SongCard> {
     return this.apiService.getTrackById(trackId).pipe(
       map(response => this.mapBackendTrackToSongCard(response.data))
@@ -190,6 +190,17 @@ export class SongsService {
   updateTrack(trackId: number | string, body: Partial<SongCard>) {
     return this.apiService.updateTrack(String(trackId), body).pipe(
       map((resp: any) => this.mapBackendTrackToSongCard(resp.data))
+    );
+  }
+
+  // Eliminar pista (intenta en backend; si se usa el mock local, la elimina de la lista local)
+  deleteTrack(trackId: number | string) {
+    return this.apiService.deleteTrack(String(trackId)).pipe(
+      map(() => {
+        // Si trabajamos con datos mock, eliminar del array local
+        this.songs = this.songs.filter(s => String(s.id) !== String(trackId));
+        return;
+      })
     );
   }
 

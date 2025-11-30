@@ -4,13 +4,13 @@
         <div *ngIf="albums.length > 0; else noAlbums">
             <div class="albums-container">
 
-                <div class="album-card" *ngFor="let album of albums" (click)="navigateToAlbumDetail(album.id)">
-                    <h4>{{ album.title }}</h4>
-                    <p class="album-description">{{album.description}}</p>
-                    <span class="album-price">{{ album.price | currency:album.currency }}</span>
-                    <span class="album-tags">{{ album.genres }}</span>
-                    <p *ngIf="album.releaseDate" class="album-release-date">{{ album.releaseDate }}</p>
-                </div>
+                <article class="album-card" *ngFor="let album of albums" (click)="navigateToAlbumPage(album.id)">
+                    <img [src]="album.cover" [alt]="album.title" loading="lazy">
+                    <div class="album-info">
+                        <h3>{{ album.title }}</h3>
+                        <p>{{ album.releaseDate }}</p>
+                    </div>
+                </article>
             </div>
         </div>
 

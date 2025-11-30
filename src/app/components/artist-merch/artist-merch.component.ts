@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MerchItem } from '../../models/merch-item.model';
 import { MerchService } from '../../services/merch.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-artist-merch',
@@ -14,6 +15,7 @@ export class ArtistMerchComponent {
   merchItems: MerchItem[] = [];
   isLoading: boolean = true;
   errorMsg: string = '';
+  private router = inject(Router);
 
   constructor(private merchService: MerchService) {}
 
@@ -35,5 +37,9 @@ export class ArtistMerchComponent {
         this.isLoading = false;
       },
     });
+  }
+
+  navigateToMerchPage(merchId: string) {
+    this.router.navigate(['/merchandising', merchId]);
   }
 }

@@ -1,13 +1,20 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
+import { ArtistsService } from '../../services/artists.service';
 import { SongCard } from '../../models/song-card.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-song-player',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './song-player.component.html',
   styleUrl: './song-player.component.css'
 })
@@ -16,8 +23,19 @@ export class SongPlayerComponent implements OnInit {
   isLoading: boolean = true;
   errorMsg: string = '';
   @ViewChild('audioRef') audioRef!: ElementRef<HTMLAudioElement>;
+  private dialog = inject(MatDialog);
+  private snack = inject(MatSnackBar);
+  private authService = inject(AuthService);
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
   
-  constructor(private route: ActivatedRoute, private songService: SongsService, private api: ApiService){}
+  constructor(
+    private route: ActivatedRoute,
+    private songService: SongsService,
+    private api: ApiService,
+    private artistsService: ArtistsService
+  ){}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -28,14 +46,12 @@ export class SongPlayerComponent implements OnInit {
       if (!isNaN(numericId) && numericId > 0 && numericId < 1000) {
         this.song = this.songService.getSongById(numericId);
         if (this.song) {
-          console.log('🎵 Canción encontrada en mock:', this.song);
           this.isLoading = false;
           return;
         }
       }
       
       // Si no es un número o no se encontró en mock, cargar desde backend
-      console.log('🌐 Cargando canción desde backend, ID:', id);
       this.loadSongFromBackend(id);
     } else {
       this.errorMsg = 'ID de canción no válido';
@@ -49,6 +65,7 @@ export class SongPlayerComponent implements OnInit {
       next: (song) => {
         this.song = song;
         this.isLoading = false;
+        this.resolveArtistName();
       },
       error: (error) => {
         console.error('Error al cargar la canción desde el backend:', error);
@@ -75,5 +92,38 @@ export class SongPlayerComponent implements OnInit {
         error: (e) => console.warn('No se pudieron refrescar las estadísticas:', e)
       });
     }, 250);
+  }
+
+  private resolveArtistName(): void {
+    if (!this.song) return;
+    if (this.song.artist && this.song.artist !== 'Artista desconocido') return;
+    const artistId = this.song.artistId;
+    if (!artistId) return;
+    // Si el artistId no es numérico, asumimos que backend de usuarios no puede resolverlo todavía
+    if (typeof artistId === 'string' && !/^\d+$/.test(artistId)) return; 
+    this.artistsService.getArtistById(String(artistId)).subscribe(artist => {
+      if (artist && this.song) {
+        this.song.artist = artist.name || artist.username || this.song.artist;
+      }
+    });
+  }
+
+  confirmDeleteSong(): void {
+    const s = this.song;
+    if (!s) return;
+    const ref = this.dialog.open(ConfirmDialogComponent, { data: { name: s.title } });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+      this.songService.deleteTrack(String(s.id)).subscribe({
+        next: () => {
+          this.snack.open('Canción eliminada', undefined, { duration: 2000 });
+          history.length > 1 ? history.back() : location.assign('/songs');
+        },
+        error: (err) => {
+          console.error('Error eliminando canción', err);
+          this.snack.open('No se pudo eliminar la canción', undefined, { duration: 3000 });
+        },
+      });
+    });
   }
 }

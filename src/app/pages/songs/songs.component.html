@@ -1,13 +1,8 @@
 <section class="songs-page">
   <!-- Barra de búsqueda -->
   <div class="search-bar" role="search">
-    <input 
-      type="search" 
-      placeholder="Buscar canciones" 
-      (keyup.enter)="searchSongs()" 
-      [(ngModel)]="searchQuery" 
-      aria-label="Buscar canciones" 
-    />
+    <input type="search" placeholder="Buscar canciones" (keyup.enter)="searchSongs()" [(ngModel)]="searchQuery"
+      aria-label="Buscar canciones" />
     <button (click)="searchSongs()" type="button" aria-label="Botón de buscar">buscar</button>
   </div>
 
@@ -18,17 +13,17 @@
 
   <header class="songs-page__header">
     <h1>Lanzamientos destacados</h1>
-    
-      <!-- Indicador de fuente de datos (solo en modo debug) -->
-      <div *ngIf="showDebugInfo" class="data-source-indicator" [ngClass]="dataSource">
-        <span *ngIf="dataSource === 'backend'" class="badge badge-backend">
-          🌐 Conectado al Backend
-        </span>
-        <span *ngIf="dataSource === 'mock'" class="badge badge-mock">
-          📦 Datos de Prueba (Mock)
-        </span>
-      </div>
-    
+
+    <!-- Indicador de fuente de datos (solo en modo debug) -->
+    <div *ngIf="showDebugInfo" class="data-source-indicator" [ngClass]="dataSource">
+      <span *ngIf="dataSource === 'backend'" class="badge badge-backend">
+        🌐 Conectado al Backend
+      </span>
+      <span *ngIf="dataSource === 'mock'" class="badge badge-mock">
+        📦 Datos de Prueba (Mock)
+      </span>
+    </div>
+
     <p>
       Una selección curada de nuevos álbumes, demos y joyas escondidas de la
       comunidad independiente.
@@ -40,12 +35,7 @@
         <!-- Género -->
         <div class="filter-group">
           <label for="genre-select">Género:</label>
-          <select 
-            id="genre-select" 
-            [(ngModel)]="selectedGenre" 
-            (change)="applyFilters()"
-            class="filter-select"
-          >
+          <select id="genre-select" [(ngModel)]="selectedGenre" (change)="applyFilters()" class="filter-select">
             <option value="">Todos</option>
             <option *ngFor="let genre of availableGenres" [value]="genre">{{ genre }}</option>
           </select>
@@ -54,55 +44,27 @@
         <!-- Tag -->
         <div class="filter-group">
           <label for="tag-select">Etiqueta:</label>
-          <select 
-            id="tag-select" 
-            [(ngModel)]="selectedTag" 
-            (change)="applyFilters()"
-            class="filter-select"
-          >
+          <select id="tag-select" [(ngModel)]="selectedTag" (change)="applyFilters()" class="filter-select">
             <option value="">Todas</option>
             <option *ngFor="let tag of availableTags" [value]="tag">{{ tag }}</option>
           </select>
         </div>
 
-        <!-- Idioma -->
-        <div class="filter-group">
-          <label for="language-select">Idioma:</label>
-          <select 
-            id="language-select" 
-            [(ngModel)]="selectedLanguage" 
-            (change)="applyFilters()"
-            class="filter-select"
-          >
-            <option value="">Todos</option>
-            <option *ngFor="let lang of availableLanguages" [value]="lang">{{ lang }}</option>
-          </select>
-        </div>
+
       </div>
 
       <div class="filters-row">
         <!-- Fecha desde -->
         <div class="filter-group">
           <label for="released-from">Publicado desde:</label>
-          <input 
-            id="released-from"
-            type="date" 
-            [(ngModel)]="releasedFrom" 
-            (change)="applyFilters()"
-            class="filter-input"
-          />
+          <input id="released-from" type="date" [(ngModel)]="releasedFrom" (change)="applyFilters()"
+            class="filter-input" />
         </div>
 
         <!-- Fecha hasta -->
         <div class="filter-group">
           <label for="released-to">Publicado hasta:</label>
-          <input 
-            id="released-to"
-            type="date" 
-            [(ngModel)]="releasedTo" 
-            (change)="applyFilters()"
-            class="filter-input"
-          />
+          <input id="released-to" type="date" [(ngModel)]="releasedTo" (change)="applyFilters()" class="filter-input" />
         </div>
       </div>
 
@@ -116,31 +78,22 @@
 
     <!-- Etiquetas de ordenación -->
     <div class="sort-tags">
-      <button 
-        (click)="sortBy('title')" 
-        [ngClass]="{ 
+      <button (click)="sortBy('title')" [ngClass]="{ 
           active: selectedSort === 'title',
           'desc': selectedSort === 'title' && selectedOrder === 'desc'
-        }"
-      >
+        }">
         Título {{ selectedSort === 'title' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
       </button>
-      <button 
-        (click)="sortBy('durationSec')" 
-        [ngClass]="{
+      <button (click)="sortBy('durationSec')" [ngClass]="{
           active: selectedSort === 'durationSec',
           'desc': selectedSort === 'durationSec' && selectedOrder === 'desc'
-        }"
-      >
+        }">
         Duración {{ selectedSort === 'durationSec' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
       </button>
-      <button 
-        (click)="sortBy('playCount')" 
-        [ngClass]="{
+      <button (click)="sortBy('playCount')" [ngClass]="{
           active: selectedSort === 'playCount',
           'desc': selectedSort === 'playCount' && selectedOrder === 'desc'
-        }"
-      >
+        }">
         Reproducciones {{ selectedSort === 'playCount' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
       </button>
     </div>
@@ -160,7 +113,6 @@
 
       <div class="song-card__body">
         <h3>{{ song.title }}</h3>
-        <p class="song-card__artist">{{ song.artist }}</p>
         <p class="song-card__description">{{ song.description }}</p>
         <div class="song-card__metadata" *ngIf="song.genre || song.language">
           <span *ngIf="song.genre" class="metadata-tag">{{ song.genre }}</span>
@@ -174,6 +126,10 @@
 
       <footer class="song-card__meta">
         <span class="song-card__format">{{ song.format }}</span>
+        <!-- Admin: eliminar canción desde listado -->
+        <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="$event.stopPropagation(); confirmDeleteSong(song)">
+          Eliminar
+        </button>
       </footer>
     </article>
   </div>
@@ -186,19 +142,11 @@
 
   <!-- Paginación (solo cuando se usa backend) -->
   <div *ngIf="useBackend && !isLoading" class="pagination">
-    <button 
-      (click)="prevPage()" 
-      [disabled]="currentPage === 1"
-      class="pagination-btn"
-    >
+    <button (click)="prevPage()" [disabled]="currentPage === 1" class="pagination-btn">
       ← Anterior
     </button>
     <span class="pagination-info">Página {{ currentPage }} de {{ totalPages }}</span>
-    <button 
-      (click)="nextPage()" 
-      [disabled]="currentPage === totalPages"
-      class="pagination-btn"
-    >
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="pagination-btn">
       Siguiente →
     </button>
   </div>

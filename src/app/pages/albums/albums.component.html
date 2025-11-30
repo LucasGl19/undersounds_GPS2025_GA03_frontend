@@ -51,20 +51,6 @@
           </select>
         </div>
 
-        <!-- Tag -->
-        <div class="filter-group">
-          <label for="tag-select">Etiqueta:</label>
-          <select 
-            id="tag-select" 
-            [(ngModel)]="selectedTag" 
-            (change)="applyFilters()"
-            class="filter-select"
-          >
-            <option value="">Todas</option>
-            <option *ngFor="let tag of availableTags" [value]="tag">{{ tag }}</option>
-          </select>
-        </div>
-
         <!-- Estado -->
         <div class="filter-group">
           <label for="release-state-select">Estado:</label>

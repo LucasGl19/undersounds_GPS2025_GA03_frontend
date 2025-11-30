@@ -8,23 +8,39 @@ export interface ArtistStats {
   totalPlays: number;
 }
 
+export interface AlbumStats {
+  albumPlays: number;
+  albumSales: number;
+  albumRate: number;
+}
+
+export interface MerchStats {
+  merchSales: number;
+  merchRate: number;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StatsService {
-
   private apiUrl = `${environment.statsApiUrl}/v1/stats`;
 
-   dummyStats = {
-      totalSales: 1240,
-      totalPlays: 58700
-    };
-    
+  dummyStats = {
+    totalSales: 1240,
+    totalPlays: 58700,
+  };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getArtistStats(artistId: string): Observable<ArtistStats> {
     return this.http.get<ArtistStats>(`${this.apiUrl}/artist/${artistId}`);
   }
-  
+
+  getAlbumStats(albumId: string): Observable<AlbumStats> {
+    return this.http.get<any>(`${this.apiUrl}/album/${albumId}`);
+  }
+
+  getMerchStats(merchId: string): Observable<MerchStats> {
+    return this.http.get<MerchStats>(`${this.apiUrl}/merch/${merchId}`);
+  }
 }

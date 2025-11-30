@@ -21,11 +21,16 @@
     <div class="search-elements-container">
       <div class="sort-controls">
         <span class="sort-label">Ordenar por:</span>
-        <button (click)="sortBy('name')" [disabled]="isSearching" [ngClass]="{ active: selectedSort === 'name'}">Nombre</button>
-        <button (click)="sortBy('createdAt')" [disabled]="isSearching" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha alta</button>
-        <button class="order-toggle" (click)="toggleSortOrder()" [disabled]="isSearching">
-          {{ sortOrder === 'asc' ? 'Ascendente' : 'Descendente' }}
-        </button>
+
+      <button (click)="sortBy('name')" [disabled]="isSearching" [ngClass]="{ active: selectedSort === 'name'}">
+        Nombre
+        <span *ngIf="selectedSort === 'name'"> {{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
+      </button>
+      <button (click)="sortBy('createdAt')" [disabled]="isSearching" [ngClass]="{ active: selectedSort === 'createdAt'}">
+        Fecha alta
+        <span *ngIf="selectedSort === 'createdAt'">
+          {{ sortOrder === 'asc' ? '↑' : '↓' }} </span>
+      </button>
       </div>
     </div>
   </header>
@@ -40,7 +45,7 @@
     <h2 *ngIf="searchQuery">Resultados de búsqueda ({{ backendArtists.length }})</h2>
     <h2 *ngIf="!searchQuery">Artistas ({{ backendArtists.length }})</h2>
     <div class="artist-grid">
-      <article class="artist-card" *ngFor="let artist of backendArtists">
+      <article class="artist-card" *ngFor="let artist of backendArtists" [routerLink]="['/artist', artist.id]">
         <img
           [src]="artist.avatarUrl || 'assets/images/artists/default-artist.svg'"
           [alt]="'Perfil de ' + artist.username"
@@ -62,7 +67,7 @@
   
   <!-- Fallback a artistas locales si el backend falla y no hay búsqueda -->
   <div class="artist-grid" *ngIf="!isSearching && backendArtists.length === 0 && !searchQuery && artists.length > 0">
-    <article class="artist-card" *ngFor="let artist of artists">
+    <article class="artist-card" *ngFor="let artist of artists" [routerLink]="['/artist', artist.id]">
       <img
         [src]="artist.image"
         [alt]="'Retrato de ' + artist.name"

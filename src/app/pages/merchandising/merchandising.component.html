@@ -4,8 +4,24 @@
     <p>Apoya directamente a los artistas con ediciones limitadas y objetos únicos.</p>
 
     <div class="sort-tags">
-      <button (click)="sortBy('name')" [ngClass]="{ active: selectedSort === 'name'}">Título</button>
-      <button (click)="sortBy('createdAt')" [ngClass]="{active: selectedSort === 'createdAt' }">Fecha</button>
+      <button (click)="sortBy('name')" [ngClass]="{ 
+          active: selectedSort === 'name',
+          'desc': selectedSort === 'name' && selectedOrder === 'desc'
+        }">
+        Título {{ selectedSort === 'name' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sortBy('createdAt')" [ngClass]="{
+          active: selectedSort === 'createdAt',
+          'desc': selectedSort === 'createdAt' && selectedOrder === 'desc'
+        }">
+        Fecha {{ selectedSort === 'createdAt' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sortBy('price')" [ngClass]="{
+          active: selectedSort === 'price',
+          'desc': selectedSort === 'price' && selectedOrder === 'desc'
+        }">
+        Precio {{ selectedSort === 'price' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
     </div>
 
     <button 
@@ -42,7 +58,7 @@
       </div>
 
       <footer class="merch-card__meta">
-        <span class="merch-card__price">{{ (item.priceCents / 100) | number:'1.2-2' }} {{ item.currency || 'EUR' }}</span>
+        <span class="merch-card__price">{{ (item.priceCents / 100) | currency: 'EUR' }}</span>
         <button type="button" class="btn-add-cart" (click)="toggleCart(item, $event)"
             [disabled]="item.stock !== undefined && item.stock === 0" [ngClass]="{ 'in-cart': isInCart(item.id) }"> 
             {{ isInCart(item.id) ? 'En el carrito' : 'Añadir al carrito' }}</button>

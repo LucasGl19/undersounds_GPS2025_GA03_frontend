@@ -6,10 +6,10 @@ h1 {
 }
 
 .merch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.5rem;
-  padding: 0 1.5rem;
+  padding-left: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
 .merch-card {
@@ -20,13 +20,14 @@ h1 {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: transform .25s ease;
-  max-width: 300px;
+  width: 300px;
 }
 
 .merch-card__image img {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .merch-card__body {
@@ -49,29 +50,77 @@ h1 {
 
 .edit-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--surface-primary);
-  border: none;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .edit-btn img {
-  width: 24px;
-  height: 24px;
-  filter: invert(1); /* Invert icon color for dark mode if it's black */
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
 }
 
 .edit-btn:hover {
-    transform: translateY(-2px);
-    background-color: var(--surface-secondary);
+  transform: translateY(-2px) scale(1.05);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.edit-btn:hover img {
+  opacity: 1;
+}
+
+/* Delete button: small, bottom-right, integrated look */
+.delete-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transition: transform .12s ease, background-color .12s ease, opacity .12s ease;
+  z-index: 4;
+}
+
+.delete-btn img {
+  width: 14px;
+  height: 14px;
+  filter: invert(1) opacity(.95);
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: rgba(0,0,0,0.22);
+}
+
+/* Make sure the image doesn't cover the bottom-right controls */
+.merch-card__image {
+  position: relative;
+}
+
+/* Slightly reduce spacing in the body so the delete button feels attached */
+.merch-card__body {
+  padding: 0.8rem 1rem 1.2rem 1rem;
 }
 
 .modal-backdrop {

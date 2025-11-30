@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ExploreComponent } from './pages/explore/explore.component';
 import { SongsComponent } from './pages/songs/songs.component';
 import { AlbumsComponent } from './pages/albums/albums.component';
 import { AlbumDetailComponent } from './pages/album-detail/album-detail.component';
@@ -27,22 +28,24 @@ import { UserFavoritesComponent } from './pages/user-favorites/user-favorites.co
 import { UploadMerchComponent } from './upload-merch/upload-merch.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { OrderConfirmationComponent } from './pages/order-confirmation/order-confirmation.component';
+import { ArtistDetailComponent } from './pages/artist-detail/artist-detail.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutBasicoComponent,
     children: [
-      { path: '', redirectTo: 'songs', pathMatch: 'full' },
+      { path: '', component: ExploreComponent },
       { path: 'songs', component: SongsComponent },
       { path: 'albums', component: AlbumsComponent },
       { path: 'album/:id', component: AlbumDetailComponent },
       { path: 'artists', component: ArtistsComponent },
+      { path: 'artist/:id', component: ArtistDetailComponent },
       { path: 'merchandising', component: MerchandisingComponent },
       { path: 'merchandising/:id', component: MerchDetailComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'home', component: EmptyComponent },
+      { path: 'home', redirectTo: '', pathMatch: 'full' },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'order-confirmation', component: OrderConfirmationComponent },
