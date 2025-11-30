@@ -1,0 +1,254 @@
+<section class="checkout-page">
+  <div class="checkout-container">
+    <!-- Encabezado -->
+    <header class="checkout-header">
+      <h1>Finalizar compra</h1>
+      <button type="button" class="btn-back" (click)="cancelCheckout()">
+        ← Volver al carrito
+      </button>
+    </header>
+
+    <div class="checkout-content">
+      <!-- Formulario de checkout -->
+      <div class="checkout-form-section">
+        <form [formGroup]="checkoutForm" (ngSubmit)="processPayment()">
+          <!-- Datos de envío -->
+          <section class="form-section">
+            <h2>Datos de envío</h2>
+            
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="fullName">Nombre completo *</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  formControlName="fullName"
+                  placeholder="Juan Pérez"
+                  [class.error]="checkoutForm.get('fullName')?.invalid && checkoutForm.get('fullName')?.touched"
+                />
+                <span class="error-message" *ngIf="checkoutForm.get('fullName')?.hasError('required') && checkoutForm.get('fullName')?.touched">
+                  El nombre es obligatorio
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                  placeholder="tu@email.com"
+                  [class.error]="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched"
+                />
+                <span class="error-message" *ngIf="checkoutForm.get('email')?.hasError('email') && checkoutForm.get('email')?.touched">
+                  Email inválido
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Teléfono *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  formControlName="phone"
+                  placeholder="612345678"
+                  [class.error]="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched"
+                />
+                <span class="error-message" *ngIf="checkoutForm.get('phone')?.hasError('pattern') && checkoutForm.get('phone')?.touched">
+                  Formato de teléfono inválido
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="address">Dirección *</label>
+                <input
+                  type="text"
+                  id="address"
+                  formControlName="address"
+                  placeholder="Calle Principal, 123, 2º A"
+                  [class.error]="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Ciudad *</label>
+                <input
+                  type="text"
+                  id="city"
+                  formControlName="city"
+                  placeholder="Madrid"
+                  [class.error]="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="postalCode">Código Postal *</label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  formControlName="postalCode"
+                  placeholder="28001"
+                  [class.error]="checkoutForm.get('postalCode')?.invalid && checkoutForm.get('postalCode')?.touched"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="country">País *</label>
+                <select id="country" formControlName="country">
+                  <option value="España">España</option>
+                  <option value="Portugal">Portugal</option>
+                  <option value="Francia">Francia</option>
+                  <option value="Italia">Italia</option>
+                  <option value="Alemania">Alemania</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Método de pago -->
+          <section class="form-section">
+            <h2>Método de pago</h2>
+            
+            <div class="payment-methods">
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="card" />
+                <span class="payment-method-content">
+                  <img src="assets/images/ui/credit-card-logo.svg" alt="Tarjeta" class="payment-logo" />
+                  <span>Tarjeta de crédito/débito</span>
+                </span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="paypal" />
+                <span class="payment-method-content">
+                  <img src="assets/images/ui/paypal-logo.svg" alt="PayPal" class="payment-logo" />
+                  <span>PayPal</span>
+                </span>
+              </label>
+            </div>
+
+            <!-- Datos de tarjeta (solo si es tarjeta) -->
+            <div class="card-details" *ngIf="checkoutForm.get('paymentMethod')?.value === 'card'">
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="cardNumber">Número de tarjeta</label>
+                  <input
+                    type="text"
+                    id="cardNumber"
+                    formControlName="cardNumber"
+                    placeholder="1234 5678 9012 3456"
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="cardName">Nombre en la tarjeta</label>
+                  <input
+                    type="text"
+                    id="cardName"
+                    formControlName="cardName"
+                    placeholder="JUAN PEREZ"
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="cardExpiry">Fecha expiración</label>
+                  <input
+                    type="text"
+                    id="cardExpiry"
+                    formControlName="cardExpiry"
+                    placeholder="12/25"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="cardCVV">CVV</label>
+                  <input
+                    type="text"
+                    id="cardCVV"
+                    formControlName="cardCVV"
+                    placeholder="123"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="payment-info" *ngIf="checkoutForm.get('paymentMethod')?.value === 'paypal'">
+              <p>Serás redirigido a PayPal para completar el pago de forma segura.</p>
+            </div>
+          </section>
+
+          <!-- Términos y condiciones -->
+          <section class="form-section">
+            <div class="form-group checkbox-group">
+              <label>
+                <input type="checkbox" formControlName="acceptTerms" />
+                <span>
+                  Acepto los <a href="/terms" target="_blank">términos y condiciones</a> 
+                  y la <a href="/privacy" target="_blank">política de privacidad</a> *
+                </span>
+              </label>
+            </div>
+          </section>
+
+          <!-- Mensajes de error -->
+          <div class="alert alert-error" *ngIf="error">
+            {{ error }}
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="cancelCheckout()" [disabled]="isProcessing">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="!isFormValid">
+              <span *ngIf="!isProcessing">Confirmar y pagar {{ total | number:'1.2-2' }} €</span>
+              <span *ngIf="isProcessing">Procesando...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Resumen del pedido -->
+      <aside class="order-summary">
+        <h2>Resumen del pedido</h2>
+        
+        <div class="summary-items">
+          <div class="summary-item" *ngFor="let item of cartItems">
+            <img [src]="item.image" [alt]="item.name" />
+            <div class="item-details">
+              <h4>{{ item.name }}</h4>
+              <p>{{ item.price | number:'1.2-2' }} € × {{ item.quantity }}</p>
+            </div>
+            <div class="item-total">
+              {{ (item.price * item.quantity) | number:'1.2-2' }} €
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span>{{ subtotal | number:'1.2-2' }} €</span>
+          </div>
+          <div class="summary-line">
+            <span>Envío</span>
+            <span>{{ shippingCost | number:'1.2-2' }} €</span>
+          </div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span>{{ total | number:'1.2-2' }} €</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

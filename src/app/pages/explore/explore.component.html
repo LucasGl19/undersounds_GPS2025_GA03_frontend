@@ -1,0 +1,80 @@
+<div class="explore-container">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Descubre tu próxima obsesión musical</h1>
+      <p>Explora nuevos lanzamientos, artistas emergentes y las canciones más escuchadas de la comunidad.</p>
+      <div class="hero-actions">
+        <a routerLink="/songs" class="btn btn-primary">Explorar Canciones</a>
+        <a routerLink="/artists" class="btn btn-secondary">Ver Artistas</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="abstract-shape"></div>
+    </div>
+  </section>
+
+  <!-- New Releases Section -->
+  <section class="section" *ngIf="newAlbums.length > 0">
+    <div class="section-header">
+      <h2>Nuevos Lanzamientos</h2>
+      <a routerLink="/albums" class="see-all">Ver todos</a>
+    </div>
+    <div class="grid-albums">
+      <div class="card album-card" *ngFor="let album of newAlbums" [routerLink]="['/album', album.id]">
+        <div class="card-image">
+          <img [src]="album.coverUrl || 'assets/images/default-album.png'" [alt]="album.title" onerror="this.src='assets/images/default-album.png'">
+          <div class="play-overlay">
+            <i class="play-icon">▶</i>
+          </div>
+        </div>
+        <div class="card-info">
+          <h3>{{ album.title }}</h3>
+          <p>{{ album.artistName || 'Artista' }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Tracks Section -->
+  <section class="section" *ngIf="topTracks.length > 0">
+    <div class="section-header">
+      <h2>Tendencias</h2>
+      <a routerLink="/songs" class="see-all">Ver todas</a>
+    </div>
+    <div class="list-tracks">
+      <div class="track-row" *ngFor="let track of topTracks; let i = index">
+        <div class="track-rank">{{ i + 1 }}</div>
+        <div class="track-info">
+          <div class="track-title">{{ track.title }}</div>
+          <div class="track-artist">{{ track.artistName || 'Artista' }}</div>
+        </div>
+        <div class="track-stats">
+          <span class="play-count">🎧 {{ track.playCount || 0 }}</span>
+        </div>
+        <div class="track-actions">
+           <a [routerLink]="['/song-player', track.id]" class="btn-icon">▶</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Artists Section -->
+  <section class="section" *ngIf="featuredArtists.length > 0">
+    <div class="section-header">
+      <h2>Artistas Destacados</h2>
+      <a routerLink="/artists" class="see-all">Ver todos</a>
+    </div>
+    <div class="grid-artists">
+      <div class="card artist-card" *ngFor="let artist of featuredArtists" [routerLink]="['/artist', artist.id]">
+        <div class="artist-image">
+          <img [src]="artist.image || artist.avatarUrl || 'assets/images/artists/default-artist.svg'" [alt]="artist.name" onerror="this.src='assets/images/artists/default-artist.svg'">
+        </div>
+        <div class="artist-info">
+          <h3>{{ artist.name }}</h3>
+          <p>{{ artist.genre || 'Artista' }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

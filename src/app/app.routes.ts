@@ -1,0 +1,74 @@
+import { Routes } from '@angular/router';
+import { ExploreComponent } from './pages/explore/explore.component';
+import { SongsComponent } from './pages/songs/songs.component';
+import { AlbumsComponent } from './pages/albums/albums.component';
+import { AlbumDetailComponent } from './pages/album-detail/album-detail.component';
+import { LayoutBasicoComponent } from './layouts/layout-basico/layout-basico.component';
+import { EmptyComponent } from './pages/empty/empty.component';
+import { ArtistsComponent } from './pages/artists/artists.component';
+import { CartComponent } from './pages/cart/cart.component';
+import { MerchandisingComponent } from './pages/merchandising/merchandising.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { AboutComponent } from './pages/about/about.component';
+import { HelpComponent } from './pages/help/help.component';
+import { TermsComponent } from './pages/terms/terms.component';
+import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { RegisterComponent } from './pages/register/register.component';
+
+import { LoginComponent } from './pages/login/login.component';
+import { UserDashboardComponent } from './pages/user-dashboard/user-dashboard.component';
+import { SongPlayerComponent } from './pages/song-player/song-player.component';
+import { ModifyMerchComponent } from './pages/modify-merch/modify-merch.component';
+import { ModifyCreationsComponent } from './modify-creations/modify-creations.component';
+
+import { UploadSongComponent } from './upload-song/upload-song.component';
+import { UploadAlbumComponent } from './upload-album/upload-album.component';
+import { MerchDetailComponent } from './pages/merch-detail/merch-detail.component';
+import { UserFavoritesComponent } from './pages/user-favorites/user-favorites.component';
+import { UploadMerchComponent } from './upload-merch/upload-merch.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { OrderConfirmationComponent } from './pages/order-confirmation/order-confirmation.component';
+import { ArtistDetailComponent } from './pages/artist-detail/artist-detail.component';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: LayoutBasicoComponent,
+    children: [
+      { path: '', component: ExploreComponent },
+      { path: 'songs', component: SongsComponent },
+      { path: 'albums', component: AlbumsComponent },
+      { path: 'album/:id', component: AlbumDetailComponent },
+      { path: 'artists', component: ArtistsComponent },
+      { path: 'artist/:id', component: ArtistDetailComponent },
+      { path: 'merchandising', component: MerchandisingComponent },
+      { path: 'merchandising/:id', component: MerchDetailComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'home', redirectTo: '', pathMatch: 'full' },
+      { path: 'cart', component: CartComponent },
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'order-confirmation', component: OrderConfirmationComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'help', component: HelpComponent },
+      { path: 'terms', component: TermsComponent },
+      { path: 'privacy', component: PrivacyComponent },
+
+      { path: 'login', component: LoginComponent },
+      { path: 'admin/dashboard', component: UserDashboardComponent },
+      { path: 'user-dashboard', component: UserDashboardComponent },
+      { path: 'song-player/:id', component: SongPlayerComponent },
+      { path : 'modify-merch', component: ModifyMerchComponent},
+      { path: 'modify-creations', component: ModifyCreationsComponent},
+
+      { path: 'upload-song', component: UploadSongComponent },
+      {path: 'upload-album', component: UploadAlbumComponent},
+      {path: 'user-favorites', component: UserFavoritesComponent },
+      {path: 'upload-merch', component: UploadMerchComponent},
+
+      // Fallback
+      { path: '**', redirectTo: 'songs' }
+
+    ],
+  },
+];

@@ -1,0 +1,54 @@
+<section class="favorites-section">
+  <h1>Mis favoritos de álbumes</h1>
+  <div *ngIf="favAlbums.length > 0; else noAlbumFavorites" class="merch-grid">
+    <article class="merch-card" *ngFor="let fav of favAlbums">
+      <figure class="merch-card__cover">
+           <img [src]="getImageUrl(fav)"
+             [alt]="'Portada de ' + (fav.album?.title || fav.targetId)" loading="lazy" />
+      </figure>
+      <div class="merch-card__body">
+        <h3>{{ fav.album?.title || ('Álbum ' + fav.targetId) }}</h3>
+        <p class="merch-card__description">{{ fav.album?.description || '' }}</p>
+        <div class="merch-card__metadata">
+          <ng-container *ngIf="fav.album?.genres">
+            <span class="metadata-tag" *ngFor="let g of fav.album.genres">{{ g }}</span>
+          </ng-container>
+          <span *ngIf="fav.album?.releaseState" class="metadata-tag">{{ fav.album.releaseState }}</span>
+        </div>
+      </div>
+      <footer class="merch-card__meta">
+        <span class="merch-card__price">{{ (fav.album?.price || 0) | number:'1.2-2' }} {{ fav.album?.currency || 'EUR' }}</span>
+      </footer>
+      
+    </article>
+  </div>
+  <ng-template #noAlbumFavorites>
+    <p>No has añadido ningún álbum a favoritos todavía.</p>
+  </ng-template>
+
+  <h1>Mis favoritos de merch</h1>
+  <div *ngIf="favMerch.length > 0; else noFavorites" class="merch-grid">
+    <article class="merch-card" *ngFor="let item of favMerch">
+      <figure class="merch-card__cover">
+        <img [src]="getImageUrl(item)" [alt]="'Imagen de ' + item.title" loading="lazy" />
+      </figure>
+      <div class="merch-card__body">
+        <h3>{{ item.title }}</h3>
+        <p class="merch-card__description">{{ item.description }}</p>
+        <div class="merch-card__metadata">
+          <span class="metadata-tag">{{ item.category }}</span>
+          <span class="metadata-tag" [ngClass]="item.stock > 0 ? 'in-stock' : 'out-of-stock'">
+            {{ item.stock > 0 ? 'Disponible' : 'Agotado' }}
+          </span>
+        </div>
+      </div>
+      <footer class="merch-card__meta">
+        <span class="merch-card__price">{{ item.priceCents / 100 | number:'1.2-2' }} {{ item.currency }}</span>
+      </footer>
+    </article>
+  </div>
+  <ng-template #noFavorites>
+    <p>No has añadido ningún artículo a favoritos todavía.</p>
+  </ng-template>
+</section>
+

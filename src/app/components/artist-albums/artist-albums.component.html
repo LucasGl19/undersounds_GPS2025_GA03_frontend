@@ -1,0 +1,25 @@
+<div class="artist-albums">
+    <h3>Álbumes del artista</h3>
+    <ng-container *ngIf="!isLoading; else loading">
+        <div *ngIf="albums.length > 0; else noAlbums">
+            <div class="albums-container">
+
+                <article class="album-card" *ngFor="let album of albums" (click)="navigateToAlbumPage(album.id)">
+                    <img [src]="album.cover" [alt]="album.title" loading="lazy">
+                    <div class="album-info">
+                        <h3>{{ album.title }}</h3>
+                        <p>{{ album.releaseDate }}</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <ng-template #noAlbums>
+            <p>Este artista no tiene álbumes disponibles.</p>
+        </ng-template>
+    </ng-container>
+
+    <ng-template #loading>
+        <p>Cargando álbumes...</p>
+    </ng-template>
+</div>

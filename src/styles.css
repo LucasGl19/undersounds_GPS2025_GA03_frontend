@@ -1,0 +1,93 @@
+:root {
+  color-scheme: dark;
+  --layout-max-width: 1200px;
+  
+  /* Modern Dark Theme Palette */
+  --surface-background: #0f172a; /* Deep dark blue/slate */
+  --surface-primary: #1e293b;    /* Lighter slate for cards */
+  --surface-secondary: #334155;  /* Even lighter for inputs/hovers */
+  --surface-tertiary: #475569;
+  
+  --border-subtle: #334155;
+  
+  --text-strong: #f8fafc;        /* Almost white */
+  --text-soft: #cbd5e1;          /* Light gray */
+  --text-muted: #94a3b8;         /* Muted gray */
+  
+  --accent: #38bdf8;             /* Electric Sky Blue */
+  --accent-stronger: #0ea5e9;    /* Darker Sky Blue */
+  --accent-glow: rgba(56, 189, 248, 0.3);
+
+  --danger: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px var(--accent-glow);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: var(--surface-background);
+  color: var(--text-soft);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-stronger);
+}
+
+button {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+main.layout-content {
+  min-height: 80vh;
+  padding-top: 2rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-secondary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-tertiary);
+}

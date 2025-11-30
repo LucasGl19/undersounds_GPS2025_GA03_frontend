@@ -1,0 +1,22 @@
+.stats-box {
+    padding: 1.5rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    width: fit-content;
+    background-color: var(--surface-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 14px;
+    color: var(--text-strong);
+}
+
+.stat-item > span {
+    font-weight: bold; 
+    margin-right: 12px;
+    color: var(--accent);
+}

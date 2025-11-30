@@ -1,0 +1,93 @@
+<div class="merch-detail-page" *ngIf="!isLoading && merch; else loading">
+  <!-- Header con botón atrás -->
+  <div class="merch-header">
+    <button class="btn-back" (click)="goBack()">← Volver a Merch</button>
+  </div>
+
+  <div class="merch-container">
+    <!-- Imagen principal e info básica -->
+    <div class="merch-hero">
+      <figure class="merch-cover" *ngIf="merch.cover">
+        <img [src]="merch.cover.url" [alt]="merch.title" loading="lazy" />
+      </figure>
+
+      <div class="merch-info">
+        <h1 class="merch-title">{{ merch.title }}</h1>
+
+        <div class="merch-metadata">
+          <span class="metadata-merch">
+            <strong>Precio:</strong> {{ merch.priceCents / 100 | currency:merch.currency }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.stock !== null">
+            <strong>Stock:</strong> {{ merch.stock }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.sku">
+            <strong>SKU:</strong> {{ merch.sku }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.category">
+            <strong>Categoría:</strong> {{ merch.category }}
+          </span>
+          <span class="metadata-merch" *ngIf="!merch.active">
+            <strong>Estado:</strong> Inactivo
+          </span>
+          <div class="metadata-item stats">
+            <div class="stats-item">
+              <mat-icon class="mat-icon">shopping_cart</mat-icon><span>{{ merchStats?.merchSales || 0 }} ventas</span>
+            </div>
+            <div class="stats-item">
+              <mat-icon class="mat-icon">star_rate</mat-icon><span> {{ merchStats?.merchRate || 0 }} / 5
+                estrellas</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="merch-description" *ngIf="merch.description">
+          {{ merch.description }}
+        </p>
+
+        <p class="merch-artist" *ngIf="artistName || artistLinkId">
+          <strong>Autor: </strong>
+          <ng-container *ngIf="artistLinkId; else plainArtist">
+            <a [routerLink]="['/artist', artistLinkId]" class="artist-link">{{ artistName || 'Ver artista' }}</a>
+          </ng-container>
+          <ng-template #plainArtist>
+            <span>{{ artistName || 'Artista desconocido' }}</span>
+          </ng-template>
+        </p>
+
+        <div class="merch-actions">
+          <button class="btn-add-cart" [ngClass]="{ 'added': isInCart }" (click)="addMerchToCart()" [disabled]="!merch">
+            {{ buttonText}}
+          </button>
+          <a (click)="navigateToCart()" class="link-go-cart">Ver carrito</a>
+          <!-- Admin: eliminar merch -->
+          <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteMerch()">
+            Eliminar merch
+          </button>
+        </div>
+
+        <div class="merch-dates">
+          <span class="metadata-merch">
+            <strong>Creado:</strong> {{ merch.createdAt | date:'short' }}
+          </span>
+          <span class="metadata-merch" *ngIf="merch.updatedAt">
+            <strong>Actualizado:</strong> {{ merch.updatedAt | date:'short' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <app-comment-box [productId]="merch.id.toString()" type="merch"></app-comment-box>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando artículo...</p>
+  </div>
+
+  <div class="error-container" *ngIf="!isLoading && errorMsg">
+    <p class="error-message">{{ errorMsg }}</p>
+    <button class="btn-back" (click)="goBack()">← Volver a Merch</button>
+  </div>
+</ng-template>

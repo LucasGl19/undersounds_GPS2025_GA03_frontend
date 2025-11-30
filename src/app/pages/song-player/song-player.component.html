@@ -1,0 +1,55 @@
+<section class="song-player-page">
+  <div *ngIf="isLoading" class="loading-indicator">Cargando canción...</div>
+  <div *ngIf="errorMsg && !isLoading" class="error-message">{{ errorMsg }}</div>
+
+  <div class="song-layout" *ngIf="song && !isLoading">
+    <article class="song-card song-card--large">
+
+      <figure class="song-card__cover song-card__cover--large">
+        <img [src]="song.image" [alt]="song.title" />
+      </figure>
+
+      <div class="song-card__body">
+        <h1 class="song-card__title">{{ song.title }}</h1>
+        <p class="song-card__artist">{{ song.artist }}</p>
+
+        <div *ngIf="song.audio; else noAudio">
+          <audio controls class="audio-player" preload="none" (play)="onPlay()" #audioRef>
+            <source [src]="song.audio" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+          </audio>
+        </div>
+
+        <ng-template #noAudio>
+          <div class="no-audio-message">
+            <p>⚠️ No hay audio disponible para esta canción</p>
+          </div>
+        </ng-template>
+
+        <!-- SEGUNDA SECCIÓN DE DATOS (YA CORRECTAMENTE DENTRO DEL MISMO BODY) -->
+        <h1>{{ song.title }}</h1>
+
+        <p class="song-card__artist">
+          <span>Autor: </span>
+          <a [routerLink]="['/artist', song.artistId]" class="artist-link">{{ song.artist }}</a>
+        </p>
+
+        <div class="song-card__plays" *ngIf="song.playCount !== undefined">
+          <span style="font-size: 1.2rem;">🎧</span>
+          <strong>{{ song.playCount || 0 }}</strong> 
+          {{ song.playCount === 1 ? 'reproducción' : 'reproducciones' }}
+        </div>
+
+        <p class="song-card__description">{{ song.description }}</p>
+
+        <!-- Admin-only delete button -->
+        <div>
+          <button class="btn-danger" *ngIf="isAdmin$ | async" (click)="confirmDeleteSong()">Eliminar canción</button>
+        </div>
+      </div>
+
+    </article>
+
+
+  </div>
+</section>

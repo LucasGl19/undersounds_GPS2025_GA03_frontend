@@ -1,0 +1,70 @@
+<form class="uploadsong-page" [formGroup]="form" (ngSubmit)="submit()">
+  <h1>¡Sube aquí tus creaciones!</h1>
+
+  <div class="form-field">
+    <label for="title">Título</label>
+    <input id="title" type="text" formControlName="title" />
+  </div>
+
+  <div class="form-field">
+    <label for="albumId">Álbum</label>
+    <div *ngIf="loading" class="loading-message">Cargando tus álbumes...</div>
+    <div *ngIf="!loading && userAlbums.length === 0" class="empty-message">
+      No tienes álbumes creados. <a href="/upload-album">Crea uno primero.</a>
+    </div>
+    <select 
+      *ngIf="!loading && userAlbums.length > 0" 
+      id="albumId" 
+      formControlName="albumId"
+      [disabled]="loading"
+    >
+      <option value="" disabled selected>Selecciona un álbum</option>
+      <option *ngFor="let album of userAlbums" [value]="album.id">
+        {{ album.title }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-field">
+    <label for="trackNumber">Nº de pista</label>
+    <input id="trackNumber" type="number" formControlName="trackNumber" />
+    <small *ngIf="form.get('trackNumber')?.value">
+      Calculado automáticamente. Puedes cambiarlo si lo deseas.
+    </small>
+  </div>
+
+  <div class="form-field">
+    <label for="audioFile">Archivo de audio (MP3, WAV, OGG, etc.)</label>
+    <input 
+      id="audioFile" 
+      type="file" 
+      accept="audio/*"
+      (change)="onAudioFileSelected($event)"
+    />
+  </div>
+
+  <div class="form-field">
+    <label for="durationSec">Duración (s)</label>
+    <div class="duration-input-group">
+      <input id="durationSec" type="number" formControlName="durationSec" />
+      <span class="duration-display" *ngIf="form.value.durationSec">
+        ({{ formattedDuration }})
+      </span>
+    </div>
+    <small>Calculada automáticamente del archivo de audio. Puedes corregirla si es necesario.</small>
+  </div>
+
+  <div class="form-field">
+    <label for="bitrate">Bitrate (kbps)</label>
+    <input id="bitrate" type="number" formControlName="bitrate" />
+  </div>
+
+  <div class="form-field">
+    <label for="codec">Codec</label>
+    <input id="codec" type="text" formControlName="codec" />
+  </div>
+
+  <button type="submit" class="upload-btn" [disabled]="loading || uploading || userAlbums.length === 0 || form.invalid">
+    {{ uploading ? 'Subiendo...' : 'Subir Canción' }}
+  </button>
+</form>

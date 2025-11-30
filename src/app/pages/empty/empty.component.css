@@ -1,0 +1,9 @@
+.empty-state {
+    background-color: var(--surface-background);
+    height: 700px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

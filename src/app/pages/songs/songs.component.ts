@@ -1,0 +1,268 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { SongCard } from '../../models/song-card.model';
+import { SongsService } from '../../services/songs.service';
+import { FormsModule } from '@angular/forms';
+import { ApiService, TrackFilters } from '../../services/api.service';
+import { environment } from '../../../environments/environment';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-songs',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatDialogModule, MatSnackBarModule],
+  templateUrl: './songs.component.html',
+  styleUrls: ['./songs.component.css'],
+})
+export class SongsComponent implements OnInit {
+  songs: SongCard[] = [];
+  isLoading: boolean = false;
+    useBackend: boolean = true;
+    dataSource: 'backend' | 'mock' = 'backend'; // Indica la fuente de datos actual
+  errorMsg: string = '';
+  showDebugInfo: boolean = environment.showDebugInfo;
+  private dialog = inject(MatDialog);
+  private snack = inject(MatSnackBar);
+  private authService = inject(AuthService);
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
+  
+  // Filtros
+  searchQuery: string = '';
+  selectedGenre: string = '';
+  selectedTag: string = '';
+  selectedLanguage: string = '';
+  releasedFrom: string = '';
+  releasedTo: string = '';
+  selectedSort: 'title' | 'durationSec' | 'playCount' | null = null;
+  selectedOrder: 'asc' | 'desc' = 'asc';
+
+  // Paginación
+  currentPage: number = 1;
+  itemsPerPage: number = 20;
+  totalPages: number = 1;
+
+  // Listas para los selects
+  availableGenres: string[] = ['Rock', 'Pop', 'Jazz', 'Electronic', 'Hip Hop', 'Classical', 'Folk', 'Metal', 'Reggae', 'Blues', 'Ambient', 'Synthwave', 'Lofi', 'Shoegaze', 'House'];
+  availableTags: string[] = ['indie', 'experimental', 'acoustic', 'live', 'remix', 'instrumental', 'lo-fi', 'ambient', 'chill'];
+  availableLanguages: string[] = ['es', 'en', 'fr', 'de', 'it', 'pt', 'instrumental'];
+
+  constructor(private songService: SongsService, private router: Router, private api: ApiService) {}
+
+  navigateToSongPlayer(id: number | string) {
+    this.router.navigate(['song-player', id]);
+  }
+
+  ngOnInit(): void {
+    this.loadSongs();
+  }
+
+  loadSongs() {
+    if (this.useBackend) {
+      this.loadFromBackend();
+    } else {
+      this.loadFromMock();
+    }
+  }
+
+  loadFromBackend() {
+    this.isLoading = true;
+    this.errorMsg = '';
+    const filters: TrackFilters = this.buildFilters();
+    if (this.showDebugInfo) {
+      console.log('🔎 Filtros enviados al BACKEND:', filters);
+    }
+
+    this.songService.getTracksFromBackend(filters).subscribe({
+      next: (response) => {
+        if (this.showDebugInfo) {
+          console.log('✅ Datos cargados desde el BACKEND:', response);
+          console.log('📊 Total de canciones recibidas:', response.tracks.length);
+        }
+        this.songs = response.tracks;
+        this.totalPages = response.pagination.totalPages;
+        this.dataSource = 'backend';
+        this.isLoading = false;
+        // Refrescar playCount desde /tracks/{id}/stats para asegurar valores recientes
+        this.refreshStatsForVisibleSongs();
+      },
+      error: (error) => {
+        console.error('❌ Error al conectar con backend:', error);
+        const status = error?.status ?? 'desconocido';
+        const msg = error?.message || error?.statusText || 'Error desconocido';
+        this.errorMsg = `No se pudieron cargar las canciones (HTTP ${status}). ${msg}`;
+        // Fallback a mock para no dejar la vista vacía
+        this.useBackend = false;
+        this.isLoading = false;
+        this.loadFromMock();
+      }
+    });
+  }
+
+  // Obtiene estadísticas actualizadas para las canciones actualmente visibles
+  private refreshStatsForVisibleSongs() {
+    // Evitar si estamos usando mock
+    if (this.dataSource !== 'backend') return;
+    const isUuidLike = (v: number | string | undefined) => typeof v === 'string' && v.length >= 24;
+    for (const s of this.songs) {
+      const id = s.id;
+      if (!isUuidLike(id)) continue;
+      this.api.getTrackStats(String(id)).subscribe({
+        next: (res) => {
+          const pc = res?.data?.playCount;
+          if (typeof pc === 'number') s.playCount = pc;
+        },
+        error: () => {
+          // Silencioso: si falla, dejamos el valor ya mapeado
+        }
+      });
+    }
+  }
+
+  loadFromMock() {
+    if (this.showDebugInfo) {
+      console.log('📦 Usando datos de PRUEBA (mock)');
+    }
+    this.dataSource = 'mock';
+    this.isLoading = false;
+    let filteredSongs = this.songService.getSongs();
+
+    // Aplicar filtros localmente
+    if (this.searchQuery) {
+      const query = this.searchQuery.toLowerCase();
+      filteredSongs = filteredSongs.filter(song => 
+        song.title.toLowerCase().includes(query) ||
+        song.artist.toLowerCase().includes(query) ||
+        song.description.toLowerCase().includes(query)
+      );
+    }
+
+    if (this.selectedGenre) {
+      filteredSongs = filteredSongs.filter(song => song.genre === this.selectedGenre);
+    }
+
+    if (this.selectedLanguage) {
+      filteredSongs = filteredSongs.filter(song => song.language === this.selectedLanguage);
+    }
+
+    // Aplicar ordenación
+    if (this.selectedSort) {
+      filteredSongs = this.sortSongs(filteredSongs, this.selectedSort, this.selectedOrder);
+    }
+
+    this.songs = filteredSongs;
+  }
+
+  buildFilters(): TrackFilters {
+    const filters: TrackFilters = {
+      page: this.currentPage,
+      limit: this.itemsPerPage,
+      // No forzamos include: el backend incluye relaciones por defecto (album,audio,lyrics,stats)
+    };
+
+    if (this.searchQuery) filters.q = this.searchQuery;
+    if (this.selectedGenre) filters.genre = this.selectedGenre;
+    if (this.selectedTag) filters.tag = this.selectedTag;
+    if (this.selectedLanguage) filters.language = this.selectedLanguage;
+    if (this.releasedFrom) filters.releasedFrom = this.releasedFrom;
+    if (this.releasedTo) filters.releasedTo = this.releasedTo;
+    if (this.selectedSort) {
+      filters.sort = this.selectedSort;
+      filters.order = this.selectedOrder;
+    }
+
+    return filters;
+  }
+
+  sortSongs(songs: SongCard[], criteria: 'title' | 'durationSec' | 'playCount', order: 'asc' | 'desc'): SongCard[] {
+    return [...songs].sort((a, b) => {
+      let comparison = 0;
+
+      if (criteria === 'title') {
+        comparison = a.title.localeCompare(b.title);
+      } else if (criteria === 'durationSec') {
+        comparison = (a.durationSec ?? 0) - (b.durationSec ?? 0);
+      } else if (criteria === 'playCount') {
+        comparison = (a.playCount ?? 0) - (b.playCount ?? 0);
+      }
+
+      return order === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  searchSongs() {
+    this.currentPage = 1; // Reset a la primera página al buscar
+    this.loadSongs();
+  }
+
+  applyFilters() {
+    this.currentPage = 1; // Reset a la primera página al filtrar
+    this.loadSongs();
+  }
+
+  clearFilters() {
+    this.searchQuery = '';
+    this.selectedGenre = '';
+    this.selectedTag = '';
+    this.selectedLanguage = '';
+    this.releasedFrom = '';
+    this.releasedTo = '';
+    this.selectedSort = null;
+    this.selectedOrder = 'asc';
+    this.currentPage = 1;
+    this.loadSongs();
+  }
+
+  sortBy(criteria: 'title' | 'durationSec' | 'playCount') {
+    if (this.selectedSort === criteria) {
+      // Toggle order
+      this.selectedOrder = this.selectedOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.selectedSort = criteria;
+      this.selectedOrder = 'asc';
+    }
+    this.loadSongs();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadSongs();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadSongs();
+    }
+  }
+
+  confirmDeleteSong(song: SongCard): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: song.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+      this.songService.deleteTrack(String(song.id)).subscribe({
+        next: () => {
+          this.songs = this.songs.filter((s) => String(s.id) !== String(song.id));
+          this.snack.open('Canción eliminada', undefined, { duration: 2000 });
+        },
+        error: (err) => {
+          console.error('Error eliminando canción', err);
+          this.snack.open('No se pudo eliminar la canción', undefined, {
+            duration: 3000,
+          });
+        },
+      });
+    });
+  }
+}
+

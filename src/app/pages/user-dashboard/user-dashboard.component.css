@@ -1,0 +1,112 @@
+.user-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 1rem;
+    max-width: var(--layout-max-width);
+    margin: 0 auto;
+}
+
+.user-dashboard__status {
+    font-size: 1rem;
+    color: var(--text-strong);
+    text-align: center;
+}
+
+.user-dashboard__status--error {
+    color: #ef4444;
+}
+
+.user-dashboard__table {
+    width: 100%;
+    max-width: 960px;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+    background-color: var(--surface-primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+}
+
+.user-dashboard__table th,
+.user-dashboard__table td {
+    border: 1px solid var(--border-subtle);
+    text-align: left;
+    padding: 1rem;
+    color: var(--text-strong);
+}
+
+.user-dashboard__table th {
+    background-color: var(--surface-secondary);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.user-dashboard__table tr:nth-child(even) {
+    background-color: var(--surface-secondary);
+}
+
+.user-dashboard__table tr:hover {
+    background-color: rgba(56, 189, 248, 0.05);
+}
+
+.user-dashboard button {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.user-dashboard button:hover {
+    text-decoration: underline;
+    color: #f87171;
+}
+
+@media (max-width: 768px) {
+
+    .user-dashboard__table,
+    .user-dashboard__table thead,
+    .user-dashboard__table tbody,
+    .user-dashboard__table th,
+    .user-dashboard__table td,
+    .user-dashboard__table tr {
+        display: block;
+    }
+
+    .user-dashboard__table tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        padding: 1rem;
+        background-color: var(--surface-primary);
+    }
+
+    .user-dashboard__table th {
+        display: none;
+    }
+
+    .user-dashboard__table td {
+        display: flex;
+        justify-content: space-between;
+        border: none;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 0.75rem 0;
+    }
+
+    .user-dashboard__table td:last-child {
+        border-bottom: none;
+    }
+
+    .user-dashboard__table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+}

@@ -1,0 +1,84 @@
+<form class="uploadalbum-layout" [formGroup]="form" (ngSubmit)="uploadAlbum()">
+  <div class="uploadalbum-page">
+    <h1>¡Sube aquí tu álbum!</h1>
+
+    <div class="form-field">
+      <label for="title">Título</label>
+      <input id="title" type="text" formControlName="title" />
+    </div>
+
+    <div class="form-field">
+      <label for="description">Descripción</label>
+      <input id="description" type="text" formControlName="description" />
+    </div>
+
+    <div class="form-field">
+      <label for="date">Fecha de lanzamiento</label>
+      <input id="date" type="date" formControlName="date" />
+    </div>
+
+    <div class="form-field">
+      <label for="price">Precio</label>
+      <input id="price" type="number" formControlName="price" />
+    </div>
+
+    <div class="form-field">
+      <label for="currency">Divisa</label>
+      <select id="currency" formControlName="currency">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="MXN">MXN</option>
+        <option value="JPY">JPY</option>
+        <option value="AUD">AUD</option>
+        <option value="CAD">CAD</option>
+        <option value="CHF">CHF</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="releaseState">Estado de lanzamiento</label>
+      <select id="releaseState" formControlName="releaseState">
+        <option selected value="draft">Borrador</option>
+        <option value="scheduled">Programado</option>
+        <option value="published">Publicado</option>
+        <option value="archived">Archivado</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="genre">Género</label>
+      <!-- OJO: formControlName (no 'formatControlName') -->
+      <select id="genre" formControlName="genre">
+        <option value="Rock">Rock</option>
+        <option value="Pop">Pop</option>
+        <option value="Hip Hop">Hip Hop</option>
+        <option value="Jazz">Jazz</option>
+        <option value="Classical">Clásica</option>
+        <option value="Electronic">Electrónica</option>
+        <option value="Folk">Folk</option>
+        <option value="Reggae">Reggae</option>
+        <option value="Metal">Metal</option>
+        <option value="Blues">Blues</option>
+        <option value="Ambient">Ambient</option>
+        <option value="Synthwave">Synthwave</option>
+        <option value="Lofi">Lofi</option>
+        <option value="Shoegaze">Shoegaze</option>
+        <option value="House">House</option>
+        <option value="other">Otro</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="coverFile">Portada del álbum (imagen)</label>
+      <input id="coverFile" type="file" (change)="onCoverFileChange($event)" accept="image/*" />
+      <small *ngIf="coverSelected">Seleccionado: {{ coverSelected.name }}</small>
+    </div>
+
+    <div class="form-field">
+      <label for="labelId">ID del sello (label) - Opcional</label>
+      <input id="labelId" type="text" formControlName="labelId" />
+    </div>
+
+    <button type="submit" class="upload-btn">Subir Álbum</button>
+  </div>
+</form>

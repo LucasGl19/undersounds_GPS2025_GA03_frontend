@@ -1,0 +1,270 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Album } from '../../models/album.model';
+import { SongCard } from '../../models/song-card.model';
+import { ApiService } from '../../services/api.service';
+import { CartService } from '../../services/cart.service';
+import { ArtistsService } from '../../services/artists.service';
+import { environment } from '../../../environments/environment';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AlbumStats, StatsService } from '../../services/stats.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../component/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../../services/auth.service';
+import { map, Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-album-detail',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSnackBarModule,
+    CommentBoxComponent,
+    RouterModule,
+    MatIconModule,
+    MatDialogModule,
+  ],
+  templateUrl: './album-detail.component.html',
+  styleUrls: ['./album-detail.component.css'],
+})
+export class AlbumDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private apiService = inject(ApiService);
+  private cartService = inject(CartService);
+  private snack = inject(MatSnackBar);
+  private artistsService = inject(ArtistsService);
+  private statsService = inject(StatsService);
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+
+  isAdmin$: Observable<boolean> = this.authService.userRole$.pipe(
+    map((role) => role === 'admin')
+  );
+
+  buttonText: String = 'Añadir al carrito';
+  isInCart: boolean = false;
+
+  album: Album | null = null;
+  tracks: SongCard[] = [];
+  isLoading = true;
+  errorMsg = '';
+  // Debug desactivado; mantener código limpio
+  showDebugInfo = environment.showDebugInfo;
+  albumStats: AlbumStats | null = null;
+
+  private normalizeUrl(u?: string): string {
+    if (!u) return 'assets/images/covers/album-default.png';
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.startsWith('/')) return `${environment.contentApiUrl}${u}`;
+    return `${environment.contentApiUrl}/${u}`;
+  }
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      const albumId = params['id'];
+      if (albumId) {
+        this.loadAlbumDetail(albumId);
+        this.loadAlbumStats(albumId);
+      }
+    });
+  }
+
+  private loadAlbumDetail(albumId: string): void {
+    this.isLoading = true;
+    this.errorMsg = '';
+
+    // Cargar detalles de álbum
+
+    // Obtener detalles del álbum
+    this.apiService.getAlbumById(albumId).subscribe({
+      next: (response: any) => {
+        if (response.data) {
+          // Mapear datos del backend al modelo
+          this.album = {
+            id: response.data.id,
+            title: response.data.title || 'Sin título',
+            description: response.data.description || '',
+            artistId: response.data.artistId || '',
+            releaseDate: response.data.releaseDate
+              ? new Date(response.data.releaseDate).toLocaleDateString('es-ES')
+              : '',
+            releaseState: response.data.releaseState || 'draft',
+            price: response.data.price || 0,
+            currency: response.data.currency || 'EUR',
+            genres: response.data.genres
+              ? response.data.genres.split(',').map((g: string) => g.trim())
+              : [],
+            cover: this.normalizeUrl(response.data.cover?.url),
+            artistName: response.data.artistName || 'Artista desconocido',
+          };
+
+          // Resolver nombre de artista y después cargar tracks
+          this.resolveArtistNameAndThenLoadTracks(albumId);
+        }
+      },
+      error: (error: any) => {
+        console.error('[AlbumDetailComponent] Error loading album:', error);
+        this.errorMsg = 'No se pudo cargar el álbum';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private resolveArtistNameAndThenLoadTracks(albumId: string): void {
+    if (!this.album) {
+      this.loadAlbumTracks(albumId);
+      return;
+    }
+    const placeholder =
+      !this.album.artistName || this.album.artistName === 'Artista desconocido';
+    const artistId = this.album.artistId;
+    const isNumericId =
+      typeof artistId !== 'undefined' && String(artistId).match(/^\d+$/);
+
+    if (placeholder && isNumericId) {
+      this.artistsService
+        .getArtistById(String(artistId))
+        .pipe(catchError(() => of(null)))
+        .subscribe((artist) => {
+          if (artist && this.album) {
+            this.album.artistName =
+              artist.name || artist.username || this.album.artistName;
+          }
+          this.loadAlbumTracks(albumId);
+        });
+    } else {
+      this.loadAlbumTracks(albumId);
+    }
+  }
+
+  private loadAlbumStats(albumId: string): void {
+    this.statsService.getAlbumStats(albumId).subscribe({
+      next: (stats: AlbumStats) => {
+        this.albumStats = stats;
+      },
+    });
+  }
+
+  private loadAlbumTracks(albumId: string): void {
+    this.apiService.getTracks({ albumId, limit: 100 }).subscribe({
+      next: (response: any) => {
+        // Mapear datos del backend al modelo SongCard y filtrar por albumId
+        let tracks = (response.data || [])
+          .filter((track: any) => {
+            // Filtrar solo tracks que pertenezcan a este álbum
+            return String(track.albumId) === String(albumId);
+          })
+          .map((track: any) => ({
+            id: track.id,
+            title: track.title || 'Sin título',
+            artist: this.album?.artistName || 'Desconocido',
+            description: track.description || '',
+            image: track.coverUrl
+              ? this.normalizeUrl(track.coverUrl)
+              : track?.album?.cover?.url
+              ? this.normalizeUrl(track.album.cover.url)
+              : 'assets/images/covers/track-default.png',
+            genre: track.genre || '',
+            language: track.language || '',
+            format: track.format || 'MP3',
+            price: track.price ? `${track.price} EUR` : 'Gratis',
+            durationSec: track.durationSec || 0,
+            playCount: track.playCount || 0,
+            audio: track.audio?.url || '',
+            createdAt: track.createdAt || new Date().toISOString(),
+            artistId: track.artistId || 0,
+            albumId: track.albumId,
+            trackNumber: track.trackNumber,
+          })) as SongCard[];
+
+        this.tracks = tracks;
+
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        // No mostramos error si no hay canciones, simplemente dejamos el array vacío
+        this.isLoading = false;
+      },
+    });
+  }
+
+  navigateToSongPlayer(trackId: string | number): void {
+    this.router.navigate(['song-player', trackId]);
+  }
+
+  goBack(): void {
+    this.router.navigate(['/albums']);
+  }
+
+  formatDuration(seconds: number): string {
+    if (!seconds) return '--:--';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  navigateToCart() {
+    this.router.navigate(['/cart']);
+  }
+
+  addAlbumToCart(): void {
+    if (!this.album) return;
+    this.cartService.addAlbum(this.album);
+    this.buttonText = 'Álbum añadido';
+    this.isInCart = true;
+    this.snack
+      .open('Álbum añadido al carrito', 'Ver', { duration: 3000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/cart']));
+  }
+
+  confirmDeleteAlbum(): void {
+    if (!this.album) return;
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: this.album.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok || !this.album) return;
+      this.apiService.deleteAlbum(String(this.album.id)).subscribe({
+        next: () => {
+          this.snack.open('Álbum eliminado', undefined, { duration: 2000 });
+          this.router.navigate(['/albums']);
+        },
+        error: (err) => {
+          console.error('Error eliminando álbum', err);
+          this.snack.open('No se pudo eliminar el álbum', undefined, {
+            duration: 3000,
+          });
+        },
+      });
+    });
+  }
+
+  confirmDeleteTrack(track: SongCard, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { name: track.title },
+    });
+    ref.afterClosed().subscribe((ok) => {
+      if (!ok) return;
+      this.apiService.deleteTrack(String(track.id)).subscribe({
+        next: () => {
+          this.tracks = this.tracks.filter((t) => String(t.id) !== String(track.id));
+          this.snack.open('Canción eliminada', undefined, { duration: 2000 });
+        },
+        error: (err) => {
+          console.error('Error eliminando canción', err);
+          this.snack.open('No se pudo eliminar la canción', undefined, {
+            duration: 3000,
+          });
+        },
+      });
+    });
+  }
+}

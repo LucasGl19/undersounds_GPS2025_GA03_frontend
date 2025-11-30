@@ -1,0 +1,82 @@
+<div *ngIf="isLoading" class="loading-indicator">
+  <p>Cargando tus creaciones...</p>
+</div>
+
+<div *ngIf="!isLoading && errorMsg" class="error-banner">
+  {{ errorMsg }}
+</div>
+
+<div *ngIf="!isLoading">
+  <h1> Mis canciones </h1>
+  <div class="creation-grid" >
+    <article class="creation-card" *ngFor="let song of artistSongs">
+      <figure class="creation-card__cover" (click)="toggleSongEditor(song.id)">
+        <img
+          [src]="song.image"
+          [alt]="'Portada de ' + song.title"
+          loading="lazy"
+        />
+      </figure>
+
+      <div class="creation-card__body" (click)="toggleSongEditor(song.id)">
+        <h3>{{ song.title }}</h3>
+        <p class="creation-card__artist">{{ song.artist }}</p>
+        <p class="creation-card__description">{{ song.description }}</p>
+      </div>
+
+      <footer class="creation-card__meta" (click)="toggleSongEditor(song.id)">
+        <span class="creation-card__format">{{ song.format }}</span>
+      </footer>
+
+      <div class="edit-panel" *ngIf="openedSongId === song.id">
+        <h3>Panel de edición de la canción:</h3>
+        <label>Título <input [(ngModel)]="song.title" /></label>
+        <!-- Precio editing moved to album editor only -->
+        <label>Descripción <textarea [(ngModel)]="song.description"></textarea></label>
+        <!-- Portada heredada del álbum, no se puede modificar aquí -->
+        <label>Archivo de audio <input type="file" accept="audio/*" (change)="onTrackAudioChange($event, song.id)" />
+          <small *ngIf="trackAudioFiles.get(song.id)">Seleccionado: {{ trackAudioFiles.get(song.id)?.name }}</small>
+        </label>
+        <button class="save-btn" (click)="saveSong(song)">Guardar</button>
+        <button class="delete-btn" (click)="deleteSong(song.id)" title="Eliminar canción">Eliminar</button>
+      </div>
+
+    </article>
+  </div>
+
+  <h1>Mis álbumes</h1>
+  <div class="creation-grid">
+    <article class="creation-card" *ngFor="let a of artistAlbums">
+      <figure class="creation-card__cover" (click)="toggleAlbumEditor(a.id)">
+        <img
+          [src]="a.cover"
+          [alt]="'Portada de ' + a.title"
+          loading="lazy"
+        />
+      </figure>
+
+      <div class="creation-card__body" (click)="toggleAlbumEditor(a.id)">
+        <h3>{{ a.title }}</h3>
+        <p class="creation-card__description">{{ a.description }}</p>
+      </div>
+
+      <footer class="creation-card__meta" (click)="toggleAlbumEditor(a.id)">
+        <span class="creation-card__price">{{ a.price }}</span>
+      </footer>
+
+      <div class="edit-panel" *ngIf="openedAlbumId === a.id">
+        <h3>Panel de edición del álbum:</h3>
+        <label>Título <input [(ngModel)]="a.title" /></label>
+        <label>Precio <input type="number" [(ngModel)]="a.price" /></label>
+        <label>Divisa <input [(ngModel)]="a.currency" /></label>
+        <label>Descripción <textarea [(ngModel)]="a.description"></textarea></label>
+        <label>Portada <input type="file" accept="image/*" (change)="onAlbumCoverChange($event, a.id)" />
+          <small *ngIf="albumCoverFiles.get(a.id)">Seleccionado: {{ albumCoverFiles.get(a.id)?.name }}</small>
+        </label>
+
+        <button class="save-btn" (click)="saveAlbum(a)">Guardar</button>
+        <button class="delete-btn" (click)="deleteAlbum(a.id)" title="Eliminar álbum">Eliminar</button>
+      </div>
+    </article>
+  </div>
+</div>

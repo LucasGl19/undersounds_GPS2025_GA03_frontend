@@ -1,0 +1,55 @@
+<div class="comments-wrapper">
+  <h3>Comentarios</h3>
+
+  <div class="comment" *ngFor="let c of comments">
+    <div class="comment-header">
+      <div>
+        <span class="comment-user">{{ c.userId || 'Usuario' }}</span>
+        Valoración: 
+        <i *ngFor="let star of [1,2,3,4,5]" class="star">
+          {{ star <= c.rating ? '★' : '☆' }} </i>
+      </div>
+
+      <div class="comment-meta">
+        <span class="comment-date">{{ c.createdAt | date:'short' }}</span>
+        <div class="comment-actions" *ngIf="c.userId === currentUserId">
+          <button class="remove-btn"  (click)="delete(c.id)">
+            <img src="assets/images/ui/eliminar.png" alt="Eliminar" />
+          </button>
+          <button class="edit-btn" (click)="toggleEdit(c)">✏️</button>
+        </div>
+      </div>
+
+    
+    </div>
+
+    <!-- Formulario de edición -->
+    <p class="comment-text" *ngIf="!c.editing">{{ c.text }}</p>
+    <div *ngIf="c.editing" class="edit-form">
+      <textarea [(ngModel)]="c.editText"></textarea>
+      <button class="btn-save" (click)="saveEdit(c)">Guardar</button>
+      <button class="btn-cancel" (click)="c.editing = false">Cancelar</button>
+    </div>
+
+    <div class="comment-footer">
+      <button class="btn-like" (click)="like(c.id)">
+        <span [class.liked]="c.isLiked">❤️</span>
+        <span>{{ c.likes || 0 }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="comment-form" *ngIf="canComment; else cannot">
+    <div class="star-rating">
+      Valoración:
+      <i *ngFor="let star of [1,2,3,4,5]" class="star" (click)="rating = star">
+        {{ star <= rating ? '★' : '☆' }} </i>
+    </div>
+    <textarea [(ngModel)]="newComment" placeholder="Escribe tu comentario..."></textarea>
+    <button class="btn-send" (click)="submit()">Enviar comentario</button>
+  </div>
+
+  <ng-template #cannot>
+    <p class="disabled-message">Solo puedes comentar si has comprado este producto.</p>
+  </ng-template>
+</div>

@@ -1,0 +1,81 @@
+<section class="merch-page">
+  <header class="merch-page__header">
+    <h1>Merch exclusivo</h1>
+    <p>Apoya directamente a los artistas con ediciones limitadas y objetos únicos.</p>
+
+    <div class="sort-tags">
+      <button (click)="sortBy('name')" [ngClass]="{ 
+          active: selectedSort === 'name',
+          'desc': selectedSort === 'name' && selectedOrder === 'desc'
+        }">
+        Título {{ selectedSort === 'name' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sortBy('createdAt')" [ngClass]="{
+          active: selectedSort === 'createdAt',
+          'desc': selectedSort === 'createdAt' && selectedOrder === 'desc'
+        }">
+        Fecha {{ selectedSort === 'createdAt' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+      <button (click)="sortBy('price')" [ngClass]="{
+          active: selectedSort === 'price',
+          'desc': selectedSort === 'price' && selectedOrder === 'desc'
+        }">
+        Precio {{ selectedSort === 'price' ? (selectedOrder === 'asc' ? '↑' : '↓') : '' }}
+      </button>
+    </div>
+
+    <button 
+      *ngIf="(isLoggedIn$ | async) && ((userRole$ | async) === 'artista' || (userRole$ | async) === 'admin')"
+      class="btn-upload-merch" (click)="navigateToUploadMerch()"
+      type="button"> + Subir merchandising</button>
+  </header>
+
+  <div class="search-bar" role="search">
+    <input type="search" placeholder="Buscar artículos" (keyup.enter)="searchArticles()" [(ngModel)]="searchQuery"
+      aria-label="Buscar artículos" />
+    <button (click)="searchArticles()" type="button" aria-label="Botón de buscar">buscar</button>
+  </div>
+
+  <div class="merch-grid" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="!errorMessage && articles.length === 0">No hay productos de merchandising todavía.</div>
+    <div class="error-state" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <article class="merch-card" *ngFor="let item of articles" (click)="navigateToMerchDetail(item.id)">
+      <figure class="merch-card__cover">
+        <img [src]="item.cover?.url" [alt]="'Imagen de ' + item.title" loading="lazy" />
+
+      </figure>
+
+      <div class="merch-card__body">
+        <h3>{{ item.title }}</h3>
+        <p class="merch-card__description">{{ item.description }}</p>
+        <div class="merch-card__metadata" *ngIf="item.category || item.stock">
+          <span *ngIf="item.category" class="metadata-tag">{{ item.category }}</span>
+          <span *ngIf="item.stock !== undefined" class="metadata-tag"
+            [ngClass]="item.stock > 0 ? 'in-stock' : 'out-of-stock'">
+            {{ item.stock > 0 ? 'Disponible' : 'Agotado' }}
+          </span>
+        </div>
+      </div>
+
+      <footer class="merch-card__meta">
+        <span class="merch-card__price">{{ (item.priceCents / 100) | currency: 'EUR' }}</span>
+        <button type="button" class="btn-add-cart" (click)="toggleCart(item, $event)"
+            [disabled]="item.stock !== undefined && item.stock === 0" [ngClass]="{ 'in-cart': isInCart(item.id) }"> 
+            {{ isInCart(item.id) ? 'En el carrito' : 'Añadir al carrito' }}</button>
+      </footer>
+
+      <button class="fav-button" (click)="toggleFavorite(item, $event)">
+        <svg class="heart-icon" viewBox="0 0 24 24">
+          <path
+            [attr.fill]="isFavorite(item.id) ? '#e63946' : 'none'"
+            stroke="#e63946"
+            stroke-width="2"
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+              2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+              C13.09 3.81 14.76 3 16.5 3
+              19.58 3 22 5.42 22 8.5
+              c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </button>
+    </article>
+  </div>
+</section>

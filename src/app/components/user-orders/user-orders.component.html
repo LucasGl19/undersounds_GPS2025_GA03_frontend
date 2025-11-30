@@ -1,0 +1,18 @@
+<div class="user-orders">
+    <h2>Pedidos</h2>
+    <div *ngIf="loading">Cargando...</div>
+
+    <div *ngIf="!loading && orders.length === 0">
+        No tienes pedidos.
+    </div>
+
+    <div class="orders-container">
+        <div *ngFor="let order of orders" class="order-card">
+            <h3>Pedido: {{ order.orderId }}</h3>
+            <p>Fecha: {{ order.orderDate | date:'short' }}</p>
+            <p>Artículos: {{ order.items.length }}</p>
+            <p>Total: {{ order.totalAmount }} €</p>
+
+        </div>
+    </div>
+</div>
