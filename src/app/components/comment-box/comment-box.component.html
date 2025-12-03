@@ -2,40 +2,51 @@
   <h3>Comentarios</h3>
 
   <div class="comment" *ngFor="let c of comments">
-    <div class="comment-header">
-      <div>
-        <span class="comment-user">{{ c.userId || 'Usuario' }}</span>
-        Valoración: 
-        <i *ngFor="let star of [1,2,3,4,5]" class="star">
-          {{ star <= c.rating ? '★' : '☆' }} </i>
+    <div class="comment-container">
+      <div class="comment-avatar">
+        <img [src]="getAvatarUrl(c.userAvatar, c.userName)" 
+             [alt]="c.userName || 'Usuario'" 
+             (error)="onAvatarError($event, c.userName)">
       </div>
+      
+      <div class="comment-content">
+        <div class="comment-header">
+          <div class="comment-user-info">
+            <span class="comment-user">{{ c.userName || 'Usuario' }}</span>
+            <span class="comment-date">{{ c.createdAt | date:'short' }}</span>
+          </div>
 
-      <div class="comment-meta">
-        <span class="comment-date">{{ c.createdAt | date:'short' }}</span>
-        <div class="comment-actions" *ngIf="c.userId === currentUserId">
-          <button class="remove-btn"  (click)="delete(c.id)">
-            <img src="assets/images/ui/eliminar.png" alt="Eliminar" />
+          <div class="comment-actions" *ngIf="c.userId === currentUserId">
+            <button class="edit-btn" (click)="toggleEdit(c)" title="Editar">✏️</button>
+            <button class="remove-btn" (click)="delete(c.id)" title="Eliminar">
+              <img src="assets/images/ui/eliminar.png" alt="Eliminar" />
+            </button>
+          </div>
+        </div>
+
+        <div class="comment-rating">
+          <i *ngFor="let star of [1,2,3,4,5]" class="star" [class.filled]="star <= c.rating">
+            {{ star <= c.rating ? '★' : '☆' }}
+          </i>
+        </div>
+
+        <!-- Formulario de edición -->
+        <p class="comment-text" *ngIf="!c.editing">{{ c.text }}</p>
+        <div *ngIf="c.editing" class="edit-form">
+          <textarea [(ngModel)]="c.editText" placeholder="Editar comentario..."></textarea>
+          <div class="edit-actions">
+            <button class="btn-save" (click)="saveEdit(c)">Guardar</button>
+            <button class="btn-cancel" (click)="c.editing = false">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="comment-footer">
+          <button class="btn-like" (click)="like(c.id)" [class.active]="c.isLiked">
+            <span class="like-icon">❤️</span>
+            <span class="like-count">{{ c.likes || 0 }}</span>
           </button>
-          <button class="edit-btn" (click)="toggleEdit(c)">✏️</button>
         </div>
       </div>
-
-    
-    </div>
-
-    <!-- Formulario de edición -->
-    <p class="comment-text" *ngIf="!c.editing">{{ c.text }}</p>
-    <div *ngIf="c.editing" class="edit-form">
-      <textarea [(ngModel)]="c.editText"></textarea>
-      <button class="btn-save" (click)="saveEdit(c)">Guardar</button>
-      <button class="btn-cancel" (click)="c.editing = false">Cancelar</button>
-    </div>
-
-    <div class="comment-footer">
-      <button class="btn-like" (click)="like(c.id)">
-        <span [class.liked]="c.isLiked">❤️</span>
-        <span>{{ c.likes || 0 }}</span>
-      </button>
     </div>
   </div>
 
