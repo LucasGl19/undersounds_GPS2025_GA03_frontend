@@ -111,7 +111,27 @@ export class ExploreComponent implements OnInit {
         });
       }
 
+      // Fetch track stats to get playCount
+      this.refreshTrackStats();
+
       this.loading = false;
+    });
+  }
+
+  private refreshTrackStats(): void {
+    this.topTracks.forEach(track => {
+      if (track.id) {
+        this.apiService.getTrackStats(track.id).subscribe({
+          next: (res) => {
+            if (res?.data?.playCount !== undefined) {
+              track.playCount = res.data.playCount;
+            }
+          },
+          error: () => {
+            // Silently fail, keep existing value
+          }
+        });
+      }
     });
   }
 }
