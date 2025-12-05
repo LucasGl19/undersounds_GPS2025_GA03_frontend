@@ -334,3 +334,30 @@
   background: rgba(0, 0, 0, 0.05);
   color: var(--text-strong);
 }
+
+/* Mensajes de error e información */
+.error-message {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.info-message {
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+  color: #1e40af;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.info-message p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}

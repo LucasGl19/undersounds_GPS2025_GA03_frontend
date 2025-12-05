@@ -17,11 +17,13 @@ export class CommentBoxComponent implements OnInit {
   @Input() productId!: string;
   @Input() type!: 'album' | 'track' | 'merch';
   canComment  = false;
+  hasUserCommented = false; // Nueva propiedad para verificar si ya comentó
   comments: any[] = [];
   newComment = "";
   rating = 0;
   currentUserId: string | null = null;
   userCache: Map<string, { name: string, avatarUrl: string | null }> = new Map();
+  errorMessage: string | null = null; // Para mostrar mensajes de error
   
   constructor(
     private commentsService: CommentsService, 
@@ -71,9 +73,19 @@ export class CommentBoxComponent implements OnInit {
 
     req?.subscribe((r:any) => {
       this.comments = Array.isArray(r) ? r : r.data;
+      this.checkIfUserCommented(); // Verificar si el usuario ya comentó
       this.loadUserNames();
       this.comments.forEach(c => this.loadReplies(c.id));
     });
+  }
+
+  checkIfUserCommented() {
+    if (!this.currentUserId) {
+      this.hasUserCommented = false;
+      return;
+    }
+    // Verificar si el usuario actual ya tiene un comentario
+    this.hasUserCommented = this.comments.some(c => String(c.userId) === String(this.currentUserId));
   }
 
   loadUserNames() {
@@ -146,7 +158,8 @@ export class CommentBoxComponent implements OnInit {
 
 
   submit() {
-    if (!this.newComment.trim()) return;
+    // Permitir comentarios vacíos y rating 0
+    this.errorMessage = null; // Limpiar mensaje de error anterior
 
     let req;
     if (this.type === 'album') {
@@ -157,32 +170,47 @@ export class CommentBoxComponent implements OnInit {
       req = this.commentsService.addArticleComment(this.productId, this.newComment, this.rating, this.currentUserId!);
     }
 
-    req?.subscribe((created: any) => {
-      this.newComment = '';
-      this.rating = 0;
-      const newCommentData = created.data;
-      newCommentData.replies = [];
-      
-      // Agregar información del usuario actual
-      const currentUserInfo = this.userCache.get(this.currentUserId!);
-      if (currentUserInfo) {
-        newCommentData.userName = currentUserInfo.name;
-        newCommentData.userAvatar = currentUserInfo.avatarUrl;
-        this.comments.unshift(newCommentData);
-      } else {
-        // Cargar información del usuario actual si no está en cache
-        this.comments.unshift(newCommentData);
-        this.userService.getUserById(this.currentUserId!).subscribe((user: any) => {
-          if (user) {
-            const displayName = user.name || user.username || 'Usuario';
-            newCommentData.userName = displayName;
-            newCommentData.userAvatar = user.avatarUrl;
-            this.userCache.set(this.currentUserId!, {
-              name: displayName,
-              avatarUrl: user.avatarUrl
-            });
-          }
-        });
+    req?.subscribe({
+      next: (created: any) => {
+        this.newComment = '';
+        this.rating = 0;
+        this.errorMessage = null;
+        const newCommentData = created.data;
+        newCommentData.replies = [];
+        
+        // Agregar información del usuario actual
+        const currentUserInfo = this.userCache.get(this.currentUserId!);
+        if (currentUserInfo) {
+          newCommentData.userName = currentUserInfo.name;
+          newCommentData.userAvatar = currentUserInfo.avatarUrl;
+          this.comments.unshift(newCommentData);
+        } else {
+          // Cargar información del usuario actual si no está en cache
+          this.comments.unshift(newCommentData);
+          this.userService.getUserById(this.currentUserId!).subscribe((user: any) => {
+            if (user) {
+              const displayName = user.name || user.username || 'Usuario';
+              newCommentData.userName = displayName;
+              newCommentData.userAvatar = user.avatarUrl;
+              this.userCache.set(this.currentUserId!, {
+                name: displayName,
+                avatarUrl: user.avatarUrl
+              });
+            }
+          });
+        }
+        this.hasUserCommented = true; // Marcar que el usuario ya comentó
+      },
+      error: (error: any) => {
+        console.error('Error al crear comentario:', error);
+        if (error.status === 409) {
+          this.errorMessage = 'Ya has comentado este artículo. Solo puedes tener un comentario.';
+          this.hasUserCommented = true;
+        } else if (error.status === 400) {
+          this.errorMessage = 'Error: Datos inválidos.';
+        } else {
+          this.errorMessage = 'Error al publicar el comentario. Inténtalo de nuevo.';
+        }
       }
     });
   }
@@ -191,6 +219,7 @@ export class CommentBoxComponent implements OnInit {
   delete(commentId: string) {
     this.commentsService.deleteComment(commentId).subscribe(() => {
       this.comments = this.comments.filter(c=> c.id !== commentId);
+      this.checkIfUserCommented(); // Volver a verificar después de eliminar
     })
   }
 

@@ -50,7 +50,13 @@
     </div>
   </div>
 
-  <div class="comment-form" *ngIf="canComment; else cannot">
+  <!-- Mostrar mensaje de error si existe -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Formulario de comentario solo si puede comentar y NO ha comentado ya -->
+  <div class="comment-form" *ngIf="canComment && !hasUserCommented">
     <div class="star-rating">
       Valoración:
       <i *ngFor="let star of [1,2,3,4,5]" class="star" (click)="rating = star">
@@ -60,6 +66,12 @@
     <button class="btn-send" (click)="submit()">Enviar comentario</button>
   </div>
 
+  <!-- Mensaje si ya comentó -->
+  <div class="info-message" *ngIf="canComment && hasUserCommented">
+    <p>Ya has comentado este artículo. Puedes editar o eliminar tu comentario existente.</p>
+  </div>
+
+  <!-- Mensaje si no puede comentar (no ha comprado) -->
   <ng-template #cannot>
     <p class="disabled-message">Solo puedes comentar si has comprado este producto.</p>
   </ng-template>
