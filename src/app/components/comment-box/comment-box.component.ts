@@ -2,8 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommentsService } from '../../services/comments.service';
 import { OrdersService } from '../../services/orders.service';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-comment-box',
   imports: [FormsModule, CommonModule],
@@ -14,12 +17,20 @@ export class CommentBoxComponent implements OnInit {
   @Input() productId!: string;
   @Input() type!: 'album' | 'track' | 'merch';
   canComment  = false;
+  hasUserCommented = false; // Nueva propiedad para verificar si ya comentó
   comments: any[] = [];
   newComment = "";
   rating = 0;
   currentUserId: string | null = null;
+  userCache: Map<string, { name: string, avatarUrl: string | null }> = new Map();
+  errorMessage: string | null = null; // Para mostrar mensajes de error
   
-  constructor(private commentsService: CommentsService, private ordersService: OrdersService, private auth: AuthService) {}
+  constructor(
+    private commentsService: CommentsService, 
+    private ordersService: OrdersService, 
+    private auth: AuthService,
+    private userService: UserService
+  ) {}
   
   ngOnInit(): void {
     this.currentUserId = this.auth.getUserId();
@@ -61,8 +72,72 @@ export class CommentBoxComponent implements OnInit {
     }
 
     req?.subscribe((r:any) => {
-    this.comments = Array.isArray(r) ? r : r.data;
-    this.comments.forEach(c => this.loadReplies(c.id));
+      this.comments = Array.isArray(r) ? r : r.data;
+      this.checkIfUserCommented(); // Verificar si el usuario ya comentó
+      this.loadUserNames();
+      this.comments.forEach(c => this.loadReplies(c.id));
+    });
+  }
+
+  checkIfUserCommented() {
+    if (!this.currentUserId) {
+      this.hasUserCommented = false;
+      return;
+    }
+    // Verificar si el usuario actual ya tiene un comentario
+    this.hasUserCommented = this.comments.some(c => String(c.userId) === String(this.currentUserId));
+  }
+
+  loadUserNames() {
+    const uniqueUserIds = [...new Set(this.comments.map(c => c.userId).filter(id => id))];
+    const userIdsToFetch = uniqueUserIds.filter(id => !this.userCache.has(String(id)));
+
+    if (userIdsToFetch.length === 0) {
+      this.attachUserNames();
+      return;
+    }
+
+    // Cargar usuarios uno por uno con catchError para manejar errores individuales
+    const requests = userIdsToFetch.map(userId => 
+      this.userService.getUserById(userId).pipe(
+        catchError(err => {
+          console.error(`Error cargando usuario ${userId}:`, err);
+          return of(null); // Retornar null en caso de error
+        })
+      )
+    );
+
+    forkJoin(requests).subscribe({
+      next: (users: any[]) => {
+        users.forEach((user, index) => {
+          const userId = String(userIdsToFetch[index]);
+          if (user) {
+            const displayName = user.name || user.username || 'Usuario';
+            this.userCache.set(userId, {
+              name: displayName,
+              avatarUrl: user.avatarUrl
+            });
+          }
+        });
+        this.attachUserNames();
+      },
+      error: (err) => {
+        console.error('Error cargando usuarios:', err);
+        this.attachUserNames();
+      }
+    });
+  }
+
+  attachUserNames() {
+    this.comments.forEach(comment => {
+      const userInfo = this.userCache.get(String(comment.userId));
+      if (userInfo) {
+        comment.userName = userInfo.name;
+        comment.userAvatar = userInfo.avatarUrl;
+      } else {
+        comment.userName = 'Usuario';
+        comment.userAvatar = null;
+      }
     });
   }
 
@@ -83,7 +158,8 @@ export class CommentBoxComponent implements OnInit {
 
 
   submit() {
-    if (!this.newComment.trim()) return;
+    // Permitir comentarios vacíos y rating 0
+    this.errorMessage = null; // Limpiar mensaje de error anterior
 
     let req;
     if (this.type === 'album') {
@@ -94,10 +170,48 @@ export class CommentBoxComponent implements OnInit {
       req = this.commentsService.addArticleComment(this.productId, this.newComment, this.rating, this.currentUserId!);
     }
 
-    req?.subscribe((created: any) => {
-      this.newComment = '';
-      this.comments.unshift(created.data); 
-      created.data.replies = [];
+    req?.subscribe({
+      next: (created: any) => {
+        this.newComment = '';
+        this.rating = 0;
+        this.errorMessage = null;
+        const newCommentData = created.data;
+        newCommentData.replies = [];
+        
+        // Agregar información del usuario actual
+        const currentUserInfo = this.userCache.get(this.currentUserId!);
+        if (currentUserInfo) {
+          newCommentData.userName = currentUserInfo.name;
+          newCommentData.userAvatar = currentUserInfo.avatarUrl;
+          this.comments.unshift(newCommentData);
+        } else {
+          // Cargar información del usuario actual si no está en cache
+          this.comments.unshift(newCommentData);
+          this.userService.getUserById(this.currentUserId!).subscribe((user: any) => {
+            if (user) {
+              const displayName = user.name || user.username || 'Usuario';
+              newCommentData.userName = displayName;
+              newCommentData.userAvatar = user.avatarUrl;
+              this.userCache.set(this.currentUserId!, {
+                name: displayName,
+                avatarUrl: user.avatarUrl
+              });
+            }
+          });
+        }
+        this.hasUserCommented = true; // Marcar que el usuario ya comentó
+      },
+      error: (error: any) => {
+        console.error('Error al crear comentario:', error);
+        if (error.status === 409) {
+          this.errorMessage = 'Ya has comentado este artículo. Solo puedes tener un comentario.';
+          this.hasUserCommented = true;
+        } else if (error.status === 400) {
+          this.errorMessage = 'Error: Datos inválidos.';
+        } else {
+          this.errorMessage = 'Error al publicar el comentario. Inténtalo de nuevo.';
+        }
+      }
     });
   }
 
@@ -105,6 +219,7 @@ export class CommentBoxComponent implements OnInit {
   delete(commentId: string) {
     this.commentsService.deleteComment(commentId).subscribe(() => {
       this.comments = this.comments.filter(c=> c.id !== commentId);
+      this.checkIfUserCommented(); // Volver a verificar después de eliminar
     })
   }
 
@@ -120,5 +235,19 @@ export class CommentBoxComponent implements OnInit {
       comment.text = comment.editText;
       comment.editing = false;
     });
+  }
+
+  onAvatarError(event: any, userName: string) {
+    // Fallback a avatar generado con iniciales
+    const name = userName || 'U';
+    event.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff&size=128`;
+  }
+
+  getAvatarUrl(userAvatar: string | null | undefined, userName: string | null | undefined): string {
+    if (userAvatar && userAvatar.trim()) {
+      return userAvatar;
+    }
+    const name = (userName && userName.trim()) || 'U';
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff&size=128`;
   }
 }

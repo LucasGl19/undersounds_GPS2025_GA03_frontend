@@ -175,7 +175,7 @@ export class AlbumDetailComponent implements OnInit {
             format: track.format || 'MP3',
             price: track.price ? `${track.price} EUR` : 'Gratis',
             durationSec: track.durationSec || 0,
-            playCount: track.playCount || 0,
+            playCount: track.stats?.playCount || 0,
             audio: track.audio?.url || '',
             createdAt: track.createdAt || new Date().toISOString(),
             artistId: track.artistId || 0,
@@ -185,12 +185,32 @@ export class AlbumDetailComponent implements OnInit {
 
         this.tracks = tracks;
 
+        // Refresh track stats to get accurate playCount
+        this.refreshTrackStats();
+
         this.isLoading = false;
       },
       error: (error: any) => {
         // No mostramos error si no hay canciones, simplemente dejamos el array vacío
         this.isLoading = false;
       },
+    });
+  }
+
+  private refreshTrackStats(): void {
+    this.tracks.forEach(track => {
+      if (track.id) {
+        this.apiService.getTrackStats(String(track.id)).subscribe({
+          next: (res) => {
+            if (res?.data?.playCount !== undefined) {
+              track.playCount = res.data.playCount;
+            }
+          },
+          error: () => {
+            // Silently fail
+          }
+        });
+      }
     });
   }
 
