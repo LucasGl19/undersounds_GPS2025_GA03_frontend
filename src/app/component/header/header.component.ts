@@ -16,7 +16,7 @@ export class HeaderComponent {
   isLoggedIn$: Observable<boolean>;
   userRole$: Observable<string | null>;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private readonly router: Router, private readonly authService: AuthService) {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
     this.userRole$ = this.authService.userRole$;
   }
