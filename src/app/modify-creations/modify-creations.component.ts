@@ -199,7 +199,7 @@ export class ModifyCreationsComponent implements OnInit {
           typeof album.price === 'number'
             ? album.price
             : (() => {
-                const parsed = parseFloat(String(album.price).replace('€', '').replace(',', '.'));
+                const parsed = Number.parseFloat(String(album.price).replace('€', '').replace(',', '.'));
                 return Number.isFinite(parsed) ? parsed : undefined;
               })(),
         currency: album.currency,
