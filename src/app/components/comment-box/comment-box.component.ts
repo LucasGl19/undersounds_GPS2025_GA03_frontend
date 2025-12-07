@@ -89,7 +89,7 @@ export class CommentBoxComponent implements OnInit {
   }
 
   loadUserNames() {
-    const uniqueUserIds = [...new Set(this.comments.map(c => c.userId).filter(id => id))];
+    const uniqueUserIds = [...new Set(this.comments.map(c => c.userId).filter(Boolean))];
     const userIdsToFetch = uniqueUserIds.filter(id => !this.userCache.has(String(id)));
 
     if (userIdsToFetch.length === 0) {
