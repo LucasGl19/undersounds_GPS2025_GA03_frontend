@@ -1,7 +1,5 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { Order, OrdersService } from '../../services/orders.service';
-import { AlbumsService } from '../../services/albums.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
